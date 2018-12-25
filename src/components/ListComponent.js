@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import {
   View,
   Text,
@@ -7,47 +8,31 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
+import {
+  nameNewChoresList,
+  createNewChoresList,
+  deleteChoresList
+} from "../actions";
 import Note from "./SmallerListComponent";
 import { ListModal } from "./common";
 
-class List extends Component {
+class ChoresComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      noteArray: [
-        {
-          date: "12/12/18",
-          note: "Weekly",
-          warningColor: "green",
-          chores: ["clean room", "go to bed", "go to store"]
-        },
-        {
-          date: "December",
-          note: "Monthly",
-          warningColor: "green",
-          chores: []
-        },
-        {
-          date: "12/12/18",
-          note: "Jon's Chores",
-          warningColor: "green",
-          chores: []
-        },
-        {
-          date: "12/12/18",
-          note: "Cindy's Chores",
-          warningColor: "green",
-          chores: []
-        }
-      ],
+      noteArray: [],
       noteText: "",
       showModal: false
     };
   }
 
   onAccept() {
-    this.setState({ showModal: false });
-    this.addNote();
+    if (this.props.newChoreListName) {
+      this.setState({ showModal: false });
+      this.props.createNewChoresList();
+    } else {
+      alert.alert("Please fill in a name for your list");
+    }
   }
 
   onDecline() {
@@ -55,19 +40,21 @@ class List extends Component {
   }
 
   onChangeTextFunc(noteText) {
-    console.log(this.state.noteText);
-    this.setState({ noteText });
+    this.props.nameNewChoresList(noteText);
+  }
+
+  deleteNote(val) {
+    this.props.deleteChoresList(val);
   }
 
   render() {
-    let notes = this.state.noteArray.map((val, key) => {
-      //   console.log("heres key: ", key, "heres val: ", val);
+    let notes = this.props.chores.map((val, key) => {
       return (
         <Note
           key={key}
           keyval={key}
           val={val}
-          deleteMethod={() => this.deleteNote(key, val)}
+          deleteMethod={() => this.deleteNote(val)}
         />
       );
     });
@@ -101,23 +88,17 @@ class List extends Component {
       </View>
     );
   }
-  addNote() {
-    if (this.state.noteText) {
-      var d = new Date();
-      this.state.noteArray.push({
-        date: d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate(),
-        note: this.state.noteText,
-        warningColor: "green",
-        chores: []
-      });
-      this.setState({ noteArray: this.state.noteArray });
-      this.setState({ noteText: "" });
-    }
-  }
-  deleteNote(key, val) {
-    this.state.noteArray.splice(key, 1);
-    this.setState({ noteArray: this.state.noteArray });
-  }
+  // addNote() {
+  // if (this.state.noteText) {
+  //   var d = new Date();
+  //   this.state.noteArray.push({
+  //     date: d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate(),
+  //     note: this.state.noteText,
+  //     warningColor: "green",
+  //     chores: []
+  //   });
+  // }
+  // }
 }
 const styles = {
   container: {
@@ -162,4 +143,16 @@ const styles = {
   }
 };
 
-export default List;
+const mapStateToProps = ({ groupReducer }) => {
+  const { chores, loading, newChoreListName } = groupReducer;
+  return { chores, loading, newChoreListName };
+};
+
+export default connect(
+  mapStateToProps,
+  {
+    nameNewChoresList,
+    createNewChoresList,
+    deleteChoresList
+  }
+)(ChoresComponent);

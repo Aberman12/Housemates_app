@@ -66,7 +66,12 @@ export const loginUser = ({
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then(user => loginUserSuccess(dispatch, user))
+      .then(user => {
+        alert.alert(
+          "It looks like you already have an account. Signing you in..."
+        );
+        loginUserSuccess(dispatch, user);
+      })
       .catch(error => {
         console.log(error);
 

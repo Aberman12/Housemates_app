@@ -20,13 +20,13 @@ class SignUpEmail extends Component {
     this.props.passwordChanged(text);
   }
 
-  // onfirstNameChange(text) {
-  //   this.props.firstNameChanged(text);
-  // }
+  onfirstNameChange(text) {
+    this.props.firstNameChanged(text);
+  }
 
-  // onlastNameChange(text) {
-  //   this.props.lastNameChanged(text);
-  // }
+  onlastNameChange(text) {
+    this.props.lastNameChanged(text);
+  }
 
   // onphoneChange(text) {
   //   this.props.phoneChanged(text);
@@ -52,7 +52,7 @@ class SignUpEmail extends Component {
   render() {
     return (
       <Card>
-        {/* <CardSection>
+        <CardSection>
           <Input
             label="First"
             placeholder="name"
@@ -67,7 +67,7 @@ class SignUpEmail extends Component {
             onChangeText={this.onlastNameChange.bind(this)}
             value={this.props.lastName}
           />
-        </CardSection> */}
+        </CardSection>
         <CardSection>
           <Input
             label="Email"
@@ -109,8 +109,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, error, loading } = auth;
-  return { email, password, error, loading };
+  const { email, password, firstName, lastName, error, loading } = auth;
+  return { email, password, firstName, lastName, error, loading };
 };
 
 export default connect(
@@ -118,6 +118,8 @@ export default connect(
   {
     emailChanged,
     passwordChanged,
-    loginUser
+    loginUser,
+    firstNameChanged,
+    lastNameChanged
   }
 )(SignUpEmail);

@@ -4,8 +4,42 @@ import {
   LOADING,
   NEW_GROUP_CREATED,
   GROUP_ZIP_CHANGED,
-  GROUP_NAME_CHANGED
+  GROUP_NAME_CHANGED,
+  NEW_CHORES_LIST_CREATED,
+  NEW_CHORES_LIST_NAMED,
+  DELETE_CHORES_LIST
 } from "./types";
+const uuidv4 = require("uuid/v4");
+
+const addInitialChores = {
+  chores: [
+    {
+      uid: uuidv4(),
+      note: "Weekly",
+      warningColor: "green",
+      chores: ["clean room", "go to bed", "go to store"]
+    },
+    {
+      uid: uuidv4(),
+      note: "Monthly",
+      warningColor: "green",
+      chores: []
+    },
+    {
+      uid: uuidv4(),
+      note: "Jon's Chores",
+      warningColor: "green",
+      chores: []
+    },
+    {
+      uid: uuidv4(),
+      note: "Cindy's Chores",
+      warningColor: "green",
+      chores: []
+    }
+  ],
+  groceries: []
+};
 
 export const createNewHouseName = text => {
   console.log("made it to action house: ", text);
@@ -19,6 +53,27 @@ export const houseZipChange = text => {
   console.log("made it to action zip: ", text);
   return {
     type: GROUP_ZIP_CHANGED,
+    payload: text
+  };
+};
+
+export const nameNewChoresList = text => {
+  console.log("made it to action chores list: ", text);
+  return {
+    type: NEW_CHORES_LIST_NAMED,
+    payload: text
+  };
+};
+
+export const createNewChoresList = () => {
+  return {
+    type: NEW_CHORES_LIST_CREATED
+  };
+};
+
+export const deleteChoresList = text => {
+  return {
+    type: DELETE_CHORES_LIST,
     payload: text
   };
 };
@@ -43,10 +98,32 @@ export const createGroup = ({ houseName, zip }) => {
           .database()
           .ref(`/group/${currentUser.uid}/chores`)
           .push({
-            SallysChores: "Sallys Chores",
-            FredsChores: "Freds Chores",
-            Weekly: "Weekly",
-            Monthly: "Monthly"
+            chores: [
+              {
+                date: "12/12/18",
+                note: "Weekly",
+                warningColor: "green",
+                chores: ["clean room", "go to bed", "go to store"]
+              },
+              {
+                date: "December",
+                note: "Monthly",
+                warningColor: "green",
+                chores: []
+              },
+              {
+                date: "12/12/18",
+                note: "Jon's Chores",
+                warningColor: "green",
+                chores: []
+              },
+              {
+                date: "12/12/18",
+                note: "Cindy's Chores",
+                warningColor: "green",
+                chores: []
+              }
+            ]
           });
       })
       .then(() => {
@@ -68,7 +145,7 @@ export const createGroup = ({ houseName, zip }) => {
           .push({ SallysIOU: "Sallys Chores", FredsIOU: "Sallys Chores" });
       })
       .then(() => {
-        dispatch({ type: NEW_GROUP_CREATED });
+        dispatch({ type: NEW_GROUP_CREATED, payload: addInitialChores.chores });
         Actions.main({ type: "reset" });
       });
   };
