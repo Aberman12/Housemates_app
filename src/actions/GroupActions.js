@@ -1,8 +1,8 @@
 import firebase from "firebase";
 import { Actions } from "react-native-router-flux";
 import {
+  LOADING,
   NEW_GROUP_CREATED,
-  SEND_TO_HOMEPAGE,
   GROUP_ZIP_CHANGED,
   GROUP_NAME_CHANGED
 } from "./types";
@@ -23,23 +23,52 @@ export const houseZipChange = text => {
   };
 };
 
-export const createGroup = ({ name, zip }) => {
+export const createGroup = ({ houseName, zip }) => {
   const { currentUser } = firebase.auth();
-  console.log("inside createGroup: ", { name, zip, currentUser });
+  const id = currentUser.uid;
   return dispatch => {
-    dispatch({ type: NEW_GROUP_CREATED });
+    dispatch({ type: LOADING });
     firebase
       .database()
       .ref(`/group/${currentUser.uid}/groupData`)
-      .push({ name, zip })
-      .ref(`/group/${currentUser.uid}/members`)
-      .push({ currentUser })
-      .ref(`/group/${currentUser.uid}/chores`)
-      .ref(`/group/${currentUser.uid}/groceries`)
-      .ref(`/group/${currentUser.uid}/calendar`)
-      .ref(`/group/${currentUser.uid}/iou`)
+      .push({ houseName, zip })
       .then(() => {
-        dispatch({ type: SEND_TO_HOMEPAGE });
+        firebase
+          .database()
+          .ref(`/group/${currentUser.uid}/members`)
+          .push({ id });
+      })
+      .then(() => {
+        firebase
+          .database()
+          .ref(`/group/${currentUser.uid}/chores`)
+          .push({
+            SallysChores: "Sallys Chores",
+            FredsChores: "Freds Chores",
+            Weekly: "Weekly",
+            Monthly: "Monthly"
+          });
+      })
+      .then(() => {
+        firebase
+          .database()
+          .ref(`/group/${currentUser.uid}/groceries`)
+          .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
+      })
+      .then(() => {
+        firebase
+          .database()
+          .ref(`/group/${currentUser.uid}/groceries`)
+          .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
+      })
+      .then(() => {
+        firebase
+          .database()
+          .ref(`/group/${currentUser.uid}/iou`)
+          .push({ SallysIOU: "Sallys Chores", FredsIOU: "Sallys Chores" });
+      })
+      .then(() => {
+        dispatch({ type: NEW_GROUP_CREATED });
         Actions.main({ type: "reset" });
       });
   };

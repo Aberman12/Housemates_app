@@ -10,15 +10,25 @@ import {
   Spinner
 } from "./common";
 class HouseSignup extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: false
+    };
+  }
   joinHouse() {
+    this.setState({ loading: true });
     Actions.JoinHouse();
+    this.setState({ loading: false });
   }
   createHouse() {
+    this.setState({ loading: true });
     Actions.CreateHouse();
+    this.setState({ loading: false });
   }
 
   renderButton1() {
-    if (this.props.loading) {
+    if (this.state.loading) {
       return <Spinner size="large" />;
     }
 
@@ -33,7 +43,7 @@ class HouseSignup extends Component {
   }
 
   renderButton2() {
-    if (this.props.loading) {
+    if (this.state.loading) {
       return <Spinner size="large" />;
     }
 
