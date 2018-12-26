@@ -13,7 +13,7 @@ import Chores from "./components/Chores";
 import HouseSignup from "./components/HouseSignup";
 import JoinHouse from "./components/JoinHouse";
 import CreateHouse from "./components/CreateHouse";
-import Calendar from "./components/Calendar";
+// import Calendar from "./components/Calendar";
 import Agenda from "./components/CalendarAgenda";
 import List from "./components/ListComponent";
 
@@ -113,11 +113,10 @@ const RouterComponent = () => {
           // onRight={() => Actions.employeeCreate()}
           // rightTitle="Settings"
           key="tab4"
-          component={Calendar}
+          component={Agenda}
           title="Calendar"
           icon={TabIcon}
         />
-        <Scene key="agenda" component={Agenda} tite="Agenda" />
       </Scene>
       {/* </Scene> */}
     </Router>
