@@ -7,7 +7,9 @@ import {
   GROUP_NAME_CHANGED,
   NEW_CHORES_LIST_CREATED,
   NEW_CHORES_LIST_NAMED,
-  DELETE_CHORES_LIST
+  DELETE_CHORES_LIST,
+  CREATE_CHORE_NAME,
+  CREATE_NEW_CHORE
 } from "./types";
 const uuidv4 = require("uuid/v4");
 
@@ -42,7 +44,6 @@ const addInitialChores = {
 };
 
 export const createNewHouseName = text => {
-  console.log("made it to action house: ", text);
   return {
     type: GROUP_NAME_CHANGED,
     payload: text
@@ -50,7 +51,6 @@ export const createNewHouseName = text => {
 };
 
 export const houseZipChange = text => {
-  console.log("made it to action zip: ", text);
   return {
     type: GROUP_ZIP_CHANGED,
     payload: text
@@ -58,13 +58,12 @@ export const houseZipChange = text => {
 };
 
 export const nameNewChoresList = text => {
-  console.log("made it to action chores list: ", text);
   return {
     type: NEW_CHORES_LIST_NAMED,
     payload: text
   };
 };
-
+//need to add this to database as well
 export const createNewChoresList = () => {
   return {
     type: NEW_CHORES_LIST_CREATED
@@ -75,6 +74,20 @@ export const deleteChoresList = text => {
   return {
     type: DELETE_CHORES_LIST,
     payload: text
+  };
+};
+
+export const createChoreName = text => {
+  return {
+    type: CREATE_CHORE_NAME,
+    payload: text
+  };
+};
+
+export const createNewChore = info => {
+  return {
+    type: CREATE_NEW_CHORE,
+    payload: info
   };
 };
 

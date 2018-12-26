@@ -10,24 +10,34 @@ import {
 } from "react-native";
 import { CardSection } from "./common";
 import { connect } from "react-redux";
-import { employeesFetch } from "../actions";
+import { createChoreName, createNewChore } from "../actions";
 import ListItem from "./ListItem";
+import { ListModal } from "./common";
 
 class IndividualList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      showList: false
+      showList: false,
+      showModal: false
     };
   }
 
-  componentWillMount() {
-    this.props.employeesFetch();
-    this.createDataSource(this.props);
+  onChangeTextFunc(text) {
+    this.props.createChoreName(text);
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.createDataSource(nextProps);
+  onAccept() {
+    if (this.props.newChoreName) {
+      this.props.createNewChore(this.props);
+      this.setState({ showModal: false });
+    } else {
+      window.alert("Please fill in a name for your chore");
+    }
+  }
+
+  onDecline() {
+    this.setState({ showModal: false });
   }
 
   createDataSource({ employees }) {
@@ -61,11 +71,13 @@ class IndividualList extends Component {
             {this.props.val.chores.map(chore => {
               return <ListItem employee={chore} />;
             })}
-            <TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this.setState({ showModal: true })}
+            >
               <CardSection>
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 27,
                     marginLeft: 175,
                     color: "blue"
                   }}
@@ -97,6 +109,14 @@ class IndividualList extends Component {
           </View>
         </TouchableOpacity>
         <View>{this.renderRow()}</View>
+        <ListModal
+          visible={this.state.showModal}
+          onAccept={this.onAccept.bind(this)}
+          onDecline={this.onDecline.bind(this)}
+          onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+        >
+          Add New Chore?
+        </ListModal>
       </View>
     );
   }
@@ -119,15 +139,12 @@ const styles = {
   }
 };
 
-const mapStateToProps = state => {
-  const employees = _.map(state.employees, (val, uid) => {
-    return { ...val, uid };
-  });
-
-  return { employees };
+const mapStateToProps = ({ groupReducer }) => {
+  const { newChoreName } = groupReducer;
+  return { newChoreName };
 };
 
 export default connect(
   mapStateToProps,
-  { employeesFetch }
+  { createChoreName, createNewChore }
 )(IndividualList);

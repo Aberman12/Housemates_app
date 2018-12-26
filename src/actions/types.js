@@ -20,3 +20,5 @@ export const GROUP_ZIP_CHANGED = "group_zip_changed";
 export const GROUP_NAME_CHANGED = "group_name_changed";
 export const NEW_GROUP_CREATED = "new_group_created";
 export const DELETE_CHORES_LIST = "delete_chores_list";
+export const CREATE_CHORE_NAME = "create_chore_name";
+export const CREATE_NEW_CHORE = "create_new_chore";

@@ -5,12 +5,16 @@ import {
   GROUP_NAME_CHANGED,
   NEW_CHORES_LIST_CREATED,
   NEW_CHORES_LIST_NAMED,
-  DELETE_CHORES_LIST
+  DELETE_CHORES_LIST,
+  CREATE_CHORE_NAME,
+  CREATE_NEW_CHORE
 } from "../actions/types";
+
 const uuidv4 = require("uuid/v4");
 
 const INITIAL_STATE = {
   newChoreListName: "",
+  newChoreName: "",
   houseName: "",
   zip: "",
   members: [],
@@ -43,6 +47,24 @@ export default (state = INITIAL_STATE, action) => {
       return {
         chores: state.chores.filter(chore => {
           return chore.uid !== action.payload.uid;
+        })
+      };
+    case CREATE_CHORE_NAME:
+      return { ...state, newChoreName: action.payload };
+    case CREATE_NEW_CHORE:
+      let newChore = {
+        note: state.newChoreName,
+        uid: uuidv4(),
+        warningColor: "green"
+      };
+      return {
+        chores: state.chores.map(chore => {
+          if (chore.uid === action.payload.val.uid) {
+            chore.chores = [...chore.chores, newChore.note];
+            return chore;
+          } else {
+            return chore;
+          }
         })
       };
     case NEW_CHORES_LIST_NAMED:

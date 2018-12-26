@@ -26,12 +26,17 @@ class ChoresComponent extends Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    console.log("entered", newProps);
+    this.props.chores = newProps.chores;
+  }
+
   onAccept() {
     if (this.props.newChoreListName) {
       this.setState({ showModal: false });
       this.props.createNewChoresList();
     } else {
-      alert.alert("Please fill in a name for your list");
+      Alert.alert("Please fill in a name for your list");
     }
   }
 
@@ -48,6 +53,7 @@ class ChoresComponent extends Component {
   }
 
   render() {
+    console.log("heres the problem: this.props.chores: ", this.props);
     let notes = this.props.chores.map((val, key) => {
       return (
         <Note
