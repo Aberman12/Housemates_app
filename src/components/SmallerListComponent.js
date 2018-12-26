@@ -88,6 +88,26 @@ class IndividualList extends Component {
             </TouchableOpacity>
           </View>
         );
+      } else {
+        return (
+          <View>
+            <TouchableOpacity
+              onPress={() => this.setState({ showModal: true })}
+            >
+              <CardSection>
+                <Text
+                  style={{
+                    fontSize: 27,
+                    marginLeft: 175,
+                    color: "blue"
+                  }}
+                >
+                  +
+                </Text>
+              </CardSection>
+            </TouchableOpacity>
+          </View>
+        );
       }
     }
   }
