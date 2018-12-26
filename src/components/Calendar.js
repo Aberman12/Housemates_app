@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { Actions } from "react-native-router-flux";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
 
+const vacation = { key: "vacation", color: "red", selectedDotColor: "blue" };
+const massage = { key: "massage", color: "blue", selectedDotColor: "blue" };
+const workout = { key: "workout", color: "green" };
+
 class CalendarApp extends Component {
   goToAgenda() {
     Actions.agenda();
@@ -25,29 +29,14 @@ class CalendarApp extends Component {
         style={{ marginTop: 65 }}
         markingType={"simple"}
         markedDates={{
-          "2018-12-28": {
-            customStyles: {
-              container: {
-                backgroundColor: "green"
-              },
-              text: {
-                color: "black",
-                fontWeight: "bold"
-              }
-            }
+          "2018-12-25": {
+            dots: [vacation, massage, workout],
+            selected: true,
+            selectedColor: "red"
           },
-          "2018-12-29": {
-            customStyles: {
-              container: {
-                backgroundColor: "white",
-                elevation: 2
-              },
-              text: {
-                color: "blue"
-              }
-            }
-          }
+          "2018-12-26": { dots: [massage, workout], disabled: true }
         }}
+        markingType={"multi-dot"}
       />
     );
   }
