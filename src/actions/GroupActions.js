@@ -88,22 +88,34 @@ export const createNewChoresList = info => {
 
 export const choresFetch = () => {
   const { currentUser } = firebase.auth();
-
   return dispatch => {
+    console.log("made jit to fetch");
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}`)
       .on("value", snapshot => {
-        console.log("heres what i got: ", snapshot.val());
+        console.log("fetched: ", snapshot.val());
         dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
       });
   };
 };
 
 export const deleteChoresList = text => {
-  return {
-    type: DELETE_CHORES_LIST,
-    payload: text
+  const index = state.chores.map(chore => {
+    if (chore.note === text) {
+      return state.chores.indexOf(chore);
+    }
+  });
+  console.log("my console siu: ", index);
+  return dispatch => {
+    dispatch({ type: DELETE_CHORES_LIST, payload: text });
+    firebase
+      .database()
+      .ref(`/chores/${currentUser.uid}/${index[0]}`)
+      .remove()
+      .then(() => {
+        Actions.employeeList({ type: "reset" });
+      });
   };
 };
 

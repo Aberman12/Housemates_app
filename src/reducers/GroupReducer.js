@@ -65,7 +65,9 @@ export default (state = INITIAL_STATE, action) => {
     case LOADING:
       return { ...state, loading: true };
     case CHORES_FETCH_SUCCESS:
-      return { chores: action.payload.chore };
+      return {
+        chores: action.payload.choresLists
+      };
     case GROUP_ZIP_CHANGED:
       return { ...state, zip: action.payload };
     case GROUP_NAME_CHANGED:
