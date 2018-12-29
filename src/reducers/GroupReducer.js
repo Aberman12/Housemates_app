@@ -32,15 +32,7 @@ export default (state = INITIAL_STATE, action) => {
     case NEW_CHORES_LIST_CREATED:
       return {
         ...state,
-        chores: [
-          ...state.chores,
-          {
-            uid: uuidv4(),
-            note: state.newChoreListName,
-            warningColor: "green",
-            chores: []
-          }
-        ],
+        chores: [...state.chores, action.payload],
         newChoreListName: ""
       };
     case DELETE_CHORES_LIST:

@@ -32,8 +32,8 @@ class ChoresComponent extends Component {
 
   onAccept() {
     if (this.props.newChoreListName) {
+      this.props.createNewChoresList(this.props);
       this.setState({ showModal: false });
-      this.props.createNewChoresList();
     } else {
       Alert.alert("Please fill in a name for your list");
     }

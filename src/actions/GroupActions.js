@@ -64,9 +64,26 @@ export const nameNewChoresList = text => {
   };
 };
 //need to add this to database as well
-export const createNewChoresList = () => {
-  return {
-    type: NEW_CHORES_LIST_CREATED
+export const createNewChoresList = info => {
+  const { currentUser } = firebase.auth();
+  console.log("info inside chore: ", info);
+  const chore = {
+    uid: uuidv4(),
+    note: info.newChoreListName,
+    warningColor: "green",
+    chores: []
+  };
+  const choresLists = info.chores.concat([chore]);
+  return dispatch => {
+    dispatch({ type: NEW_CHORES_LIST_CREATED, payload: chore });
+    console.log("heres the choororo: ", choresLists);
+    firebase
+      .database()
+      .ref(`/chores/${currentUser.uid}`)
+      .set({ choresLists })
+      .then(() => {
+        console.log("chore set");
+      });
   };
 };
 
