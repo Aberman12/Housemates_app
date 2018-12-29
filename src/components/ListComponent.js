@@ -11,7 +11,8 @@ import {
 import {
   nameNewChoresList,
   createNewChoresList,
-  deleteChoresList
+  deleteChoresList,
+  choresFetch
 } from "../actions";
 import Note from "./SmallerListComponent";
 import { ListModal } from "./common";
@@ -26,8 +27,14 @@ class ChoresComponent extends Component {
     };
   }
 
+  componentDidMount() {
+    this.props.choresFetch();
+    console.log(this.props);
+  }
+
   componentWillReceiveProps(newProps) {
     this.props.chores = newProps.chores;
+    console.log("heres the newest one: ", this.props.chores);
   }
 
   onAccept() {
@@ -157,6 +164,7 @@ export default connect(
   {
     nameNewChoresList,
     createNewChoresList,
-    deleteChoresList
+    deleteChoresList,
+    choresFetch
   }
 )(ChoresComponent);

@@ -7,7 +7,8 @@ import {
   NEW_CHORES_LIST_NAMED,
   DELETE_CHORES_LIST,
   CREATE_CHORE_NAME,
-  CREATE_NEW_CHORE
+  CREATE_NEW_CHORE,
+  CHORES_FETCH_SUCCESS
 } from "../actions/types";
 
 const uuidv4 = require("uuid/v4");
@@ -63,6 +64,8 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, newChoreListName: action.payload };
     case LOADING:
       return { ...state, loading: true };
+    case CHORES_FETCH_SUCCESS:
+      return { chores: action.payload.chore };
     case GROUP_ZIP_CHANGED:
       return { ...state, zip: action.payload };
     case GROUP_NAME_CHANGED:

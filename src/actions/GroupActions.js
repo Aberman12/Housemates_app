@@ -9,7 +9,8 @@ import {
   NEW_CHORES_LIST_NAMED,
   DELETE_CHORES_LIST,
   CREATE_CHORE_NAME,
-  CREATE_NEW_CHORE
+  CREATE_NEW_CHORE,
+  CHORES_FETCH_SUCCESS
 } from "./types";
 const uuidv4 = require("uuid/v4");
 
@@ -63,10 +64,9 @@ export const nameNewChoresList = text => {
     payload: text
   };
 };
-//need to add this to database as well
+
 export const createNewChoresList = info => {
   const { currentUser } = firebase.auth();
-  console.log("info inside chore: ", info);
   const chore = {
     uid: uuidv4(),
     note: info.newChoreListName,
@@ -76,13 +76,26 @@ export const createNewChoresList = info => {
   const choresLists = info.chores.concat([chore]);
   return dispatch => {
     dispatch({ type: NEW_CHORES_LIST_CREATED, payload: chore });
-    console.log("heres the choororo: ", choresLists);
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}`)
       .set({ choresLists })
       .then(() => {
         console.log("chore set");
+      });
+  };
+};
+
+export const choresFetch = () => {
+  const { currentUser } = firebase.auth();
+
+  return dispatch => {
+    firebase
+      .database()
+      .ref(`/chores/${currentUser.uid}`)
+      .on("value", snapshot => {
+        console.log("heres what i got: ", snapshot.val());
+        dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
       });
   };
 };
