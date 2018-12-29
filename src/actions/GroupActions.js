@@ -85,9 +85,17 @@ export const createChoreName = text => {
 };
 
 export const createNewChore = info => {
-  return {
-    type: CREATE_NEW_CHORE,
-    payload: info
+  const { currentUser } = firebase.auth();
+  const chore = info.chores;
+  return dispatch => {
+    dispatch({ type: CREATE_NEW_CHORE, payload: info });
+    firebase
+      .database()
+      .ref(`/chores/${currentUser.uid}`)
+      .set({ chore })
+      .then(() => {
+        console.log("chore set");
+      });
   };
 };
 
@@ -98,63 +106,61 @@ export const createGroup = ({ houseName, zip }) => {
     dispatch({ type: LOADING });
     firebase
       .database()
-      .ref(`/group/${currentUser.uid}/groupData`)
+      .ref(`/group/${currentUser.uid}/groupData/`)
       .push({ houseName, zip })
       .then(() => {
         firebase
           .database()
-          .ref(`/group/${currentUser.uid}/members`)
+          .ref(`/group/${currentUser.uid}/members/`)
           .push({ id });
       })
       .then(() => {
         firebase
           .database()
-          .ref(`/group/${currentUser.uid}/chores`)
+          .ref(`/chores/${currentUser.uid}`)
           .push({
-            chores: [
-              {
-                date: "12/12/18",
-                note: "Weekly",
-                warningColor: "green",
-                chores: ["clean room", "go to bed", "go to store"]
-              },
-              {
-                date: "December",
-                note: "Monthly",
-                warningColor: "green",
-                chores: []
-              },
-              {
-                date: "12/12/18",
-                note: "Jon's Chores",
-                warningColor: "green",
-                chores: []
-              },
-              {
-                date: "12/12/18",
-                note: "Cindy's Chores",
-                warningColor: "green",
-                chores: []
-              }
-            ]
+            weekly: {
+              date: "12/12/18",
+              note: "Weekly",
+              warningColor: "green",
+              chores: ["hello", "goodby", "adios"]
+            },
+            monthly: {
+              date: "December",
+              note: "Monthly",
+              warningColor: "green",
+              chores: []
+            },
+            johns: {
+              date: "12/12/18",
+              note: "Jon's Chores",
+              warningColor: "green",
+              chores: []
+            },
+            cindys: {
+              date: "12/12/18",
+              note: "Cindy's Chores",
+              warningColor: "green",
+              chores: []
+            }
           });
       })
       .then(() => {
         firebase
           .database()
-          .ref(`/group/${currentUser.uid}/groceries`)
+          .ref(`/groceries/${currentUser.uid}`)
           .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
       })
       .then(() => {
         firebase
           .database()
-          .ref(`/group/${currentUser.uid}/groceries`)
+          .ref(`/expenses/${currentUser.uid}`)
           .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
       })
       .then(() => {
         firebase
           .database()
-          .ref(`/group/${currentUser.uid}/iou`)
+          .ref(`/iou/${currentUser.uid}`)
           .push({ SallysIOU: "Sallys Chores", FredsIOU: "Sallys Chores" });
       })
       .then(() => {

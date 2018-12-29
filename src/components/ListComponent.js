@@ -27,7 +27,6 @@ class ChoresComponent extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log("entered", newProps);
     this.props.chores = newProps.chores;
   }
 
@@ -53,7 +52,6 @@ class ChoresComponent extends Component {
   }
 
   render() {
-    console.log("heres the problem: this.props.chores: ", this.props);
     let notes = this.props.chores.map((val, key) => {
       return (
         <Note

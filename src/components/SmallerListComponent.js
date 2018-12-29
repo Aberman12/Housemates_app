@@ -40,14 +40,6 @@ class IndividualList extends Component {
     this.setState({ showModal: false });
   }
 
-  // createDataSource({ employees }) {
-  //   const ds = new ListView.DataSource({
-  //     rowHasChanged: (r1, r2) => r1 !== r2
-  //   });
-
-  //   this.dataSource = ds.cloneWithRows(employees);
-  // }
-
   warningColor(options) {
     return {
       position: "absolute",
@@ -160,8 +152,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { newChoreName } = groupReducer;
-  return { newChoreName };
+  const { newChoreName, chores } = groupReducer;
+  return { newChoreName, chores };
 };
 
 export default connect(

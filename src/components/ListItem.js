@@ -11,16 +11,11 @@ class ListItem extends Component {
       isChecked: false
     };
   }
-  onRowPress() {
-    Actions.employeeEdit({ employee: this.props.employee });
-  }
 
   render() {
-    const { name } = this.props.employee;
-    console.log("heres name in listItem: ", name, this.props.employee);
     return (
       <View>
-        <TouchableWithoutFeedback onPress={this.onRowPress.bind(this)}>
+        <TouchableWithoutFeedback>
           <View>
             <CardSection>
               <CheckBox
