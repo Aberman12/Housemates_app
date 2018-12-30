@@ -50,10 +50,17 @@ export default (state = INITIAL_STATE, action) => {
         uid: uuidv4(),
         warningColor: "green"
       };
+      console.log("sdfg", state.chores);
       return {
         chores: state.chores.map(chore => {
+          console.log("chore:", chore);
           if (chore.uid === action.payload.val.uid) {
-            chore.chores = [...chore.chores, newChore.note];
+            if (chore.chores) {
+              chore.chores = [...chore.chores, newChore.note];
+            } else {
+              chore.chores = [newChore.note];
+            }
+
             return chore;
           } else {
             return chore;
