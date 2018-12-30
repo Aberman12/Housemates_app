@@ -73,7 +73,8 @@ export const createNewChoresList = info => {
     warningColor: "green",
     chores: []
   };
-  const chore = info.chores.concat([chore]);
+  const chore = info.chores.concat([newChore]);
+  console.log(chore);
   return dispatch => {
     dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
     firebase
@@ -100,7 +101,6 @@ export const choresFetch = () => {
 
 export const deleteChoresList = (text, chores) => {
   const { currentUser } = firebase.auth();
-  console.log(chores, text);
   return dispatch => {
     var index;
     for (var i = 0; i < chores.length; i++) {
@@ -108,7 +108,7 @@ export const deleteChoresList = (text, chores) => {
         index = i;
       }
     }
-    console.log("my console index: ", index);
+    console.log(text, chores);
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
     firebase
       .database()
