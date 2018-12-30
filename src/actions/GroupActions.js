@@ -98,18 +98,21 @@ export const choresFetch = () => {
   };
 };
 
-export const deleteChoresList = text => {
-  const index = state.chores.map(chore => {
-    if (chore.note === text) {
-      return state.chores.indexOf(chore);
-    }
-  });
-  console.log("my console siu: ", index);
+export const deleteChoresList = (text, chores) => {
+  const { currentUser } = firebase.auth();
+  console.log(chores, text);
   return dispatch => {
+    var index;
+    for (var i = 0; i < chores.length; i++) {
+      if (chores[i].note === text.note) {
+        index = i;
+      }
+    }
+    console.log("my console index: ", index);
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
     firebase
       .database()
-      .ref(`/chores/${currentUser.uid}/${index[0]}`)
+      .ref(`/chores/${currentUser.uid}/chore/${index}`)
       .remove()
       .then(() => {
         Actions.employeeList({ type: "reset" });
