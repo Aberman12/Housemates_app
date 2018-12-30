@@ -30,9 +30,7 @@ class ChoresComponent extends Component {
   componentDidMount() {
     if (this.props.chores.length === 0) {
       this.props.choresFetch();
-      console.log("did mount", this.props.chores);
     }
-    console.log("other mount", this.props.chores);
   }
 
   // componentWillReceiveProps(newProps) {
@@ -62,7 +60,6 @@ class ChoresComponent extends Component {
   }
 
   render() {
-    console.log("heres my props: ", this.props.chores);
     let notes = this.props.chores.map((val, key) => {
       return (
         <Note

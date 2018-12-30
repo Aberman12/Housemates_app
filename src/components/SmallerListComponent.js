@@ -56,9 +56,7 @@ class IndividualList extends Component {
 
   renderRow() {
     if (this.state.showList) {
-      console.log(this.props.chores);
       if (this.props.val.chores.length) {
-        console.log(this.props.val.chores);
         return (
           <View>
             {this.props.val.chores.map(chore => {

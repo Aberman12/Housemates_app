@@ -67,19 +67,19 @@ export const nameNewChoresList = text => {
 
 export const createNewChoresList = info => {
   const { currentUser } = firebase.auth();
-  const chore = {
+  const newChore = {
     uid: uuidv4(),
     note: info.newChoreListName,
     warningColor: "green",
     chores: []
   };
-  const choresLists = info.chores.concat([chore]);
+  const chore = info.chores.concat([chore]);
   return dispatch => {
-    dispatch({ type: NEW_CHORES_LIST_CREATED, payload: chore });
+    dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}`)
-      .set({ choresLists })
+      .set({ chore })
       .then(() => {
         console.log("chore set");
       });
@@ -89,12 +89,10 @@ export const createNewChoresList = info => {
 export const choresFetch = () => {
   const { currentUser } = firebase.auth();
   return dispatch => {
-    console.log("made jit to fetch");
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}`)
       .on("value", snapshot => {
-        console.log("fetched: ", snapshot.val());
         dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
       });
   };
