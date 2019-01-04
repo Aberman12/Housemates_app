@@ -27,3 +27,4 @@ export const SHOW_CHORE_EDIT_MODAL = "show_chore_edit_modal";
 export const HIDE_CHORE_EDIT_MODAL = "hide_chore_edit_modal";
 export const CREATE_CHORE_DATE = "create_chore_date";
 export const DELETE_CHORE = "delete_chore";
+export const CHORE_DATE_CHANGED = "chore_date_changed";

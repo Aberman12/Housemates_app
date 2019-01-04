@@ -12,7 +12,8 @@ import {
   SHOW_CHORE_EDIT_MODAL,
   HIDE_CHORE_EDIT_MODAL,
   CREATE_CHORE_DATE,
-  DELETE_CHORE
+  DELETE_CHORE,
+  CHORE_DATE_CHANGED
 } from "../actions/types";
 
 const uuidv4 = require("uuid/v4");
@@ -20,7 +21,7 @@ const uuidv4 = require("uuid/v4");
 const INITIAL_STATE = {
   newChoreListName: "",
   newChoreName: "",
-  newChoreDate: null,
+  newChoreDueDate: "",
   houseName: "",
   zip: "",
   members: [],
@@ -40,6 +41,8 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CREATE_CHORE_DATE:
       return { ...state, newChoreDate: action.payload };
+    case CHORE_DATE_CHANGED:
+      return { ...state, newChoreDueDate: action.payload };
     case SHOW_CHORE_EDIT_MODAL:
       return { ...state, choreEditModal: true, choreSelected: action.payload };
     case HIDE_CHORE_EDIT_MODAL:
@@ -64,8 +67,10 @@ export default (state = INITIAL_STATE, action) => {
       let newChore = {
         note: state.newChoreName,
         uid: uuidv4(),
-        warningColor: "green"
+        warningColor: "green",
+        dueDate: state.newChoreDueDate
       };
+      console.log("this thign: ", newChore);
       return {
         chores: state.chores.map(chore => {
           if (chore.uid === action.payload.val.uid) {

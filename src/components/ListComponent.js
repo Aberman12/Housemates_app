@@ -7,7 +7,8 @@ import {
   deleteChoresList,
   choresFetch,
   hideChoreEditModal,
-  deleteChore
+  deleteChore,
+  changeChoreDate
 } from "../actions";
 import Note from "./SmallerListComponent";
 import { ListModal } from "./common";
@@ -49,6 +50,10 @@ class ChoresComponent extends Component {
   deleteNote(val) {
     // console.log("right now:", this.props);
     this.props.deleteChoresList(val, this.props.chores);
+  }
+
+  onChangeDate(date) {
+    this.props.changeChoreDate(date);
   }
 
   onDeleteChore(choreList) {
@@ -160,6 +165,7 @@ export default connect(
     deleteChoresList,
     choresFetch,
     hideChoreEditModal,
-    deleteChore
+    deleteChore,
+    changeChoreDate
   }
 )(ChoresComponent);

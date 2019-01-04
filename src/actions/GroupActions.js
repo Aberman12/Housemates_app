@@ -14,7 +14,8 @@ import {
   SHOW_CHORE_EDIT_MODAL,
   HIDE_CHORE_EDIT_MODAL,
   CREATE_CHORE_DATE,
-  DELETE_CHORE
+  DELETE_CHORE,
+  CHORE_DATE_CHANGED
 } from "./types";
 const uuidv4 = require("uuid/v4");
 
@@ -59,6 +60,13 @@ export const houseZipChange = text => {
   return {
     type: GROUP_ZIP_CHANGED,
     payload: text
+  };
+};
+
+export const changeChoreDate = date => {
+  return {
+    type: CHORE_DATE_CHANGED,
+    payload: date
   };
 };
 
