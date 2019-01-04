@@ -8,7 +8,11 @@ import {
   DELETE_CHORES_LIST,
   CREATE_CHORE_NAME,
   CREATE_NEW_CHORE,
-  CHORES_FETCH_SUCCESS
+  CHORES_FETCH_SUCCESS,
+  SHOW_CHORE_EDIT_MODAL,
+  HIDE_CHORE_EDIT_MODAL,
+  CREATE_CHORE_DATE,
+  DELETE_CHORE
 } from "../actions/types";
 
 const uuidv4 = require("uuid/v4");
@@ -16,6 +20,7 @@ const uuidv4 = require("uuid/v4");
 const INITIAL_STATE = {
   newChoreListName: "",
   newChoreName: "",
+  newChoreDate: null,
   houseName: "",
   zip: "",
   members: [],
@@ -23,11 +28,22 @@ const INITIAL_STATE = {
   groceries: [],
   calendar: [],
   expenses: [],
-  loading: false
+  loading: false,
+  choreListModal: false,
+  choreModal: false,
+  choreEditModal: false,
+  choreSelected: "",
+  choreListEditModal: false
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case CREATE_CHORE_DATE:
+      return { ...state, newChoreDate: action.payload };
+    case SHOW_CHORE_EDIT_MODAL:
+      return { ...state, choreEditModal: true, choreSelected: action.payload };
+    case HIDE_CHORE_EDIT_MODAL:
+      return { ...state, choreEditModal: false, choreSelected: "" };
     case NEW_GROUP_CREATED:
       return { ...state, loading: false, chores: action.payload };
     case NEW_CHORES_LIST_CREATED:
@@ -50,10 +66,8 @@ export default (state = INITIAL_STATE, action) => {
         uid: uuidv4(),
         warningColor: "green"
       };
-      console.log("sdfg", state.chores);
       return {
         chores: state.chores.map(chore => {
-          console.log("chore:", chore);
           if (chore.uid === action.payload.val.uid) {
             if (chore.chores) {
               chore.chores = [...chore.chores, newChore.note];
@@ -74,6 +88,23 @@ export default (state = INITIAL_STATE, action) => {
     case CHORES_FETCH_SUCCESS:
       return {
         chores: action.payload.chore
+      };
+    case DELETE_CHORE:
+      return {
+        chores: state.chores.filter(chore => {
+          if (chore.chores) {
+            if (chore.chores.includes(action.payload)) {
+              let index = chore.chores.indexOf(action.payload);
+              chore.chores.splice(index, 1);
+              return chore;
+            } else {
+              return chore;
+            }
+          } else {
+            return chore;
+          }
+        }),
+        choreEditModal: false
       };
     case GROUP_ZIP_CHANGED:
       return { ...state, zip: action.payload };

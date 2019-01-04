@@ -23,3 +23,7 @@ export const DELETE_CHORES_LIST = "delete_chores_list";
 export const CREATE_CHORE_NAME = "create_chore_name";
 export const CREATE_NEW_CHORE = "create_new_chore";
 export const CHORES_FETCH_SUCCESS = "chores_fetch_success";
+export const SHOW_CHORE_EDIT_MODAL = "show_chore_edit_modal";
+export const HIDE_CHORE_EDIT_MODAL = "hide_chore_edit_modal";
+export const CREATE_CHORE_DATE = "create_chore_date";
+export const DELETE_CHORE = "delete_chore";

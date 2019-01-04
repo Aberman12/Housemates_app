@@ -10,7 +10,11 @@ import {
   DELETE_CHORES_LIST,
   CREATE_CHORE_NAME,
   CREATE_NEW_CHORE,
-  CHORES_FETCH_SUCCESS
+  CHORES_FETCH_SUCCESS,
+  SHOW_CHORE_EDIT_MODAL,
+  HIDE_CHORE_EDIT_MODAL,
+  CREATE_CHORE_DATE,
+  DELETE_CHORE
 } from "./types";
 const uuidv4 = require("uuid/v4");
 
@@ -62,6 +66,13 @@ export const nameNewChoresList = text => {
   return {
     type: NEW_CHORES_LIST_NAMED,
     payload: text
+  };
+};
+
+export const deleteChore = chore => {
+  return {
+    type: DELETE_CHORE,
+    payload: chore
   };
 };
 
@@ -124,6 +135,26 @@ export const createChoreName = text => {
   return {
     type: CREATE_CHORE_NAME,
     payload: text
+  };
+};
+
+export const showChoreEditModal = info => {
+  return {
+    type: SHOW_CHORE_EDIT_MODAL,
+    payload: info.employee
+  };
+};
+
+export const hideChoreEditModal = () => {
+  return {
+    type: HIDE_CHORE_EDIT_MODAL
+  };
+};
+
+export const createChoreDate = date => {
+  return {
+    type: CREATE_CHORE_DATE,
+    payload: date
   };
 };
 

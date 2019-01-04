@@ -12,7 +12,7 @@ import { CardSection } from "./common";
 import { connect } from "react-redux";
 import { createChoreName, createNewChore } from "../actions";
 import ListItem from "./ListItem";
-import { ListModal } from "./common";
+import ChoreModal from "./CreateChoreModal";
 
 class IndividualList extends Component {
   constructor(props) {
@@ -123,14 +123,14 @@ class IndividualList extends Component {
           </View>
         </TouchableOpacity>
         <View>{this.renderRow()}</View>
-        <ListModal
+        <ChoreModal
           visible={this.state.showModal}
           onAccept={this.onAccept.bind(this)}
           onDecline={this.onDecline.bind(this)}
           onChangeTextFunc={this.onChangeTextFunc.bind(this)}
         >
           Add New Chore?
-        </ListModal>
+        </ChoreModal>
       </View>
     );
   }

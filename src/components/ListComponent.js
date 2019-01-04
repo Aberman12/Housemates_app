@@ -1,21 +1,17 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  ScrollView,
-  TouchableOpacity
-} from "react-native";
+import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import {
   nameNewChoresList,
   createNewChoresList,
   deleteChoresList,
-  choresFetch
+  choresFetch,
+  hideChoreEditModal,
+  deleteChore
 } from "../actions";
 import Note from "./SmallerListComponent";
 import { ListModal } from "./common";
+import EditChoreModal from "./EditChoreModal";
 
 class ChoresComponent extends Component {
   constructor(props) {
@@ -33,22 +29,17 @@ class ChoresComponent extends Component {
     }
   }
 
-  // componentWillReceiveProps(newProps) {
-  //   console.log("recieved new props", newprops);
-  //   this.props.chores = newProps.chores;
-  // }
-
   onAccept() {
     if (this.props.newChoreListName) {
       this.props.createNewChoresList(this.props);
       this.setState({ showModal: false });
     } else {
-      Alert.alert("Please fill in a name for your list");
+      Alert.alert("Please fill in all information");
     }
   }
 
   onDecline() {
-    this.setState({ showModal: false });
+    this.props.hideChoreEditModal();
   }
 
   onChangeTextFunc(noteText) {
@@ -56,7 +47,12 @@ class ChoresComponent extends Component {
   }
 
   deleteNote(val) {
+    // console.log("right now:", this.props);
     this.props.deleteChoresList(val, this.props.chores);
+  }
+
+  onDeleteChore(choreList) {
+    this.props.deleteChore(this.props.choreSelected);
   }
 
   render() {
@@ -74,16 +70,6 @@ class ChoresComponent extends Component {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollContainer}>{notes}</ScrollView>
-        {/* <View style={styles.footer}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="note"
-            onChangeText={noteText => this.setState({ noteText })}
-            value={this.state.noteText}
-            placeholderTextColor="white"
-            underlineColorAndroid="transparent"
-          />
-        </View> */}
         <TouchableOpacity
           onPress={() => this.setState({ showModal: true })}
           style={styles.addButton}
@@ -98,20 +84,19 @@ class ChoresComponent extends Component {
         >
           Add New Chores List?
         </ListModal>
+        <EditChoreModal
+          visible={this.props.choreEditModal}
+          onAccept={this.onAccept.bind(this)}
+          onDecline={this.onDecline.bind(this)}
+          onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+          props={this.props}
+          onDelete={this.onDeleteChore.bind(this)}
+        >
+          Edit Chore
+        </EditChoreModal>
       </View>
     );
   }
-  // addNote() {
-  // if (this.state.noteText) {
-  //   var d = new Date();
-  //   this.state.noteArray.push({
-  //     date: d.getFullYear() + "/" + (d.getMonth() + 1) + "/" + d.getDate(),
-  //     note: this.state.noteText,
-  //     warningColor: "green",
-  //     chores: []
-  //   });
-  // }
-  // }
 }
 const styles = {
   container: {
@@ -157,8 +142,14 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { chores, loading, newChoreListName } = groupReducer;
-  return { chores, loading, newChoreListName };
+  const {
+    chores,
+    loading,
+    newChoreListName,
+    choreEditModal,
+    choreSelected
+  } = groupReducer;
+  return { chores, loading, newChoreListName, choreEditModal, choreSelected };
 };
 
 export default connect(
@@ -167,6 +158,8 @@ export default connect(
     nameNewChoresList,
     createNewChoresList,
     deleteChoresList,
-    choresFetch
+    choresFetch,
+    hideChoreEditModal,
+    deleteChore
   }
 )(ChoresComponent);
