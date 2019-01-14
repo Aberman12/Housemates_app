@@ -19,7 +19,7 @@ class MyDatePicker extends Component {
     return (
       <DatePicker
         style={{ width: 200 }}
-        date={new Date()}
+        date={this.props.newChoreDueDate || new Date()}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"
@@ -28,12 +28,12 @@ class MyDatePicker extends Component {
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"
         customStyles={{
-          dateIcon: {
-            position: "absolute",
-            left: 0,
-            top: 4,
-            marginLeft: 0
-          },
+          // dateIcon: {
+          //   position: "absolute",
+          //   left: 0,
+          //   top: 4,
+          //   marginLeft: 0
+          // },
           dateInput: {
             marginLeft: 36
           }

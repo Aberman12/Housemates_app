@@ -33,13 +33,13 @@ const EditChoreModal = ({
             <Input
               onChangeText={text => onChangeTextFunc(text)}
               placeholder="list name"
-              value={props.choreSelected}
+              value={props.choreSelected.note}
             />
           </CardSection>
 
           <CardSection>
             <Text>Date Due</Text>
-            <DatePicker />
+            <DatePicker date={props.choreSelected.dueDate} />
           </CardSection>
 
           <CardSection>

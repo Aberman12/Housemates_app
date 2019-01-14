@@ -25,7 +25,26 @@ const addInitialChores = {
       uid: uuidv4(),
       note: "Weekly",
       warningColor: "green",
-      chores: ["clean room", "go to bed", "go to store"]
+      chores: [
+        {
+          note: "clean room",
+          uid: uuidv4(),
+          warningColor: "green",
+          dueDate: "2018-01-19"
+        },
+        {
+          note: "mop floor",
+          uid: uuidv4(),
+          warningColor: "green",
+          dueDate: "2018-01-19"
+        },
+        {
+          note: "go to bed",
+          uid: uuidv4(),
+          warningColor: "green",
+          dueDate: "2018-01-19"
+        }
+      ]
     },
     {
       uid: uuidv4(),
@@ -147,19 +166,22 @@ export const createChoreName = text => {
 };
 
 export const showChoreEditModal = info => {
+  console.log("inside chore edit modal: ", info);
   return {
     type: SHOW_CHORE_EDIT_MODAL,
-    payload: info.employee
+    payload: info
   };
 };
 
 export const hideChoreEditModal = () => {
+  console.log("tried to hide");
   return {
     type: HIDE_CHORE_EDIT_MODAL
   };
 };
 
 export const createChoreDate = date => {
+  console.log("chore date in actions; ", date);
   return {
     type: CREATE_CHORE_DATE,
     payload: date
@@ -169,6 +191,7 @@ export const createChoreDate = date => {
 export const createNewChore = info => {
   const { currentUser } = firebase.auth();
   const chore = info.chores;
+  console.log("heres info in create:", info, "and heres chore: ", chore);
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: info });
     firebase
@@ -205,7 +228,7 @@ export const createGroup = ({ houseName, zip }) => {
               date: "12/12/18",
               note: "Weekly",
               warningColor: "green",
-              chores: ["hello", "goodby", "adios"]
+              chores: addInitialChores.chores[0].chores
             },
             monthly: {
               date: "December",

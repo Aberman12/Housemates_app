@@ -8,7 +8,8 @@ import {
   choresFetch,
   hideChoreEditModal,
   deleteChore,
-  changeChoreDate
+  changeChoreDate,
+  showChoreEditModal
 } from "../actions";
 import Note from "./SmallerListComponent";
 import { ListModal } from "./common";
@@ -28,6 +29,11 @@ class ChoresComponent extends Component {
     if (this.props.chores.length === 0) {
       this.props.choresFetch();
     }
+  }
+
+  showModal(chore) {
+    console.log("right now: ", chore);
+    this.props.showChoreEditModal(chore);
   }
 
   onAccept() {
@@ -52,12 +58,25 @@ class ChoresComponent extends Component {
     this.props.deleteChoresList(val, this.props.chores);
   }
 
-  onChangeDate(date) {
-    this.props.changeChoreDate(date);
+  onDeleteChore() {
+    this.props.deleteChore(this.props.choreSelected);
   }
 
-  onDeleteChore(choreList) {
-    this.props.deleteChore(this.props.choreSelected);
+  displayChoreEditModal() {
+    if (this.props.choreEditModal && this.props.choreSelected !== undefined) {
+      return (
+        <EditChoreModal
+          visible={this.props.choreEditModal}
+          onAccept={this.onAccept.bind(this)}
+          onDecline={this.onDecline.bind(this)}
+          onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+          props={this.props}
+          onDelete={this.onDeleteChore.bind(this)}
+        >
+          Edit Chore
+        </EditChoreModal>
+      );
+    }
   }
 
   render() {
@@ -71,7 +90,7 @@ class ChoresComponent extends Component {
         />
       );
     });
-
+    console.log("heres showEditModal: ", this.props.choreEditModal);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollContainer}>{notes}</ScrollView>
@@ -89,16 +108,7 @@ class ChoresComponent extends Component {
         >
           Add New Chores List?
         </ListModal>
-        <EditChoreModal
-          visible={this.props.choreEditModal}
-          onAccept={this.onAccept.bind(this)}
-          onDecline={this.onDecline.bind(this)}
-          onChangeTextFunc={this.onChangeTextFunc.bind(this)}
-          props={this.props}
-          onDelete={this.onDeleteChore.bind(this)}
-        >
-          Edit Chore
-        </EditChoreModal>
+        {this.displayChoreEditModal()}
       </View>
     );
   }
@@ -166,6 +176,7 @@ export default connect(
     choresFetch,
     hideChoreEditModal,
     deleteChore,
-    changeChoreDate
+    changeChoreDate,
+    showChoreEditModal
   }
 )(ChoresComponent);

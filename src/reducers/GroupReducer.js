@@ -21,7 +21,7 @@ const uuidv4 = require("uuid/v4");
 const INITIAL_STATE = {
   newChoreListName: "",
   newChoreName: "",
-  newChoreDueDate: "",
+  newChoreDueDate: null,
   houseName: "",
   zip: "",
   members: [],
@@ -33,19 +33,21 @@ const INITIAL_STATE = {
   choreListModal: false,
   choreModal: false,
   choreEditModal: false,
-  choreSelected: "",
+  choreSelected: { dueDate: new Date(), note: "hello" },
   choreListEditModal: false
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case CREATE_CHORE_DATE:
-      return { ...state, newChoreDate: action.payload };
+    // case CREATE_CHORE_DATE:
+    //   return { ...state, newChoreDate: action.payload };
     case CHORE_DATE_CHANGED:
       return { ...state, newChoreDueDate: action.payload };
     case SHOW_CHORE_EDIT_MODAL:
+      console.log("choreSelected in reducer:", action.payload);
       return { ...state, choreEditModal: true, choreSelected: action.payload };
     case HIDE_CHORE_EDIT_MODAL:
+      console.log("tried to hide in reducer");
       return { ...state, choreEditModal: false, choreSelected: "" };
     case NEW_GROUP_CREATED:
       return { ...state, loading: false, chores: action.payload };
@@ -70,14 +72,14 @@ export default (state = INITIAL_STATE, action) => {
         warningColor: "green",
         dueDate: state.newChoreDueDate
       };
-      console.log("this thign: ", newChore);
+      console.log("heres the new chore just created: ", newChore);
       return {
         chores: state.chores.map(chore => {
           if (chore.uid === action.payload.val.uid) {
             if (chore.chores) {
-              chore.chores = [...chore.chores, newChore.note];
+              chore.chores = [...chore.chores, newChore];
             } else {
-              chore.chores = [newChore.note];
+              chore.chores = [newChore];
             }
 
             return chore;

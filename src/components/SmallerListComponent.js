@@ -63,7 +63,7 @@ class IndividualList extends Component {
         return (
           <View>
             {this.props.val.chores.map(chore => {
-              return <ListItem employee={chore} />;
+              return <ListItem chore={chore} />;
             })}
             <TouchableOpacity
               onPress={() => this.setState({ showModal: true })}
