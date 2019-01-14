@@ -54,7 +54,7 @@ class ChoresComponent extends Component {
   }
 
   deleteNote(val) {
-    // console.log("right now:", this.props);
+    console.log("right now:", this.props.chores);
     this.props.deleteChoresList(val, this.props.chores);
   }
 
