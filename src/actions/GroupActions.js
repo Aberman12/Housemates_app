@@ -1,5 +1,5 @@
-import firebase from "firebase";
-import { Actions } from "react-native-router-flux";
+import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
 import {
   LOADING,
   NEW_GROUP_CREATED,
@@ -16,52 +16,52 @@ import {
   CREATE_CHORE_DATE,
   DELETE_CHORE,
   CHORE_DATE_CHANGED
-} from "./types";
-const uuidv4 = require("uuid/v4");
+} from './types';
+const uuidv4 = require('uuid/v4');
 
 const addInitialChores = {
   chores: [
     {
       uid: uuidv4(),
-      note: "Weekly",
-      warningColor: "green",
+      note: 'Weekly',
+      warningColor: 'green',
       chores: [
         {
-          note: "clean room",
+          note: 'clean room',
           uid: uuidv4(),
-          warningColor: "green",
-          dueDate: "2018-01-19"
+          warningColor: 'green',
+          dueDate: '2018-01-19'
         },
         {
-          note: "mop floor",
+          note: 'mop floor',
           uid: uuidv4(),
-          warningColor: "green",
-          dueDate: "2018-01-19"
+          warningColor: 'green',
+          dueDate: '2018-01-19'
         },
         {
-          note: "go to bed",
+          note: 'go to bed',
           uid: uuidv4(),
-          warningColor: "green",
-          dueDate: "2018-01-19"
+          warningColor: 'green',
+          dueDate: '2018-01-19'
         }
       ]
     },
     {
       uid: uuidv4(),
-      note: "Monthly",
-      warningColor: "green",
+      note: 'Monthly',
+      warningColor: 'green',
       chores: []
     },
     {
       uid: uuidv4(),
       note: "Jon's Chores",
-      warningColor: "green",
+      warningColor: 'green',
       chores: []
     },
     {
       uid: uuidv4(),
       note: "Cindy's Chores",
-      warningColor: "green",
+      warningColor: 'green',
       chores: []
     }
   ],
@@ -96,10 +96,37 @@ export const nameNewChoresList = text => {
   };
 };
 
-export const deleteChore = chore => {
-  return {
-    type: DELETE_CHORE,
-    payload: chore
+export const deleteChore = (chore, chores) => {
+  const { currentUser } = firebase.auth();
+  let index1;
+  let index2;
+  console.log('and how: ', chore, chores);
+  for (var i = 0; i <= chores.length; i++) {
+    if (chores[i].hasOwnProperty('chores') && chores[i].chores.includes(chore)) {
+      index1 = i;
+      console.log('first index found: ', chores[i]);
+      for (var j = 0; j <= chores[i].chores.length; j++) {
+        console.log('heres my thing right now: ', chores[i].chores[j]);
+        if (chores[i].chores[j].uid === chore.uid) {
+          index2 = j;
+          break;
+        }
+      }
+      break;
+    }
+  }
+  return dispatch => {
+    dispatch({
+      type: DELETE_CHORE,
+      payload: chore
+    });
+    firebase
+      .database()
+      .ref(`/chores/${currentUser.uid}/chore/${index1}/chores/${index2}`)
+      .remove()
+      .then(() => {
+        Actions.employeeList({ type: 'reset' });
+      });
   };
 };
 
@@ -108,7 +135,7 @@ export const createNewChoresList = info => {
   const newChore = {
     uid: uuidv4(),
     note: info.newChoreListName,
-    warningColor: "green",
+    warningColor: 'green',
     chores: []
   };
   const chore = info.chores.concat([newChore]);
@@ -120,7 +147,7 @@ export const createNewChoresList = info => {
       .ref(`/chores/${currentUser.uid}`)
       .set({ chore })
       .then(() => {
-        console.log("chore set");
+        console.log('chore set');
       });
   };
 };
@@ -131,7 +158,7 @@ export const choresFetch = () => {
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}`)
-      .on("value", snapshot => {
+      .on('value', snapshot => {
         dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
       });
   };
@@ -140,20 +167,19 @@ export const choresFetch = () => {
 export const deleteChoresList = (text, chores) => {
   const { currentUser } = firebase.auth();
   return dispatch => {
-    var index;
+    let index;
     for (var i = 0; i < chores.length; i++) {
       if (chores[i].note === text.note) {
         index = i;
       }
     }
-    console.log(text, chores);
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
     firebase
       .database()
       .ref(`/chores/${currentUser.uid}/chore/${index}`)
       .remove()
       .then(() => {
-        Actions.employeeList({ type: "reset" });
+        Actions.employeeList({ type: 'reset' });
       });
   };
 };
@@ -166,7 +192,7 @@ export const createChoreName = text => {
 };
 
 export const showChoreEditModal = info => {
-  console.log("inside chore edit modal: ", info);
+  console.log('inside chore edit modal: ', info);
   return {
     type: SHOW_CHORE_EDIT_MODAL,
     payload: info
@@ -174,14 +200,14 @@ export const showChoreEditModal = info => {
 };
 
 export const hideChoreEditModal = () => {
-  console.log("tried to hide");
+  console.log('tried to hide');
   return {
     type: HIDE_CHORE_EDIT_MODAL
   };
 };
 
 export const createChoreDate = date => {
-  console.log("chore date in actions; ", date);
+  console.log('chore date in actions; ', date);
   return {
     type: CREATE_CHORE_DATE,
     payload: date
@@ -191,7 +217,7 @@ export const createChoreDate = date => {
 export const createNewChore = info => {
   const { currentUser } = firebase.auth();
   const chore = info.chores;
-  console.log("heres info in create:", info, "and heres chore: ", chore);
+  console.log('heres info in create:', info, 'and heres chore: ', chore);
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: info });
     firebase
@@ -199,7 +225,7 @@ export const createNewChore = info => {
       .ref(`/chores/${currentUser.uid}`)
       .set({ chore })
       .then(() => {
-        console.log("chore set");
+        console.log('chore set');
       });
   };
 };
@@ -225,27 +251,27 @@ export const createGroup = ({ houseName, zip }) => {
           .ref(`/chores/${currentUser.uid}`)
           .push({
             weekly: {
-              date: "12/12/18",
-              note: "Weekly",
-              warningColor: "green",
+              date: '12/12/18',
+              note: 'Weekly',
+              warningColor: 'green',
               chores: addInitialChores.chores[0].chores
             },
             monthly: {
-              date: "December",
-              note: "Monthly",
-              warningColor: "green",
+              date: 'December',
+              note: 'Monthly',
+              warningColor: 'green',
               chores: []
             },
             johns: {
-              date: "12/12/18",
+              date: '12/12/18',
               note: "Jon's Chores",
-              warningColor: "green",
+              warningColor: 'green',
               chores: []
             },
             cindys: {
-              date: "12/12/18",
+              date: '12/12/18',
               note: "Cindy's Chores",
-              warningColor: "green",
+              warningColor: 'green',
               chores: []
             }
           });
@@ -254,23 +280,23 @@ export const createGroup = ({ houseName, zip }) => {
         firebase
           .database()
           .ref(`/groceries/${currentUser.uid}`)
-          .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
+          .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
       })
       .then(() => {
         firebase
           .database()
           .ref(`/expenses/${currentUser.uid}`)
-          .push({ Weekly: "Weekly", SpecialRequest: "Special Request" });
+          .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
       })
       .then(() => {
         firebase
           .database()
           .ref(`/iou/${currentUser.uid}`)
-          .push({ SallysIOU: "Sallys Chores", FredsIOU: "Sallys Chores" });
+          .push({ SallysIOU: 'Sallys Chores', FredsIOU: 'Sallys Chores' });
       })
       .then(() => {
         dispatch({ type: NEW_GROUP_CREATED, payload: addInitialChores.chores });
-        Actions.main({ type: "reset" });
+        Actions.main({ type: 'reset' });
       });
   };
 };

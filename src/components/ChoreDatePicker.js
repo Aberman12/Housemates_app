@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import DatePicker from "react-native-datepicker";
-import { connect } from "react-redux";
-import { changeChoreDate } from "../actions";
+import React, { Component } from 'react';
+import DatePicker from 'react-native-datepicker';
+import { connect } from 'react-redux';
+import { changeChoreDate } from '../actions';
 
 class MyDatePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: "101010"
+      date: '101010'
     };
   }
 
@@ -16,10 +16,11 @@ class MyDatePicker extends Component {
   }
 
   render() {
+    console.log('date inside picker ', this.props.date);
     return (
       <DatePicker
         style={{ width: 200 }}
-        date={this.props.newChoreDueDate || new Date()}
+        date={this.props.date || new Date()}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"

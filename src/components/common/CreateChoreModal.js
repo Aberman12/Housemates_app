@@ -1,27 +1,16 @@
-import React from "react";
-import { Text, View, Modal, Picker } from "react-native";
-import { CardSection } from "./CardSection";
-import { Button } from "./Button";
-import { Input } from "./Input";
-import { Card } from "./Card";
-import DatePicker from ".././ChoreDatePicker";
+import React from 'react';
+import { Text, View, Modal, Picker } from 'react-native';
+import { CardSection } from './CardSection';
+import { Button } from './Button';
+import { Input } from './Input';
+import { Card } from './Card';
+import DatePicker from '.././ChoreDatePicker';
 
-const ChoreModal = ({
-  children,
-  visible,
-  onAccept,
-  onDecline,
-  onChangeTextFunc
-}) => {
+const ChoreModal = ({ children, visible, onAccept, onDecline, onChangeTextFunc }) => {
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
 
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={() => {}}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={() => {}}>
       <View style={containerStyle}>
         <Card style={cardStyle}>
           <CardSection style={cardSectionStyle}>
@@ -29,10 +18,7 @@ const ChoreModal = ({
           </CardSection>
 
           <CardSection>
-            <Input
-              onChangeText={text => onChangeTextFunc(text)}
-              placeholder="list name"
-            />
+            <Input onChangeText={text => onChangeTextFunc(text)} placeholder="list name" />
           </CardSection>
 
           <CardSection>
@@ -43,9 +29,7 @@ const ChoreModal = ({
             <Picker
               selectedValue={this.state.language}
               style={{ height: 50, width: 100 }}
-              onValueChange={(itemValue, itemIndex) =>
-                this.setState({ language: itemValue })
-              }
+              onValueChange={(itemValue, itemIndex) => this.setState({ language: itemValue })}
             >
               <Picker.Item label="Lance" value="java" />
               <Picker.Item label="Cherry" value="js" />
@@ -64,7 +48,7 @@ const ChoreModal = ({
 
 const styles = {
   cardSectionStyle: {
-    justifyContent: "center"
+    justifyContent: 'center'
   },
   cardStyle: {
     borderRadius: 50
@@ -72,14 +56,14 @@ const styles = {
   textStyle: {
     flex: 1,
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 40
   },
   containerStyle: {
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    position: "relative",
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    position: 'relative',
     flex: 1,
-    justifyContent: "center"
+    justifyContent: 'center'
   }
 };
 

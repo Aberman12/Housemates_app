@@ -14,16 +14,16 @@ import {
   CREATE_CHORE_DATE,
   DELETE_CHORE,
   CHORE_DATE_CHANGED
-} from "../actions/types";
+} from '../actions/types';
 
-const uuidv4 = require("uuid/v4");
+const uuidv4 = require('uuid/v4');
 
 const INITIAL_STATE = {
-  newChoreListName: "",
-  newChoreName: "",
+  newChoreListName: '',
+  newChoreName: '',
   newChoreDueDate: null,
-  houseName: "",
-  zip: "",
+  houseName: '',
+  zip: '',
   members: [],
   chores: [],
   groceries: [],
@@ -33,7 +33,7 @@ const INITIAL_STATE = {
   choreListModal: false,
   choreModal: false,
   choreEditModal: false,
-  choreSelected: { dueDate: new Date(), note: "hello" },
+  choreSelected: { dueDate: new Date(), note: 'hello' },
   choreListEditModal: false
 };
 
@@ -44,18 +44,18 @@ export default (state = INITIAL_STATE, action) => {
     case CHORE_DATE_CHANGED:
       return { ...state, newChoreDueDate: action.payload };
     case SHOW_CHORE_EDIT_MODAL:
-      console.log("choreSelected in reducer:", action.payload);
+      console.log('choreSelected in reducer:', action.payload);
       return { ...state, choreEditModal: true, choreSelected: action.payload };
     case HIDE_CHORE_EDIT_MODAL:
-      console.log("tried to hide in reducer");
-      return { ...state, choreEditModal: false, choreSelected: "" };
+      console.log('tried to hide in reducer');
+      return { ...state, choreEditModal: false, choreSelected: '' };
     case NEW_GROUP_CREATED:
       return { ...state, loading: false, chores: action.payload };
     case NEW_CHORES_LIST_CREATED:
       return {
         ...state,
         chores: [...state.chores, action.payload],
-        newChoreListName: ""
+        newChoreListName: ''
       };
     case DELETE_CHORES_LIST:
       return {
@@ -69,10 +69,10 @@ export default (state = INITIAL_STATE, action) => {
       let newChore = {
         note: state.newChoreName,
         uid: uuidv4(),
-        warningColor: "green",
+        warningColor: 'green',
         dueDate: state.newChoreDueDate
       };
-      console.log("heres the new chore just created: ", newChore);
+      console.log('heres the new chore just created: ', newChore);
       return {
         chores: state.chores.map(chore => {
           if (chore.uid === action.payload.val.uid) {

@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import {
   nameNewChoresList,
   createNewChoresList,
@@ -10,17 +10,17 @@ import {
   deleteChore,
   changeChoreDate,
   showChoreEditModal
-} from "../actions";
-import Note from "./SmallerListComponent";
-import { ListModal } from "./common";
-import EditChoreModal from "./EditChoreModal";
+} from '../actions';
+import Note from './SmallerListComponent';
+import { ListModal } from './common';
+import EditChoreModal from './EditChoreModal';
 
 class ChoresComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
       noteArray: [],
-      noteText: "",
+      noteText: '',
       showModal: false
     };
   }
@@ -32,7 +32,7 @@ class ChoresComponent extends Component {
   }
 
   showModal(chore) {
-    console.log("right now: ", chore);
+    console.log('right now: ', chore);
     this.props.showChoreEditModal(chore);
   }
 
@@ -41,7 +41,7 @@ class ChoresComponent extends Component {
       this.props.createNewChoresList(this.props);
       this.setState({ showModal: false });
     } else {
-      Alert.alert("Please fill in all information");
+      Alert.alert('Please fill in all information');
     }
   }
 
@@ -54,12 +54,24 @@ class ChoresComponent extends Component {
   }
 
   deleteNote(val) {
-    console.log("right now:", this.props.chores);
     this.props.deleteChoresList(val, this.props.chores);
   }
 
   onDeleteChore() {
-    this.props.deleteChore(this.props.choreSelected);
+    Alert.alert(
+      `Are you sure you wish to delete`,
+      ` ${this.props.choreSelected.note}?`,
+      [
+        { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            this.props.deleteChore(this.props.choreSelected, this.props.chores);
+          }
+        }
+      ],
+      { cancelable: false }
+    );
   }
 
   displayChoreEditModal() {
@@ -81,16 +93,9 @@ class ChoresComponent extends Component {
 
   render() {
     let notes = this.props.chores.map((val, key) => {
-      return (
-        <Note
-          key={key}
-          keyval={key}
-          val={val}
-          deleteMethod={() => this.deleteNote(val)}
-        />
-      );
+      return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;
     });
-    console.log("heres showEditModal: ", this.props.choreEditModal);
+    console.log('heres showEditModal: ', this.props.choreEditModal);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollContainer}>{notes}</ScrollView>
@@ -122,48 +127,42 @@ const styles = {
     flex: 1
   },
   footer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
     zIndex: 10
   },
   textInput: {
-    alignSelf: "stretch",
-    color: "#fff",
+    alignSelf: 'stretch',
+    color: '#fff',
     padding: 20,
     marginBottom: 100,
-    backgroundColor: "#252525",
+    backgroundColor: '#252525',
     borderTopWidth: 2,
-    borderTopColor: "#ededed"
+    borderTopColor: '#ededed'
   },
   addButton: {
-    position: "absolute",
+    position: 'absolute',
     zIndex: 11,
     right: 20,
     bottom: 90,
-    backgroundColor: "#E91E63",
+    backgroundColor: '#E91E63',
     width: 70,
     height: 70,
     borderRadius: 35,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 8
   },
   addButtonText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 24
   }
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const {
-    chores,
-    loading,
-    newChoreListName,
-    choreEditModal,
-    choreSelected
-  } = groupReducer;
+  const { chores, loading, newChoreListName, choreEditModal, choreSelected } = groupReducer;
   return { chores, loading, newChoreListName, choreEditModal, choreSelected };
 };
 
