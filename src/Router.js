@@ -1,31 +1,27 @@
-import React from "react";
-import { Text } from "react-native";
-import { Scene, Router, Actions } from "react-native-router-flux";
-import LoginForm from "./components/LoginForm";
-import EmailSignUp from "./components/SignInEmail";
-import EmailLogIn from "./components/LogInEmail";
-import EmployeeList from "./components/EmployeeList";
-import EmployeeCreate from "./components/EmployeeCreate";
-import EmployeeEdit from "./components/EmployeeEdit";
-import FirebaseAuth from "./components/FirebasePhoneAuth";
-import CreateAccount from "./components/CreateUserAccount";
-import Chores from "./components/Chores";
-import HouseSignup from "./components/HouseSignup";
-import JoinHouse from "./components/JoinHouse";
-import CreateHouse from "./components/CreateHouse";
+import React from 'react';
+import { Text } from 'react-native';
+import { Scene, Router, Actions } from 'react-native-router-flux';
+import LoginForm from './components/LoginForm';
+import EmailSignUp from './components/SignInEmail';
+import FirebaseAuth from './components/FirebasePhoneAuth';
+import CreateAccount from './components/CreateUserAccount';
+import Chores from './components/Chores';
+import HouseSignup from './components/HouseSignup';
+import JoinHouse from './components/JoinHouse';
+import CreateHouse from './components/CreateHouse';
 // import Calendar from "./components/Calendar";
-import Agenda from "./components/CalendarAgenda";
-import List from "./components/ListComponent";
+import Agenda from './components/CalendarAgenda';
+import List from './components/ListComponent';
 
 const TabIcon = ({ selected, title }) => {
   return (
     <Text
       style={{
         fontSize: 20,
-        color: selected ? "red" : "black"
+        color: selected ? 'red' : 'black'
       }}
     >
-      {title}{" "}
+      {title}{' '}
     </Text>
   );
 };
@@ -34,42 +30,18 @@ const RouterComponent = () => {
   return (
     <Router>
       <Scene key="auth">
-        <Scene
-          key="login"
-          component={LoginForm}
-          title="Welcome to Housemates"
-        />
-        <Scene
-          key="emailSignUp"
-          component={EmailSignUp}
-          title="Sign Up Using Email"
-        />
-        <Scene
-          key="createAccount"
-          component={CreateAccount}
-          title="Create Account"
-        />
+        <Scene key="login" component={LoginForm} title="Welcome to Housemates" />
+        <Scene key="emailSignUp" component={EmailSignUp} title="Sign Up Using Email" />
+        <Scene key="createAccount" component={CreateAccount} title="Create Account" />
         <Scene
           key="HouseSignup"
           component={HouseSignup}
           title="Join a House"
           // initial
         />
-        <Scene
-          key="JoinHouse"
-          component={JoinHouse}
-          title="Sign Up Using Email"
-        />
-        <Scene
-          key="CreateHouse"
-          component={CreateHouse}
-          title="Create a House"
-        />
-        <Scene
-          key="FirebaseAuth"
-          component={FirebaseAuth}
-          title="Confirm Phone Number"
-        />
+        <Scene key="JoinHouse" component={JoinHouse} title="Sign Up Using Email" />
+        <Scene key="CreateHouse" component={CreateHouse} title="Create a House" />
+        <Scene key="FirebaseAuth" component={FirebaseAuth} title="Confirm Phone Number" />
       </Scene>
 
       <Scene
@@ -77,10 +49,10 @@ const RouterComponent = () => {
         tabs={true}
         height={60}
         tabBarStyle={{
-          backgroundColor: "#F9F9F9",
+          backgroundColor: '#F9F9F9',
           height: 60,
           borderTopWidth: 1,
-          borderTopColor: "#D3D3D3"
+          borderTopColor: '#D3D3D3'
         }}
       >
         <Scene key="osu" title="RT" icon={TabIcon}>

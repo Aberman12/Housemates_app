@@ -1,8 +1,4 @@
-import React, { Component } from "react";
-import { View, Text, Picker } from "react-native";
-import { connect } from "react-redux";
-import { employeeUpdate } from "../actions";
-import { CardSection, Input } from "./common";
+// USING FOR REFERENCE
 
 class EmployeeForm extends Component {
   render() {

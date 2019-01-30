@@ -1,14 +1,15 @@
+//USING FOR REFERENCE
 import {
   EMPLOYEE_UPDATE,
   EMPLOYEE_CREATE,
   EMPLOYEE_SAVE_SUCCESS,
   GO_TO_EMAIL
-} from "../actions/types";
+} from '../actions/types';
 
 const INITIAL_STATE = {
-  name: "",
-  phone: "",
-  shift: ""
+  name: '',
+  phone: '',
+  shift: ''
 };
 
 export default (state = INITIAL_STATE, action) => {
