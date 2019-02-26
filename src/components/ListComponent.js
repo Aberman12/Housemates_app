@@ -92,6 +92,7 @@ class ChoresComponent extends Component {
   }
 
   render() {
+    console.log(this.props.chores);
     let notes = this.props.chores.map((val, key) => {
       return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;
     });

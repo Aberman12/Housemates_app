@@ -13,7 +13,8 @@ import {
   HIDE_CHORE_EDIT_MODAL,
   CREATE_CHORE_DATE,
   DELETE_CHORE,
-  CHORE_DATE_CHANGED
+  CHORE_DATE_CHANGED,
+  CHANGE_DONE_STATUS
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
@@ -43,11 +44,26 @@ export default (state = INITIAL_STATE, action) => {
     //   return { ...state, newChoreDate: action.payload };
     case CHORE_DATE_CHANGED:
       return { ...state, newChoreDueDate: action.payload };
+    case CHANGE_DONE_STATUS:
+      return {
+        ...state,
+        chores: state.chores.map(chore => {
+          chore.chores.map(choreItem => {
+            if (choreItem.uid === action.payload.uid) {
+              console.log('found the chore: ', choreItem, action.payload);
+              choreItem.done = !choreItem.done;
+              return choreItem;
+            } else {
+              return choreItem;
+            }
+          });
+          return chore;
+        })
+      };
     case SHOW_CHORE_EDIT_MODAL:
       console.log('choreSelected in reducer:', action.payload);
       return { ...state, choreEditModal: true, choreSelected: action.payload };
     case HIDE_CHORE_EDIT_MODAL:
-      console.log('tried to hide in reducer');
       return { ...state, choreEditModal: false, choreSelected: '' };
     case NEW_GROUP_CREATED:
       return { ...state, loading: false, chores: action.payload };
@@ -70,7 +86,8 @@ export default (state = INITIAL_STATE, action) => {
         note: state.newChoreName,
         uid: uuidv4(),
         warningColor: 'green',
-        dueDate: state.newChoreDueDate
+        dueDate: state.newChoreDueDate,
+        done: false
       };
       console.log('heres the new chore just created: ', newChore);
       return {

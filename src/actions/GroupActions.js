@@ -15,7 +15,8 @@ import {
   HIDE_CHORE_EDIT_MODAL,
   CREATE_CHORE_DATE,
   DELETE_CHORE,
-  CHORE_DATE_CHANGED
+  CHORE_DATE_CHANGED,
+  CHANGE_DONE_STATUS
 } from './types';
 const uuidv4 = require('uuid/v4');
 
@@ -30,19 +31,22 @@ const addInitialChores = {
           note: 'clean room',
           uid: uuidv4(),
           warningColor: 'green',
-          dueDate: '2018-01-19'
+          dueDate: '2018-01-19',
+          done: false
         },
         {
           note: 'mop floor',
           uid: uuidv4(),
           warningColor: 'green',
-          dueDate: '2018-01-19'
+          dueDate: '2018-01-19',
+          done: false
         },
         {
           note: 'go to bed',
           uid: uuidv4(),
           warningColor: 'green',
-          dueDate: '2018-01-19'
+          dueDate: '2018-01-19',
+          done: false
         }
       ]
     },
@@ -66,6 +70,14 @@ const addInitialChores = {
     }
   ],
   groceries: []
+};
+
+export const changeDone = chore => {
+  console.log('step1: ', chore);
+  return {
+    type: CHANGE_DONE_STATUS,
+    payload: chore
+  };
 };
 
 export const createNewHouseName = text => {
@@ -120,13 +132,13 @@ export const deleteChore = (chore, chores) => {
       type: DELETE_CHORE,
       payload: chore
     });
-    firebase
-      .database()
-      .ref(`/chores/${currentUser.uid}/chore/${index1}/chores/${index2}`)
-      .remove()
-      .then(() => {
-        Actions.employeeList({ type: 'reset' });
-      });
+    // firebase
+    //   .database()
+    //   .ref(`/chores/${currentUser.uid}/chore/${index1}/chores/${index2}`)
+    //   .remove()
+    //   .then(() => {
+    //     Actions.employeeList({ type: 'reset' });
+    //   });
   };
 };
 
@@ -142,13 +154,13 @@ export const createNewChoresList = info => {
   console.log(chore);
   return dispatch => {
     dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
-    firebase
-      .database()
-      .ref(`/chores/${currentUser.uid}`)
-      .set({ chore })
-      .then(() => {
-        console.log('chore set');
-      });
+    // firebase
+    //   .database()
+    //   .ref(`/chores/${currentUser.uid}`)
+    //   .set({ chore })
+    //   .then(() => {
+    //     console.log('chore set');
+    //   });
   };
 };
 
@@ -174,13 +186,13 @@ export const deleteChoresList = (text, chores) => {
       }
     }
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
-    firebase
-      .database()
-      .ref(`/chores/${currentUser.uid}/chore/${index}`)
-      .remove()
-      .then(() => {
-        Actions.employeeList({ type: 'reset' });
-      });
+    // firebase
+    //   .database()
+    //   .ref(`/chores/${currentUser.uid}/chore/${index}`)
+    //   .remove()
+    //   .then(() => {
+    //     Actions.employeeList({ type: 'reset' });
+    //   });
   };
 };
 
@@ -220,13 +232,13 @@ export const createNewChore = info => {
   console.log('heres info in create:', info, 'and heres chore: ', chore);
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: info });
-    firebase
-      .database()
-      .ref(`/chores/${currentUser.uid}`)
-      .set({ chore })
-      .then(() => {
-        console.log('chore set');
-      });
+    // firebase
+    //   .database()
+    //   .ref(`/chores/${currentUser.uid}`)
+    //   .set({ chore })
+    //   .then(() => {
+    //     console.log('chore set');
+    //   });
   };
 };
 

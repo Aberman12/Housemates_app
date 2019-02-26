@@ -1,18 +1,19 @@
-import React, { Component } from "react";
-import { Text, TouchableWithoutFeedback, View } from "react-native";
-import { Actions } from "react-native-router-flux";
-import { CardSection } from "./common";
-import CheckBox from "react-native-check-box";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { CardSection } from './common';
+import CheckBox from 'react-native-check-box';
+import { connect } from 'react-redux';
 import {
   showChoreEditModal,
   hideChoreEditModal,
   createNewChoresList,
   nameNewChoresList,
   deleteChoresList,
-  deleteChore
-} from "../actions";
-import EditChoreModal from "./EditChoreModal";
+  deleteChore,
+  changeDone
+} from '../actions';
+import EditChoreModal from './EditChoreModal';
 
 class ListItem extends Component {
   constructor(props) {
@@ -22,8 +23,12 @@ class ListItem extends Component {
     };
   }
 
+  componentDidMount() {
+    this.setState({ isChecked: this.props.chore.done });
+  }
+
   showModal(chore) {
-    console.log("right now: ", chore);
+    // console.log("right now: ", chore);
     this.props.showChoreEditModal(chore);
   }
 
@@ -32,8 +37,13 @@ class ListItem extends Component {
       this.props.createNewChoresList(this.props);
       this.setState({ showModal: false });
     } else {
-      Alert.alert("Please fill in all information");
+      Alert.alert('Please fill in all information');
     }
+  }
+
+  markChoreAsDone(chore) {
+    console.log('step 1');
+    this.props.changeDone(chore);
   }
 
   onDecline() {
@@ -67,7 +77,7 @@ class ListItem extends Component {
                   marginLeft: 30,
                   marginTop: 15,
                   paddingRight: 130,
-                  justifyContent: "center"
+                  justifyContent: 'center'
                 }}
                 onPress={() => this.showModal(this.props.chore)}
               >
@@ -80,11 +90,12 @@ class ListItem extends Component {
                   // marginRight: 10,
                   paddingLeft: 20
                 }}
-                checkBoxColor={"green"}
+                checkBoxColor={this.props.chore.warningColor}
                 onClick={() => {
                   this.setState({
                     isChecked: !this.state.isChecked
                   });
+                  this.markChoreAsDone(this.props.chore);
                 }}
                 isChecked={this.state.isChecked}
                 // leftText={this.props.chore}
@@ -118,6 +129,7 @@ export default connect(
     createNewChoresList,
     nameNewChoresList,
     deleteChoresList,
-    deleteChore
+    deleteChore,
+    changeDone
   }
 )(ListItem);

@@ -1,9 +1,10 @@
-import React from "react";
-import { Text, View, Modal } from "react-native";
-import { Button, Card, Input, CardSection } from "./common";
-import { connect } from "react-redux";
-import { showChoreEditModal } from "../actions";
-import DatePicker from "./ChoreDatePicker";
+import React from 'react';
+import { Text, View, Modal } from 'react-native';
+import { Button, Card, Input, CardSection } from './common';
+import { connect } from 'react-redux';
+import { showChoreEditModal } from '../actions';
+import DatePicker from './ChoreDatePicker';
+import Voice from 'react-native-voice';
 
 const EditChoreModal = ({
   children,
@@ -14,15 +15,22 @@ const EditChoreModal = ({
   onChangeTextFunc,
   props
 }) => {
+  // Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
+  // Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
+  // Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
+
+  // const onStartButtonPress = (e) => {
+  //   Voice.start('en-US');
+  // }
+
+  // const onStartButtonPress = (e) => {
+  //   Voice.start('en-US');
+  // }
+
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
-  console.log("newest", props);
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={() => {}}
-    >
+    <Modal visible={visible} transparent animationType="slide" onRequestClose={() => {}}>
       <View style={containerStyle}>
         <Card style={cardStyle}>
           <CardSection style={cardSectionStyle}>
@@ -57,7 +65,7 @@ const EditChoreModal = ({
 
 const styles = {
   cardSectionStyle: {
-    justifyContent: "center"
+    justifyContent: 'center'
   },
   cardStyle: {
     borderRadius: 50
@@ -65,14 +73,14 @@ const styles = {
   textStyle: {
     flex: 1,
     fontSize: 18,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 40
   },
   containerStyle: {
-    backgroundColor: "rgba(0, 0, 0, 0.75)",
-    position: "relative",
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    position: 'relative',
     flex: 1,
-    justifyContent: "center"
+    justifyContent: 'center'
   }
 };
 
