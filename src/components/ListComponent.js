@@ -9,7 +9,8 @@ import {
   hideChoreEditModal,
   deleteChore,
   changeChoreDate,
-  showChoreEditModal
+  showChoreEditModal,
+  saveNewListChanges
 } from '../actions';
 import Note from './SmallerListComponent';
 import { ListModal } from './common';
@@ -31,10 +32,10 @@ class ChoresComponent extends Component {
     }
   }
 
-  showModal(chore) {
-    console.log('right now: ', chore);
-    this.props.showChoreEditModal(chore);
-  }
+  // showModal(chore) {
+  //   console.log('first one ', chore);
+  //   this.props.showChoreEditModal(chore);
+  // }
 
   onAccept() {
     if (this.props.newChoreListName) {
@@ -45,8 +46,13 @@ class ChoresComponent extends Component {
     }
   }
 
+  saveListChanges() {
+    this.props.saveNewListChanges(this.props.choreSelected, this.props.newChoreListName);
+  }
+
   onDecline() {
     this.props.hideChoreEditModal();
+    this.setState({ showModal: false });
   }
 
   onChangeTextFunc(noteText) {
@@ -79,7 +85,7 @@ class ChoresComponent extends Component {
       return (
         <EditChoreModal
           visible={this.props.choreEditModal}
-          onAccept={this.onAccept.bind(this)}
+          onAccept={this.saveListChanges.bind(this)}
           onDecline={this.onDecline.bind(this)}
           onChangeTextFunc={this.onChangeTextFunc.bind(this)}
           props={this.props}
@@ -95,12 +101,15 @@ class ChoresComponent extends Component {
     let determiningColor = 0;
 
     for (var i = 0; i < val.chores.length; i++) {
-      if (val.chores[i].warningColor === 'gold' && determiningColor < 1) {
-        determiningColor = 1;
-      } else if (val.chores[i].warningColor === 'red' && determiningColor < 2) {
-        determiningColor = 2;
+      if (!val.chores[i].done) {
+        if (val.chores[i].warningColor === 'gold' && determiningColor < 1) {
+          determiningColor = 1;
+        } else if (val.chores[i].warningColor === 'red' && determiningColor < 2) {
+          determiningColor = 2;
+        }
       }
     }
+
     if (determiningColor === 0) {
       return 'green';
     } else if (determiningColor === 1) {
@@ -217,6 +226,7 @@ export default connect(
     hideChoreEditModal,
     deleteChore,
     changeChoreDate,
-    showChoreEditModal
+    showChoreEditModal,
+    saveNewListChanges
   }
 )(ChoresComponent);

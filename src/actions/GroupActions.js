@@ -16,7 +16,8 @@ import {
   CREATE_CHORE_DATE,
   DELETE_CHORE,
   CHORE_DATE_CHANGED,
-  CHANGE_DONE_STATUS
+  CHANGE_DONE_STATUS,
+  SAVE_NEW_LIST_CHANGES
 } from './types';
 const uuidv4 = require('uuid/v4');
 
@@ -112,13 +113,10 @@ export const deleteChore = (chore, chores) => {
   const { currentUser } = firebase.auth();
   let index1;
   let index2;
-  console.log('and how: ', chore, chores);
   for (var i = 0; i <= chores.length; i++) {
     if (chores[i].hasOwnProperty('chores') && chores[i].chores.includes(chore)) {
       index1 = i;
-      console.log('first index found: ', chores[i]);
       for (var j = 0; j <= chores[i].chores.length; j++) {
-        console.log('heres my thing right now: ', chores[i].chores[j]);
         if (chores[i].chores[j].uid === chore.uid) {
           index2 = j;
           break;
@@ -151,7 +149,6 @@ export const createNewChoresList = info => {
     chores: []
   };
   const chore = info.chores.concat([newChore]);
-  console.log(chore);
   return dispatch => {
     dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
     // firebase
@@ -203,8 +200,14 @@ export const createChoreName = text => {
   };
 };
 
+export const saveNewListChanges = (listToUpdate, newName) => {
+  return {
+    type: SAVE_NEW_LIST_CHANGES,
+    payload: { listToUpdate, newName }
+  };
+};
+
 export const showChoreEditModal = info => {
-  console.log('inside chore edit modal: ', info);
   return {
     type: SHOW_CHORE_EDIT_MODAL,
     payload: info
@@ -212,14 +215,12 @@ export const showChoreEditModal = info => {
 };
 
 export const hideChoreEditModal = () => {
-  console.log('tried to hide');
   return {
     type: HIDE_CHORE_EDIT_MODAL
   };
 };
 
 export const createChoreDate = date => {
-  console.log('chore date in actions; ', date);
   return {
     type: CREATE_CHORE_DATE,
     payload: date
@@ -229,7 +230,6 @@ export const createChoreDate = date => {
 export const createNewChore = info => {
   const { currentUser } = firebase.auth();
   const chore = info.chores;
-  console.log('heres info in create:', info, 'and heres chore: ', chore);
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: info });
     // firebase

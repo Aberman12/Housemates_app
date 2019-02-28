@@ -43,7 +43,9 @@ class ListItem extends Component {
   }
 
   showModal(chore) {
-    this.props.showChoreEditModal(chore);
+    if (typeof chore === 'object') {
+      this.props.showChoreEditModal(chore);
+    }
   }
 
   onAccept() {

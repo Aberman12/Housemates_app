@@ -15,18 +15,6 @@ const EditChoreModal = ({
   onChangeTextFunc,
   props
 }) => {
-  // Voice.onSpeechStart = this.onSpeechStartHandler.bind(this);
-  // Voice.onSpeechEnd = this.onSpeechEndHandler.bind(this);
-  // Voice.onSpeechResults = this.onSpeechResultsHandler.bind(this);
-
-  // const onStartButtonPress = (e) => {
-  //   Voice.start('en-US');
-  // }
-
-  // const onStartButtonPress = (e) => {
-  //   Voice.start('en-US');
-  // }
-
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
 
   return (
@@ -39,9 +27,10 @@ const EditChoreModal = ({
 
           <CardSection>
             <Input
-              onChangeText={text => onChangeTextFunc(text)}
-              placeholder="list name"
-              value={props.choreSelected.note}
+              onChangeText={text => {
+                onChangeTextFunc(text);
+              }}
+              value={props.newChoreListName}
             />
           </CardSection>
 
