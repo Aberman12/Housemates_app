@@ -167,12 +167,12 @@ export const createNewChoresList = info => {
 export const choresFetch = () => {
   const { currentUser } = firebase.auth();
   return dispatch => {
-    firebase
-      .database()
-      .ref(`/chores/${currentUser.uid}`)
-      .on('value', snapshot => {
-        dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
-      });
+    // firebase
+    //   .database()
+    //   .ref(`/chores/${currentUser.uid}`)
+    //   .on('value', snapshot => {
+    //     dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
+    //   });
   };
 };
 

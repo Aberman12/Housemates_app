@@ -50,8 +50,9 @@ export default (state = INITIAL_STATE, action) => {
         chores: state.chores.map(chore => {
           chore.chores.map(choreItem => {
             if (choreItem.uid === action.payload.uid) {
-              console.log('found the chore: ', choreItem, action.payload);
+              console.log('found the chore: ', choreItem.done);
               choreItem.done = !choreItem.done;
+              console.log('found the chore: ', choreItem.done);
               return choreItem;
             } else {
               return choreItem;

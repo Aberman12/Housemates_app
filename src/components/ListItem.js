@@ -24,11 +24,22 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
+    let date = new Date();
+    let choreDate = Number(this.props.chore.dueDate.slice(-2));
+    if (!this.props.chore.done) {
+      if (choreDate >= date.getDate()) {
+        if (choreDate === date.getDate()) {
+          this.props.chore.warningColor = 'gold';
+        } else {
+          this.props.chore.warningColor = 'red';
+        }
+      }
+    }
+
     this.setState({ isChecked: this.props.chore.done });
   }
 
   showModal(chore) {
-    // console.log("right now: ", chore);
     this.props.showChoreEditModal(chore);
   }
 
@@ -42,7 +53,6 @@ class ListItem extends Component {
   }
 
   markChoreAsDone(chore) {
-    console.log('step 1');
     this.props.changeDone(chore);
   }
 
@@ -98,7 +108,6 @@ class ListItem extends Component {
                   this.markChoreAsDone(this.props.chore);
                 }}
                 isChecked={this.state.isChecked}
-                // leftText={this.props.chore}
               />
             </CardSection>
           </View>
@@ -108,13 +117,6 @@ class ListItem extends Component {
     );
   }
 }
-
-// const styles = {
-//   titleStyle: {
-//     fontSize: 18,
-//     paddingLeft: 15
-//   }
-// };
 
 const mapStateToProps = ({ groupReducer }) => {
   const { choreEditModal, currentlySelected } = groupReducer;
