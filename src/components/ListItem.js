@@ -24,17 +24,20 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
-    let date = new Date();
-    let choreDate = Number(this.props.chore.dueDate.slice(-2));
-    if (!this.props.chore.done) {
-      if (choreDate >= date.getDate()) {
-        if (choreDate === date.getDate()) {
-          this.props.chore.warningColor = 'gold';
-        } else {
-          this.props.chore.warningColor = 'red';
-        }
-      }
-    }
+    // let date = new Date();
+    // let choreDate = Number(this.props.chore.dueDate.slice(-2));
+    // if (!this.props.chore.done) {
+    //   console.log('heres if theyre done: ', this.props.chore.done);
+    //   if (choreDate >= date.getDate()) {
+    //     if (choreDate === date.getDate()) {
+    //       this.props.chore.warningColor = 'gold';
+    //     } else {
+    //       this.props.chore.warningColor = 'red';
+    //     }
+    //   }
+    // } else {
+    //   this.props.chore.warningColor = 'green';
+    // }
 
     this.setState({ isChecked: this.props.chore.done });
   }

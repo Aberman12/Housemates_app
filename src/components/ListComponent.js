@@ -91,12 +91,52 @@ class ChoresComponent extends Component {
     }
   }
 
+  coordinateListWarningColor(val) {
+    let determiningColor = 0;
+
+    for (var i = 0; i < val.chores.length; i++) {
+      if (val.chores[i].warningColor === 'gold' && determiningColor < 1) {
+        determiningColor = 1;
+      } else if (val.chores[i].warningColor === 'red' && determiningColor < 2) {
+        determiningColor = 2;
+      }
+    }
+    if (determiningColor === 0) {
+      return 'green';
+    } else if (determiningColor === 1) {
+      return 'gold';
+    } else if (determiningColor === 2) {
+      return 'red';
+    }
+  }
+
+  mainWarningColorFunc(val) {
+    for (var i = 0; i < val.chores.length; i++) {
+      let date = new Date();
+      let choreDate = Number(val.chores[i].dueDate.slice(-2));
+
+      if (!val.chores[i].done) {
+        if (choreDate <= date.getDate()) {
+          if (choreDate === date.getDate()) {
+            val.chores[i].warningColor = 'gold';
+            val.warningColor = this.coordinateListWarningColor(val);
+          } else if (choreDate < date.getDate()) {
+            val.chores[i].warningColor = 'red';
+            val.warningColor = this.coordinateListWarningColor(val);
+          }
+        }
+      } else {
+        val.chores[i].warningColor = 'green';
+        val.warningColor = this.coordinateListWarningColor(val);
+      }
+    }
+  }
+
   render() {
-    console.log(this.props.chores);
     let notes = this.props.chores.map((val, key) => {
+      this.mainWarningColorFunc(val);
       return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;
     });
-    console.log('heres showEditModal: ', this.props.choreEditModal);
     return (
       <View style={styles.container}>
         <ScrollView style={styles.scrollContainer}>{notes}</ScrollView>
