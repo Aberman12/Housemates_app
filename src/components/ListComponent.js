@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import moment from 'moment';
 import {
   nameNewChoresList,
   createNewChoresList,
@@ -31,11 +32,6 @@ class ChoresComponent extends Component {
       this.props.choresFetch();
     }
   }
-
-  // showModal(chore) {
-  //   console.log('first one ', chore);
-  //   this.props.showChoreEditModal(chore);
-  // }
 
   onAccept() {
     if (this.props.newChoreListName) {
@@ -109,7 +105,6 @@ class ChoresComponent extends Component {
         }
       }
     }
-
     if (determiningColor === 0) {
       return 'green';
     } else if (determiningColor === 1) {
@@ -120,23 +115,32 @@ class ChoresComponent extends Component {
   }
 
   mainWarningColorFunc(val) {
-    for (var i = 0; i < val.chores.length; i++) {
-      let date = new Date();
-      let choreDate = Number(val.chores[i].dueDate.slice(-2));
+    if (!val.chores.length) {
+      val.warningColor = 'green';
+    } else {
+      for (var i = 0; i < val.chores.length; i++) {
+        let getInitialDate = new Date();
+        let date = getInitialDate.setHours(0, 0, 0, 0);
+        let choreDate = new Date(val.chores[i].dueDate).setHours(0, 0, 0, 0);
+        console.log('ok here: ', val.chores[i], date, choreDate, choreDate < date);
 
-      if (!val.chores[i].done) {
-        if (choreDate <= date.getDate()) {
-          if (choreDate === date.getDate()) {
-            val.chores[i].warningColor = 'gold';
-            val.warningColor = this.coordinateListWarningColor(val);
-          } else if (choreDate < date.getDate()) {
-            val.chores[i].warningColor = 'red';
+        if (!val.chores[i].done) {
+          if (choreDate <= date) {
+            if (choreDate === date) {
+              val.chores[i].warningColor = 'gold';
+              val.warningColor = this.coordinateListWarningColor(val);
+            } else if (choreDate < date) {
+              val.chores[i].warningColor = 'red';
+              val.warningColor = this.coordinateListWarningColor(val);
+            }
+          } else {
+            val.chores[i].warningColor = 'green';
             val.warningColor = this.coordinateListWarningColor(val);
           }
+        } else {
+          val.chores[i].warningColor = 'green';
+          val.warningColor = this.coordinateListWarningColor(val);
         }
-      } else {
-        val.chores[i].warningColor = 'green';
-        val.warningColor = this.coordinateListWarningColor(val);
       }
     }
   }

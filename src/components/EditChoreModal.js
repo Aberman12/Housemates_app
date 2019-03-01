@@ -36,7 +36,7 @@ const EditChoreModal = ({
 
           <CardSection>
             <Text>Date Due</Text>
-            <DatePicker date={props.choreSelected.dueDate} />
+            <DatePicker date={props.choreSelected.dueDate} updatedDate={props.newChoreDueDate} />
           </CardSection>
 
           <CardSection>
@@ -74,8 +74,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { choreSelected } = groupReducer;
-  return { choreSelected };
+  const { choreSelected, newChoreDueDate } = groupReducer;
+  return { choreSelected, newChoreDueDate };
 };
 
 export default connect(

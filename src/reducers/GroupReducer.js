@@ -11,7 +11,6 @@ import {
   CHORES_FETCH_SUCCESS,
   SHOW_CHORE_EDIT_MODAL,
   HIDE_CHORE_EDIT_MODAL,
-  CREATE_CHORE_DATE,
   DELETE_CHORE,
   CHORE_DATE_CHANGED,
   CHANGE_DONE_STATUS,
@@ -19,11 +18,17 @@ import {
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
+let date = new Date();
+let year = date.getFullYear();
+let month = date.getMonth() + 1;
+let day = date.getDate();
+const fillinDate = `${year}-${month}-${day}`;
 
 const INITIAL_STATE = {
   newChoreListName: '',
   newChoreName: '',
-  newChoreDueDate: null,
+  newChoreDueDate: fillinDate,
+  dueDateEdited: false,
   houseName: '',
   zip: '',
   members: [],
@@ -41,10 +46,16 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    // case CREATE_CHORE_DATE:
-    //   return { ...state, newChoreDate: action.payload };
     case CHORE_DATE_CHANGED:
-      return { ...state, newChoreDueDate: action.payload };
+      let editedDate;
+      console.log('third step for date: ', action.payload.date);
+      if (action.payload.date[5] === '0') {
+        editedDate =
+          action.payload.date.slice(0, 5) +
+          action.payload.date.slice(6, action.payload.date.length);
+      }
+      console.log('edited chore due date: ', editedDate);
+      return { ...state, newChoreDueDate: editedDate, dueDateEdited: action.payload.changed };
     case SAVE_NEW_LIST_CHANGES:
       return {
         ...state,
@@ -52,14 +63,27 @@ export default (state = INITIAL_STATE, action) => {
           if (chore.chores.length) {
             for (var i = 0; i < chore.chores.length; i++) {
               if (chore.chores[i] === action.payload.listToUpdate) {
-                chore.chores[i].note = action.payload.newName;
+                if (state.newChoreListName !== '') {
+                  chore.chores[i].note = state.newChoreListName;
+                }
+                console.log('heres the rop: ', fillinDate, state.newChoreDueDate);
+                if (state.newChoreDueDate !== fillinDate || state.dueDateEdited) {
+                  if (fillinDate[5] === '0') {
+                    fillinDate.slice(5, 1);
+                  }
+                  console.log('problem here: ', state.newChoreDueDate);
+                  chore.chores[i].dueDate = state.newChoreDueDate;
+                }
               }
             }
             return chore;
           }
           return chore;
         }),
-        choreEditModal: false
+        choreEditModal: false,
+        newChoreListName: '',
+        newChoreDueDate: fillinDate,
+        dueDateEdited: false
       };
     case CHANGE_DONE_STATUS:
       return {
@@ -109,8 +133,8 @@ export default (state = INITIAL_STATE, action) => {
         dueDate: state.newChoreDueDate,
         done: false
       };
-
       return {
+        ...state,
         chores: state.chores.map(chore => {
           if (chore.uid === action.payload.val.uid) {
             if (chore.chores) {
@@ -118,12 +142,12 @@ export default (state = INITIAL_STATE, action) => {
             } else {
               chore.chores = [newChore];
             }
-
             return chore;
           } else {
             return chore;
           }
-        })
+        }),
+        newChoreName: ''
       };
     case NEW_CHORES_LIST_NAMED:
       return { ...state, newChoreListName: action.payload };

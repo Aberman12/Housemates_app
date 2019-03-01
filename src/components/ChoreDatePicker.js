@@ -7,24 +7,25 @@ class MyDatePicker extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: '101010'
+      date: ''
     };
   }
 
   onChangeDate(date) {
-    this.props.changeChoreDate(date);
+    console.log('first step for date: ', date);
+    this.setState({ date });
+    this.props.changeChoreDate(date, true);
   }
 
   render() {
-    console.log('date inside picker ', this.props.date);
     return (
       <DatePicker
         style={{ width: 200 }}
-        date={this.props.date || new Date()}
+        date={this.state.date || this.props.date || new Date()}
         mode="date"
         placeholder="select date"
         format="YYYY-MM-DD"
-        minDate="2018-05-01"
+        minDate={new Date() - 1}
         maxDate="2019-06-01"
         confirmBtnText="Confirm"
         cancelBtnText="Cancel"

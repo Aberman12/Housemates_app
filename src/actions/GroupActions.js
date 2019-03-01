@@ -95,10 +95,11 @@ export const houseZipChange = text => {
   };
 };
 
-export const changeChoreDate = date => {
+export const changeChoreDate = (date, changed) => {
+  console.log('second step for date: ', date);
   return {
     type: CHORE_DATE_CHANGED,
-    payload: date
+    payload: { date, changed }
   };
 };
 
