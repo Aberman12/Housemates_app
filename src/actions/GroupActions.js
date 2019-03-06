@@ -17,7 +17,8 @@ import {
   DELETE_CHORE,
   CHORE_DATE_CHANGED,
   CHANGE_DONE_STATUS,
-  SAVE_NEW_LIST_CHANGES
+  SAVE_NEW_LIST_CHANGES,
+  CHANGE_CHORE_TYPE
 } from './types';
 const uuidv4 = require('uuid/v4');
 
@@ -73,6 +74,13 @@ const addInitialChores = {
   groceries: []
 };
 
+export const setChoreType = type => {
+  return {
+    type: CHANGE_CHORE_TYPE,
+    payload: type
+  };
+};
+
 export const changeDone = chore => {
   console.log('step1: ', chore);
   return {
@@ -95,11 +103,11 @@ export const houseZipChange = text => {
   };
 };
 
-export const changeChoreDate = (date, changed) => {
+export const changeChoreDate = (date, changed, type) => {
   console.log('second step for date: ', date);
   return {
     type: CHORE_DATE_CHANGED,
-    payload: { date, changed }
+    payload: { date, changed, type }
   };
 };
 

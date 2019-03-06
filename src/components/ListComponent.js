@@ -146,13 +146,22 @@ class ChoresComponent extends Component {
   }
 
   render() {
+    {
+      console.log('this: ', this.props.choreType);
+    }
     let notes = this.props.chores.map((val, key) => {
       this.mainWarningColorFunc(val);
       return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;
     });
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.scrollContainer}>{notes}</ScrollView>
+        <ScrollView
+          keyboardShouldPersistTaps={'always'}
+          // scrollEventThrottle={16}
+          style={styles.scrollContainer}
+        >
+          {notes}
+        </ScrollView>
         <TouchableOpacity
           onPress={() => this.setState({ showModal: true })}
           style={styles.addButton}

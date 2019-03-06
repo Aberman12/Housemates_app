@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, TouchableWithoutFeedback, View } from 'react-native';
+import { Text, TouchableWithoutFeedback, TouchableHighlight, View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { CardSection } from './common';
 import CheckBox from 'react-native-check-box';
@@ -117,6 +117,7 @@ class ListItem extends Component {
             </CardSection>
           </View>
         </TouchableWithoutFeedback>
+
         {this.showModal()}
       </View>
     );

@@ -14,7 +14,8 @@ import {
   DELETE_CHORE,
   CHORE_DATE_CHANGED,
   CHANGE_DONE_STATUS,
-  SAVE_NEW_LIST_CHANGES
+  SAVE_NEW_LIST_CHANGES,
+  CHANGE_CHORE_TYPE
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
@@ -26,6 +27,7 @@ const fillinDate = `${year}-${month}-${day}`;
 
 const INITIAL_STATE = {
   newChoreListName: '',
+  choreType: 'none-selected',
   newChoreName: '',
   newChoreDueDate: fillinDate,
   dueDateEdited: false,
@@ -46,16 +48,33 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case CHANGE_CHORE_TYPE:
+      return { ...state, choreType: action.payload };
     case CHORE_DATE_CHANGED:
       let editedDate;
-      console.log('third step for date: ', action.payload.date);
-      if (action.payload.date[5] === '0') {
-        editedDate =
-          action.payload.date.slice(0, 5) +
-          action.payload.date.slice(6, action.payload.date.length);
+      console.log('reducer: ', action.payload);
+      if (action.payload.type === 'one-time') {
+        if (action.payload.date[5] === '0') {
+          editedDate =
+            action.payload.date.slice(0, 5) +
+            action.payload.date.slice(6, action.payload.date.length);
+          return {
+            ...state,
+            newChoreDueDate: editedDate,
+            dueDateEdited: action.payload.changed
+          };
+        }
+      } else if (action.payload.type === 'weekly' && !action.payload.changed) {
+        delete action.payload.date.message;
+        delete action.payload.date.displayed;
+        console.log('made it to weekly reducer: ', action.payload.date);
+        return {
+          ...state,
+          newChoreDueDate: action.payload.date,
+          dueDateEdited: action.payload.changed
+        };
       }
-      console.log('edited chore due date: ', editedDate);
-      return { ...state, newChoreDueDate: editedDate, dueDateEdited: action.payload.changed };
+
     case SAVE_NEW_LIST_CHANGES:
       return {
         ...state,
@@ -83,7 +102,8 @@ export default (state = INITIAL_STATE, action) => {
         choreEditModal: false,
         newChoreListName: '',
         newChoreDueDate: fillinDate,
-        dueDateEdited: false
+        dueDateEdited: false,
+        choreType: 'none-selected'
       };
     case CHANGE_DONE_STATUS:
       return {
@@ -131,7 +151,8 @@ export default (state = INITIAL_STATE, action) => {
         uid: uuidv4(),
         warningColor: 'green',
         dueDate: state.newChoreDueDate,
-        done: false
+        done: false,
+        type: state.choreType
       };
       return {
         ...state,
@@ -147,7 +168,8 @@ export default (state = INITIAL_STATE, action) => {
             return chore;
           }
         }),
-        newChoreName: ''
+        newChoreName: '',
+        choreType: 'none-selected'
       };
     case NEW_CHORES_LIST_NAMED:
       return { ...state, newChoreListName: action.payload };

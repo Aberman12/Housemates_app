@@ -4,6 +4,7 @@ import { Button, Card, Input, CardSection } from './common';
 import { connect } from 'react-redux';
 import { showChoreEditModal } from '../actions';
 import DatePicker from './ChoreDatePicker';
+import WeeklyChoreSelector from './WeeklyChoreSelector';
 import Voice from 'react-native-voice';
 
 const EditChoreModal = ({
@@ -16,6 +17,20 @@ const EditChoreModal = ({
   props
 }) => {
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
+
+  const showChoreType = () => {
+    console.log('heres the props type: ', props.choreSelected.type);
+    if (props.choreSelected.type === 'one-time') {
+      return <DatePicker date={props.choreSelected.dueDate} updatedDate={props.newChoreDueDate} />;
+    } else if (props.choreSelected.type === 'weekly') {
+      return (
+        <WeeklyChoreSelector
+          date={props.choreSelected.dueDate}
+          updatedDate={props.newChoreDueDate}
+        />
+      );
+    }
+  };
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={() => {}}>
@@ -34,10 +49,7 @@ const EditChoreModal = ({
             />
           </CardSection>
 
-          <CardSection>
-            <Text>Date Due</Text>
-            <DatePicker date={props.choreSelected.dueDate} updatedDate={props.newChoreDueDate} />
-          </CardSection>
+          <CardSection>{showChoreType()}</CardSection>
 
           <CardSection>
             <Button onPress={onDecline}>Cancel</Button>

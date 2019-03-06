@@ -14,7 +14,7 @@ class MyDatePicker extends Component {
   onChangeDate(date) {
     console.log('first step for date: ', date);
     this.setState({ date });
-    this.props.changeChoreDate(date, true);
+    this.props.changeChoreDate(date, true, 'one-time');
   }
 
   render() {

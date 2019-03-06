@@ -1,18 +1,11 @@
-import _ from "lodash";
-import React, { Component } from "react";
-import {
-  View,
-  Text,
-  ListView,
-  StyleSheet,
-  TouchableOpacity,
-  Button
-} from "react-native";
-import { CardSection } from "./common";
-import { connect } from "react-redux";
-import { createChoreName, createNewChore } from "../actions";
-import ListItem from "./ListItem";
-import ChoreModal from "./CreateChoreModal";
+import _ from 'lodash';
+import React, { Component } from 'react';
+import { View, Text, ListView, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { CardSection } from './common';
+import { connect } from 'react-redux';
+import { createChoreName, createNewChore } from '../actions';
+import ListItem from './ListItem';
+import ChoreModal from './CreateChoreModal';
 
 class IndividualList extends Component {
   constructor(props) {
@@ -32,7 +25,7 @@ class IndividualList extends Component {
       this.props.createNewChore(this.props);
       this.setState({ showModal: false });
     } else {
-      window.alert("Please fill in a name for your chore");
+      window.alert('Please fill in a name for your chore');
     }
   }
 
@@ -42,9 +35,9 @@ class IndividualList extends Component {
 
   warningColor(options) {
     return {
-      position: "absolute",
-      justifyContent: "center",
-      alignItems: "center",
+      position: 'absolute',
+      justifyContent: 'center',
+      alignItems: 'center',
       backgroundColor: options.warningColor,
       borderRadius: 5,
       padding: 10,
@@ -56,24 +49,19 @@ class IndividualList extends Component {
 
   renderRow() {
     if (this.state.showList) {
-      if (
-        this.props.val.hasOwnProperty("chores") &&
-        this.props.val.chores.length
-      ) {
+      if (this.props.val.hasOwnProperty('chores') && this.props.val.chores.length) {
         return (
           <View>
             {this.props.val.chores.map(chore => {
               return <ListItem chore={chore} />;
             })}
-            <TouchableOpacity
-              onPress={() => this.setState({ showModal: true })}
-            >
+            <TouchableOpacity onPress={() => this.setState({ showModal: true })}>
               <CardSection>
                 <Text
                   style={{
                     fontSize: 27,
                     marginLeft: 175,
-                    color: "blue"
+                    color: 'blue'
                   }}
                 >
                   +
@@ -85,15 +73,13 @@ class IndividualList extends Component {
       } else {
         return (
           <View>
-            <TouchableOpacity
-              onPress={() => this.setState({ showModal: true })}
-            >
+            <TouchableOpacity onPress={() => this.setState({ showModal: true })}>
               <CardSection>
                 <Text
                   style={{
                     fontSize: 27,
                     marginLeft: 175,
-                    color: "blue"
+                    color: 'blue'
                   }}
                 >
                   +
@@ -109,9 +95,7 @@ class IndividualList extends Component {
   render() {
     return (
       <View>
-        <TouchableOpacity
-          onPress={() => this.setState({ showList: !this.state.showList })}
-        >
+        <TouchableOpacity onPress={() => this.setState({ showList: !this.state.showList })}>
           <View key={this.props.keyval} style={styles.note}>
             <Text style={styles.noteText}>{this.props.val.note}</Text>
             <TouchableOpacity
@@ -128,6 +112,7 @@ class IndividualList extends Component {
           onAccept={this.onAccept.bind(this)}
           onDecline={this.onDecline.bind(this)}
           onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+          props={this.props.choreType}
         >
           Add New Chore?
         </ChoreModal>
@@ -138,24 +123,24 @@ class IndividualList extends Component {
 
 const styles = {
   note: {
-    position: "relative",
+    position: 'relative',
     padding: 20,
     paddingRight: 10,
     borderBottomWidth: 2,
-    borderBottomColor: "#ededed",
+    borderBottomColor: '#ededed',
     zIndex: 10
   },
   noteText: {
     paddingLeft: 0,
     borderLeftWidth: 10,
-    borderLeftColor: "#E91E63",
+    borderLeftColor: '#E91E63',
     fontSize: 25
   }
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { newChoreName, chores } = groupReducer;
-  return { newChoreName, chores };
+  const { newChoreName, chores, choreType } = groupReducer;
+  return { newChoreName, chores, choreType };
 };
 
 export default connect(
