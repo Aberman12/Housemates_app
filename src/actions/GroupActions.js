@@ -81,11 +81,10 @@ export const setChoreType = type => {
   };
 };
 
-export const changeDone = chore => {
-  console.log('step1: ', chore);
+export const changeDone = (chore, isChecked) => {
   return {
     type: CHANGE_DONE_STATUS,
-    payload: chore
+    payload: { chore, isChecked }
   };
 };
 

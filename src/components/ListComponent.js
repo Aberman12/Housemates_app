@@ -114,41 +114,192 @@ class ChoresComponent extends Component {
     }
   }
 
+  // oneTimeWarningSorter(val) {
+  //   let getInitialDate = new Date();
+  //   let date = getInitialDate.setHours(0, 0, 0, 0);
+  //   let choreDate = new Date(val.dueDate).setHours(0, 0, 0, 0);
+  //   console.log('ok here: ', val, date, choreDate, choreDate < date);
+
+  //   if (!val.done) {
+  //     if (choreDate <= date) {
+  //       if (choreDate === date) {
+  //         val.warningColor = 'gold';
+  //         val.warningColor = this.coordinateListWarningColor(val);
+  //       } else if (choreDate < date) {
+  //         val.warningColor = 'red';
+  //         val.warningColor = this.coordinateListWarningColor(val);
+  //       }
+  //     } else {
+  //       val.warningColor = 'green';
+  //       val.warningColor = this.coordinateListWarningColor(val);
+  //     }
+  //   } else {
+  //     val.warningColor = 'green';
+  //     val.warningColor = this.coordinateListWarningColor(val);
+  //   }
+  // }
+
+  // weeklyWarningSorter(val) {
+  //   var selectedDays = [];
+  //   var d = new Date();
+  //   var weekday = new Array(7);
+  //   weekday[0] = 'Sunday';
+  //   weekday[1] = 'Monday';
+  //   weekday[2] = 'Tuesday';
+  //   weekday[3] = 'Wednesday';
+  //   weekday[4] = 'Thursday';
+  //   weekday[5] = 'Friday';
+  //   weekday[6] = 'Saturday';
+
+  //   var n = weekday[d.getDay()];
+
+  //   for (var day of val) {
+  //     if (val[day] === '#89cff0') {
+  //       selectedDays.push(day);
+  //     }
+  //   }
+  //   for(var i = 0; i < weekday.length; i++){
+  //     if(selectedDays.includes(weekday[i]) && !val.done[weekday[i]]){
+  //       if(n === weekday[i]){
+  //         val.warningColor =
+  //       }
+  //     }
+  //   }
+  //   if (!val.done) {
+  //     if (choreDate <= date) {
+  //       if (choreDate === date) {
+  //         val.warningColor = 'gold';
+  //         val.warningColor = this.coordinateListWarningColor(val);
+  //       } else if (choreDate < date) {
+  //         val.warningColor = 'red';
+  //         val.warningColor = this.coordinateListWarningColor(val);
+  //       }
+  //     } else {
+  //       val.warningColor = 'green';
+  //       val.warningColor = this.coordinateListWarningColor(val);
+  //     }
+  //   } else {
+  //     val.warningColor = 'green';
+  //     val.warningColor = this.coordinateListWarningColor(val);
+  //   }
+  // }
+
   mainWarningColorFunc(val) {
     if (!val.chores.length) {
       val.warningColor = 'green';
     } else {
       for (var i = 0; i < val.chores.length; i++) {
+        console.log('first on listmannyyy: ', val.chores[i]);
         let getInitialDate = new Date();
         let date = getInitialDate.setHours(0, 0, 0, 0);
         let choreDate = new Date(val.chores[i].dueDate).setHours(0, 0, 0, 0);
-        console.log('ok here: ', val.chores[i], date, choreDate, choreDate < date);
+        var selectDays = [];
+        var weeklyDueDate;
+        var d = new Date();
+        var weekday = new Array(7);
+        weekday[0] = 'sunday';
+        weekday[1] = 'monday';
+        weekday[2] = 'tuesday';
+        weekday[3] = 'wednesday';
+        weekday[4] = 'thursday';
+        weekday[5] = 'friday';
+        weekday[6] = 'saturday';
+        var n = d.getDay();
+        let doneStatus;
+        let beforeSelectDays = [];
 
-        if (!val.chores[i].done) {
-          if (choreDate <= date) {
-            if (choreDate === date) {
-              val.chores[i].warningColor = 'gold';
-              val.warningColor = this.coordinateListWarningColor(val);
-            } else if (choreDate < date) {
-              val.chores[i].warningColor = 'red';
+        if (val.chores[i].type === 'one-time') {
+          if (!val.chores[i].done) {
+            if (choreDate <= date) {
+              if (choreDate === date) {
+                val.chores[i].warningColor = 'gold';
+                val.warningColor = this.coordinateListWarningColor(val);
+              } else if (choreDate < date) {
+                val.chores[i].warningColor = 'red';
+                val.warningColor = this.coordinateListWarningColor(val);
+              }
+            } else {
+              val.chores[i].warningColor = 'green';
               val.warningColor = this.coordinateListWarningColor(val);
             }
           } else {
             val.chores[i].warningColor = 'green';
             val.warningColor = this.coordinateListWarningColor(val);
           }
-        } else {
-          val.chores[i].warningColor = 'green';
-          val.warningColor = this.coordinateListWarningColor(val);
+        } else if (val.chores[i].type === 'weekly') {
+          weeklyDueDate = val.chores[i].dueDate;
+          doneStatus = val.chores[i].dueDate.done;
+          let thisChoreI = val.chores[i];
+          let stuffstuff = false;
+          console.log('chores: ', val.chores[i]);
+          for (let day in weeklyDueDate) {
+            if (weeklyDueDate[day] === '#89cff0') {
+              beforeSelectDays.push(day);
+            }
+          }
+
+          for (var m = 0; m < beforeSelectDays.length; m++) {
+            if (beforeSelectDays[m] === 'sunday') {
+              selectDays[0] = 'sunday';
+            }
+            if (beforeSelectDays[m] === 'monday') {
+              selectDays[1] = 'monday';
+            }
+            if (beforeSelectDays[m] === 'tuesday') {
+              selectDays[2] = 'tuesday';
+            }
+            if (beforeSelectDays[m] === 'wednesday') {
+              selectDays[3] = 'wednesday';
+            }
+            if (beforeSelectDays[m] === 'thursday') {
+              selectDays[4] = 'thursday';
+            }
+            if (beforeSelectDays[m] === 'friday') {
+              selectDays[5] = 'friday';
+            }
+            if (beforeSelectDays[m] === 'saturday') {
+              selectDays[6] = 'saturday';
+            }
+          }
+
+          for (var j = 0; j < weekday.length; j++) {
+            console.log(
+              'neweste: ',
+              selectDays.includes(weekday[j]),
+              !doneStatus[weekday[j]],
+              thisChoreI
+            );
+            if (selectDays.includes(weekday[j]) && !doneStatus[weekday[j]]) {
+              if (n === j) {
+                console.log('made it t gold', thisChoreI);
+                thisChoreI.warningColor = 'gold';
+                stuffstuff = true;
+                console.log(stuffstuff);
+                val.warningColor = this.coordinateListWarningColor(val);
+              } else if (n > j) {
+                console.log('made it t red', thisChoreI);
+                thisChoreI.warningColor = 'red';
+                stuffstuff = true;
+                console.log(stuffstuff);
+                val.warningColor = this.coordinateListWarningColor(val);
+              } else {
+                console.log('made it t gree', thisChoreI);
+                thisChoreI.warningColor = 'green';
+                val.warningColor = this.coordinateListWarningColor(val);
+              }
+            }
+          }
+          if (!stuffstuff) {
+            console.log('made it tostuff', stuffstuff);
+            thisChoreI.warningColor = 'green';
+            val.warningColor = this.coordinateListWarningColor(val);
+          }
         }
       }
     }
   }
 
   render() {
-    {
-      console.log('this: ', this.props.choreType);
-    }
     let notes = this.props.chores.map((val, key) => {
       this.mainWarningColorFunc(val);
       return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;

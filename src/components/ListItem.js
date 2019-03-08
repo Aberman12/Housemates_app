@@ -21,6 +21,7 @@ class ListItem extends Component {
     this.state = {
       isChecked: false
     };
+    this.markChoreAsDone.bind(this);
   }
 
   componentDidMount() {
@@ -38,7 +39,7 @@ class ListItem extends Component {
     // } else {
     //   this.props.chore.warningColor = 'green';
     // }
-
+    console.log('inside list: ', this.props.chore.warningColor);
     this.setState({ isChecked: this.props.chore.done });
   }
 
@@ -58,7 +59,7 @@ class ListItem extends Component {
   }
 
   markChoreAsDone(chore) {
-    this.props.changeDone(chore);
+    this.props.changeDone(chore, this.state.isChecked);
   }
 
   onDecline() {
@@ -107,10 +108,13 @@ class ListItem extends Component {
                 }}
                 checkBoxColor={this.props.chore.warningColor}
                 onClick={() => {
+                  this.markChoreAsDone(this.props.chore);
                   this.setState({
                     isChecked: !this.state.isChecked
                   });
-                  this.markChoreAsDone(this.props.chore);
+                  // setTimeout(() => {
+
+                  // }, 5);
                 }}
                 isChecked={this.state.isChecked}
               />

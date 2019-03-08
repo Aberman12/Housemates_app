@@ -8,13 +8,22 @@ class WeeklyChoreSelector extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      sunday: 'white',
       monday: 'white',
       tuesday: 'white',
       wednesday: 'white',
       thursday: 'white',
       friday: 'white',
       saturday: 'white',
-      sunday: 'white',
+      done: {
+        sunday: false,
+        monday: false,
+        tuesday: false,
+        wednesday: false,
+        thursday: false,
+        friday: false,
+        saturday: false
+      },
       displayed: false,
       message: 'Press to select due dates'
     };
@@ -22,15 +31,14 @@ class WeeklyChoreSelector extends Component {
 
   componentWillMount() {
     if (this.props.date) {
-      console.log('this thing: ', this.props);
       this.setState({
+        sunday: this.props.date.sunday,
         monday: this.props.date.monday,
         tuesday: this.props.date.tuesday,
         wednesday: this.props.date.wednesday,
         thursday: this.props.date.thursday,
         friday: this.props.date.friday,
-        saturday: this.props.date.saturday,
-        sunday: this.props.date.sunday
+        saturday: this.props.date.saturday
       });
     }
   }
@@ -39,6 +47,28 @@ class WeeklyChoreSelector extends Component {
     if (this.state.displayed) {
       return (
         <View>
+          <TouchableOpacity
+            onPress={() => {
+              if (this.state.sunday === 'white') {
+                this.setState({ sunday: '#89cff0' });
+              } else {
+                this.setState({ sunday: 'white' });
+              }
+            }}
+          >
+            <Text
+              style={{
+                borderBottomColor: 'red',
+                borderBottomWidth: 0.5,
+                marginBottom: 15,
+                textAlign: 'center',
+                fontSize: 20,
+                backgroundColor: this.state.sunday
+              }}
+            >
+              Sunday
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               if (this.state.monday === 'white') {
@@ -170,28 +200,6 @@ class WeeklyChoreSelector extends Component {
               }}
             >
               Saturday
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              if (this.state.sunday === 'white') {
-                this.setState({ sunday: '#89cff0' });
-              } else {
-                this.setState({ sunday: 'white' });
-              }
-            }}
-          >
-            <Text
-              style={{
-                borderBottomColor: 'red',
-                borderBottomWidth: 0.5,
-                marginBottom: 15,
-                textAlign: 'center',
-                fontSize: 20,
-                backgroundColor: this.state.sunday
-              }}
-            >
-              Sunday
             </Text>
           </TouchableOpacity>
           <CardSection>
