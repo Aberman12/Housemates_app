@@ -170,12 +170,6 @@ export default (state = INITIAL_STATE, action) => {
           }
         }
 
-        // for (var r = 0; r < weeday.length; r++) {
-        //   if (selectDays.includes(action.payload.chore.dueDate.done[weekday[r]]) && r !== n) {
-        //     action.payload.chore.dueDate.done[weekday[r]] = true;
-        //   }
-        // }
-
         if (!action.payload.isChecked) {
           isChecked = true;
         } else {
@@ -212,6 +206,21 @@ export default (state = INITIAL_STATE, action) => {
                     }
                   }
                 }
+                return choreItem;
+              } else {
+                return choreItem;
+              }
+            });
+            return chore;
+          })
+        };
+      } else if (action.payload.chore.type === 'monthly') {
+        return {
+          ...state,
+          chores: state.chores.map(chore => {
+            chore.chores.map(choreItem => {
+              if (choreItem.uid === action.payload.chore.uid) {
+                choreItem.done = !choreItem.done;
                 return choreItem;
               } else {
                 return choreItem;
