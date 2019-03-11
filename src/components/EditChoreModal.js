@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { showChoreEditModal } from '../actions';
 import DatePicker from './ChoreDatePicker';
 import WeeklyChoreSelector from './WeeklyChoreSelector';
+import MonthlyChoreSelector from './MonthlyChoreSelector';
 import Voice from 'react-native-voice';
 
 const EditChoreModal = ({
@@ -25,6 +26,14 @@ const EditChoreModal = ({
     } else if (props.choreSelected.type === 'weekly') {
       return (
         <WeeklyChoreSelector
+          date={props.choreSelected.dueDate}
+          updatedDate={props.newChoreDueDate}
+        />
+      );
+    } else if (props.choreSelected.type === 'monthly') {
+      console.log('heres my rpops: ', props);
+      return (
+        <MonthlyChoreSelector
           date={props.choreSelected.dueDate}
           updatedDate={props.newChoreDueDate}
         />

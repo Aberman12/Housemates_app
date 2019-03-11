@@ -72,6 +72,12 @@ export default (state = INITIAL_STATE, action) => {
           newChoreDueDate: action.payload.date,
           dueDateEdited: action.payload.changed
         };
+      } else if (action.payload.type === 'monthly') {
+        return {
+          ...state,
+          newChoreDueDate: action.payload.date,
+          dueDateEdited: action.payload.changed
+        };
       }
 
     case SAVE_NEW_LIST_CHANGES:
@@ -180,6 +186,7 @@ export default (state = INITIAL_STATE, action) => {
           chores: state.chores.map(chore => {
             chore.chores.map(choreItem => {
               if (choreItem.uid === action.payload.chore.uid) {
+                choreItem.done = isChecked;
                 for (var i = 0; i < weekday.length; i++) {
                   if (selectDays.includes(weekday[i]) && i <= n && isChecked) {
                     if (!choreItem.dueDate.done[weekday[i]]) {
@@ -299,7 +306,7 @@ export default (state = INITIAL_STATE, action) => {
             selectDays[6] = 'saturday';
           }
         }
-        console.log('after: ', selectDays);
+
         for (var t = 0; t < weekday.length; t++) {
           if (selectDays.includes(weekday[t]) && t < n) {
             dueDate.done[weekday[t]] = true;
@@ -307,7 +314,7 @@ export default (state = INITIAL_STATE, action) => {
         }
       }
       console.log('heres the final chore: ', newChore, dueDate.hasOwnProperty('done'));
-      //////////
+
       return {
         ...state,
         chores: state.chores.map(chore => {

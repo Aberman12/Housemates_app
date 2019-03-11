@@ -23,6 +23,11 @@ class ChoreTypeSelector extends React.Component {
           color: 'orange'
         },
         {
+          label: 'Bi-monthly',
+          value: 'Bi-monthly',
+          color: 'orange'
+        },
+        {
           label: 'monthly',
           value: 'monthly',
           color: 'orange'

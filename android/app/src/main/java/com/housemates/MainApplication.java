@@ -3,6 +3,9 @@ package com.housemates;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.zyu.ReactNativeWheelPickerPackage;
+import com.zyu.ReactNativeWheelPickerPackage;
+import com.beefe.picker.PickerViewPackage;
 import com.wenkesj.voice.VoicePackage;
 import io.invertase.firebase.RNFirebasePackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,6 +28,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeWheelPickerPackage(),
+            new ReactNativeWheelPickerPackage(),
+            new PickerViewPackage(),
             new VoicePackage(),
             new RNFirebasePackage()
       );

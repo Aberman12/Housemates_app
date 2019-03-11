@@ -4,7 +4,8 @@ import { CardSection, Button, Input, Card } from './common';
 import DatePicker from './ChoreDatePicker';
 import WeeklySelector from './WeeklyChoreSelector';
 import ChoreTypeSelector from './ChoreTypeSelector';
-// import RNPickerSelect from "react-native-picker-select";
+import BiMonthlyChoreSelector from './BiMonthlyChoreSelector';
+import MonthlyChoreSelector from './MonthlyChoreSelector';
 
 const ChoreModal = ({ children, visible, onAccept, onDecline, onChangeTextFunc, props }) => {
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
@@ -22,8 +23,10 @@ const ChoreModal = ({ children, visible, onAccept, onDecline, onChangeTextFunc, 
           <DatePicker />
         </View>
       );
+    } else if (props === 'Bi-monthly') {
+      return <BiMonthlyChoreSelector />;
     } else if (props === 'monthly') {
-      return <ChoreTypeSelector />;
+      return <MonthlyChoreSelector />;
     }
   };
 

@@ -28,4 +28,6 @@ target 'Housemates' do
 
   pod 'ReactNativeNavigation', :path => '../node_modules/react-native-navigation'
 
+  pod 'Picker', :path => '../node_modules/react-native-picker'
+
 end
