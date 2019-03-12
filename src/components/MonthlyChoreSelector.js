@@ -223,33 +223,10 @@ class MonthlyChoreSelector extends React.Component {
             );
           }}
         />
-        {/* <Button
-          title="+1 number to the above list"
-          onPress={() => {
-            const { numbers } = this.state;
-            const value = numbers.length + 1;
-            numbers.push({
-              label: `${value}`,
-              value,
-              color: 'dodgerblue'
-            });
-            this.setState({
-              numbers
-            });
-          }}
-        /> */}
       </ScrollView>
     );
   }
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     paddingVertical: 40,
-//     paddingHorizontal: 10,
-//     flex: 1
-//   }
-// });
 
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {

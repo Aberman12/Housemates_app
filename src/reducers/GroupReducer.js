@@ -15,7 +15,8 @@ import {
   CHORE_DATE_CHANGED,
   CHANGE_DONE_STATUS,
   SAVE_NEW_LIST_CHANGES,
-  CHANGE_CHORE_TYPE
+  CHANGE_CHORE_TYPE,
+  CHANGE_OFFSET
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
@@ -33,11 +34,13 @@ const INITIAL_STATE = {
   dueDateEdited: false,
   houseName: '',
   zip: '',
+  choreDone: false,
   members: [],
   chores: [],
   groceries: [],
   calendar: [],
   expenses: [],
+  biMonthlyOffset: false,
   loading: false,
   choreListModal: false,
   choreModal: false,
@@ -48,6 +51,9 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case CHANGE_OFFSET:
+      console.log('offset got triggered: ', action.payload);
+      return { ...state, biMonthlyOffset: action.payload };
     case CHANGE_CHORE_TYPE:
       return { ...state, choreType: action.payload };
 
@@ -76,6 +82,20 @@ export default (state = INITIAL_STATE, action) => {
         return {
           ...state,
           newChoreDueDate: action.payload.date,
+          dueDateEdited: action.payload.changed
+        };
+      } else if (action.payload.type === 'Bi-monthly') {
+        console.log('offsetteset: ', action.payload, state.biMonthlyOffset);
+        return {
+          ...state,
+          newChoreDueDate: {
+            date: action.payload.date.date,
+            offSet: action.payload.date.offSet,
+            offSetDoneStatus: {
+              one: action.payload.date.offSetDone1,
+              two: action.payload.date.offSetDone2
+            }
+          },
           dueDateEdited: action.payload.changed
         };
       }
@@ -229,6 +249,82 @@ export default (state = INITIAL_STATE, action) => {
             return chore;
           })
         };
+      } else if (action.payload.chore.type === 'Bi-monthly') {
+        console.log('heres whats getting put through!', action.payload);
+        var weekday = new Array(7);
+        weekday[0] = 'sunday';
+        weekday[1] = 'monday';
+        weekday[2] = 'tuesday';
+        weekday[3] = 'wednesday';
+        weekday[4] = 'thursday';
+        weekday[5] = 'friday';
+        weekday[6] = 'saturday';
+        var d = new Date(),
+          month = d.getMonth(),
+          daysOfMonth = [],
+          dateVariable = weekday.indexOf(action.payload.chore.dueDate.date);
+        console.log('date variable', dateVariable);
+        d.setDate(dateVariable);
+
+        // Get the first Monday in the month
+        while (d.getDay() !== dateVariable) {
+          d.setDate(d.getDate() + 1);
+        }
+
+        // Get all the other daysOfMonth in the month
+        while (d.getMonth() === month) {
+          var day = new Date(d.getTime());
+          daysOfMonth.push(day.getDate());
+          d.setDate(d.getDate() + 7);
+        }
+
+        if (action.payload.chore.dueDate.offSet) {
+          daysOfMonth = [daysOfMonth[0], daysOfMonth[2]];
+        } else {
+          daysOfMonth = [daysOfMonth[1], daysOfMonth[3]];
+        }
+
+        console.log(
+          'done status: ',
+          daysOfMonth,
+          action.payload.chore.dueDate.offSetDoneStatus.one
+        );
+        if (!action.payload.chore.dueDate.offSetDoneStatus.one) {
+          return {
+            ...state,
+            chores: state.chores.map(chore => {
+              chore.chores.map(choreItem => {
+                if (choreItem.uid === action.payload.chore.uid) {
+                  choreItem.dueDate.offSetDoneStatus.one = true;
+                  choreItem.done = true;
+                  return choreItem;
+                } else {
+                  return choreItem;
+                }
+              });
+              return chore;
+            })
+          };
+        } else if (
+          action.payload.chore.dueDate.offSetDoneStatus.one &&
+          !action.payload.chore.dueDate.offSetDoneStatus.two
+        ) {
+          return {
+            ...state,
+            chores: state.chores.map(chore => {
+              chore.chores.map(choreItem => {
+                if (choreItem.uid === action.payload.chore.uid) {
+                  choreItem.dueDate.offSetDoneStatus.two = true;
+                  choreItem.done = true;
+                  return choreItem;
+                } else {
+                  return choreItem;
+                }
+              });
+              return chore;
+            })
+          };
+        }
       }
 
     case SHOW_CHORE_EDIT_MODAL:
@@ -269,7 +365,7 @@ export default (state = INITIAL_STATE, action) => {
         uid: uuidv4(),
         warningColor: 'green',
         dueDate: dueDate,
-        done: false,
+        done: state.choreDone,
         type: state.choreType
       };
       var d = new Date();
@@ -339,7 +435,8 @@ export default (state = INITIAL_STATE, action) => {
           }
         }),
         newChoreName: '',
-        choreType: 'none-selected'
+        choreType: 'none-selected',
+        choreDone: false
       };
 
     case NEW_CHORES_LIST_NAMED:

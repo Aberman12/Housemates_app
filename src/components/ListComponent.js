@@ -114,6 +114,43 @@ class ChoresComponent extends Component {
     }
   }
 
+  getMondays(input) {
+    var weekday = new Array(7);
+    weekday[0] = 'sunday';
+    weekday[1] = 'monday';
+    weekday[2] = 'tuesday';
+    weekday[3] = 'wednesday';
+    weekday[4] = 'thursday';
+    weekday[5] = 'friday';
+    weekday[6] = 'saturday';
+    var d = new Date(),
+      month = d.getMonth(),
+      daysOfMonth = [],
+      dateVariable = weekday.indexOf(input.date);
+
+    d.setDate(dateVariable);
+
+    // Get the first Monday in the month
+    while (d.getDay() !== dateVariable) {
+      d.setDate(d.getDate() + 1);
+    }
+
+    // Get all the other daysOfMonth in the month
+    while (d.getMonth() === month) {
+      var day = new Date(d.getTime());
+      daysOfMonth.push(day.getDate());
+      d.setDate(d.getDate() + 7);
+    }
+
+    if (input.offSet) {
+      daysOfMonth = [daysOfMonth[1], daysOfMonth[3]];
+    } else {
+      daysOfMonth = [daysOfMonth[0], daysOfMonth[2]];
+    }
+    console.log(daysOfMonth);
+    return daysOfMonth;
+  }
+
   mainWarningColorFunc(val) {
     if (!val.chores.length) {
       val.warningColor = 'green';
@@ -138,7 +175,8 @@ class ChoresComponent extends Component {
         let doneStatus;
         let beforeSelectDays = [];
         let dateOfMonth = d.getDate();
-
+        var daysOfMonthBeforeOffset;
+        var daysOfMonthAfterOffset;
         if (val.chores[i].type === 'one-time') {
           if (!val.chores[i].done) {
             if (choreDate <= date) {
@@ -240,6 +278,27 @@ class ChoresComponent extends Component {
               val.chores[i].warningColor = 'green';
               val.warningColor = this.coordinateListWarningColor(val);
             }
+          }
+        } else if (val.chores[i].type === 'Bi-monthly') {
+          daysOfMonthBeforeOffset = this.getMondays(val.chores[i].dueDate);
+          console.log(daysOfMonthBeforeOffset[0], dateOfMonth);
+          if (
+            dateOfMonth === daysOfMonthBeforeOffset[0] ||
+            dateOfMonth === daysOfMonthBeforeOffset[1]
+          ) {
+            console.log('made ithere');
+            val.chores[i].warningColor = 'gold';
+            val.warningColor = this.coordinateListWarningColor(val);
+          } else if (
+            (dateOfMonth > daysOfMonthBeforeOffset[0] &&
+              !val.chores[i].dueDate.offSetDoneStatusOne) ||
+            (dateOfMonth > daysOfMonthBeforeOffset[1] && !val.chores[i].dueDate.offSetDoneStatusTwo)
+          ) {
+            val.chores[i].warningColor = 'red';
+            val.warningColor = this.coordinateListWarningColor(val);
+          } else {
+            val.chores[i].warningColor = 'green';
+            val.warningColor = this.coordinateListWarningColor(val);
           }
         }
       }

@@ -39,7 +39,7 @@ class ListItem extends Component {
     // } else {
     //   this.props.chore.warningColor = 'green';
     // }
-    console.log('inside list: ', this.props.chore.warningColor);
+    console.log('inside list: ', this.props.chore.warningColor, this.props.chore.done);
     this.setState({ isChecked: this.props.chore.done });
   }
 

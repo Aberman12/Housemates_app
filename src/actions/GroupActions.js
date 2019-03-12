@@ -18,7 +18,8 @@ import {
   CHORE_DATE_CHANGED,
   CHANGE_DONE_STATUS,
   SAVE_NEW_LIST_CHANGES,
-  CHANGE_CHORE_TYPE
+  CHANGE_CHORE_TYPE,
+  CHANGE_OFFSET
 } from './types';
 const uuidv4 = require('uuid/v4');
 
@@ -72,6 +73,13 @@ const addInitialChores = {
     }
   ],
   groceries: []
+};
+
+export const changeOffSet = offSet => {
+  return {
+    type: CHANGE_OFFSET,
+    payload: offSet
+  };
 };
 
 export const setChoreType = type => {

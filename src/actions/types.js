@@ -31,3 +31,4 @@ export const CHORE_DATE_CHANGED = 'chore_date_changed';
 export const CHANGE_DONE_STATUS = 'change_done_status';
 export const SAVE_NEW_LIST_CHANGES = 'save_new_list_changes';
 export const CHANGE_CHORE_TYPE = 'change_chore_type';
+export const CHANGE_OFFSET = 'change-offset';
