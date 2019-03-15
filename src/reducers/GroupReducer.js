@@ -52,7 +52,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CHANGE_OFFSET:
-      console.log('offset got triggered: ', action.payload);
       return { ...state, biMonthlyOffset: action.payload };
     case CHANGE_CHORE_TYPE:
       return { ...state, choreType: action.payload };
@@ -85,7 +84,6 @@ export default (state = INITIAL_STATE, action) => {
           dueDateEdited: action.payload.changed
         };
       } else if (action.payload.type === 'Bi-monthly') {
-        console.log('offsetteset: ', action.payload, state.biMonthlyOffset);
         return {
           ...state,
           newChoreDueDate: {
@@ -250,7 +248,6 @@ export default (state = INITIAL_STATE, action) => {
           })
         };
       } else if (action.payload.chore.type === 'Bi-monthly') {
-        console.log('heres whats getting put through!', action.payload);
         var weekday = new Array(7);
         weekday[0] = 'sunday';
         weekday[1] = 'monday';
@@ -263,7 +260,6 @@ export default (state = INITIAL_STATE, action) => {
           month = d.getMonth(),
           daysOfMonth = [],
           dateVariable = weekday.indexOf(action.payload.chore.dueDate.date);
-        console.log('date variable', dateVariable);
         d.setDate(dateVariable);
 
         // Get the first Monday in the month
@@ -283,12 +279,6 @@ export default (state = INITIAL_STATE, action) => {
         } else {
           daysOfMonth = [daysOfMonth[1], daysOfMonth[3]];
         }
-
-        console.log(
-          'done status: ',
-          daysOfMonth,
-          action.payload.chore.dueDate.offSetDoneStatus.one
-        );
         if (!action.payload.chore.dueDate.offSetDoneStatus.one) {
           return {
             ...state,
@@ -387,7 +377,6 @@ export default (state = INITIAL_STATE, action) => {
             beforeSelectDays.push(day);
           }
         }
-        console.log('before: ', beforeSelectDays);
         for (var i = 0; i < beforeSelectDays.length; i++) {
           if (beforeSelectDays[i] === 'sunday') {
             selectDays[0] = 'sunday';
@@ -418,7 +407,6 @@ export default (state = INITIAL_STATE, action) => {
           }
         }
       }
-      console.log('heres the final chore: ', newChore, dueDate.hasOwnProperty('done'));
 
       return {
         ...state,
