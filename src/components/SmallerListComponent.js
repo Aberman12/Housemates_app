@@ -6,13 +6,24 @@ import { connect } from 'react-redux';
 import { createChoreName, createNewChore } from '../actions';
 import ListItem from './ListItem';
 import ChoreModal from './CreateChoreModal';
+const uuidv4 = require('uuid/v4');
+let date = new Date();
+let year = date.getFullYear();
+let month = date.getMonth() + 1;
+let day = date.getDate();
+const fillinDate = `${year}-${month}-${day}`;
 
 class IndividualList extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showList: false,
-      showModal: false
+      showModal: false,
+      newChoreName: '',
+      choreDone: false,
+      choreType: 'none-selected',
+      warningColor: 'green',
+      uid: uuidv4()
     };
   }
 
@@ -21,7 +32,16 @@ class IndividualList extends Component {
   }
 
   onAccept() {
+    let newChore = {
+      note: this.state.newChoreName,
+      uid: uuidv4(),
+      warningColor: 'green',
+      dueDate: dueDate,
+      done: state.choreDone,
+      type: state.choreType
+    };
     if (this.props.newChoreName) {
+      console.log('now: ', this.props);
       this.props.createNewChore(this.props);
       this.setState({ showModal: false });
     } else {

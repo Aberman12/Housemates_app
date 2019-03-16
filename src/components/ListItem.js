@@ -25,20 +25,6 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
-    // let date = new Date();
-    // let choreDate = Number(this.props.chore.dueDate.slice(-2));
-    // if (!this.props.chore.done) {
-    //   console.log('heres if theyre done: ', this.props.chore.done);
-    //   if (choreDate >= date.getDate()) {
-    //     if (choreDate === date.getDate()) {
-    //       this.props.chore.warningColor = 'gold';
-    //     } else {
-    //       this.props.chore.warningColor = 'red';
-    //     }
-    //   }
-    // } else {
-    //   this.props.chore.warningColor = 'green';
-    // }
     console.log('inside list: ', this.props.chore.warningColor, this.props.chore.done);
     this.setState({ isChecked: this.props.chore.done });
   }
@@ -49,23 +35,25 @@ class ListItem extends Component {
     }
   }
 
-  onAccept() {
-    if (this.props.newChoreListName) {
-      this.props.createNewChoresList(this.props);
-      this.setState({ showModal: false });
-    } else {
-      Alert.alert('Please fill in all information');
-    }
-  }
+  // onAccept() {
+  //   let newChore = {};
+  //   if (this.props.newChoreListName) {
+
+  //     this.props.createNewChoresList(this.props);
+  //     this.setState({ showModal: false });
+  //   } else {
+  //     Alert.alert('Please fill in all information');
+  //   }
+  // }
 
   markChoreAsDone(chore) {
     this.props.changeDone(chore, this.state.isChecked);
   }
 
-  onDecline() {
-    this.props.hideChoreEditModal();
-    this.setState({ showModal: false });
-  }
+  // onDecline() {
+  //   this.props.hideChoreEditModal();
+  //   this.setState({ showModal: false });
+  // }
 
   onChangeTextFunc(noteText) {
     this.props.nameNewChoresList(noteText);
