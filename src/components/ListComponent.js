@@ -298,20 +298,26 @@ class ChoresComponent extends Component {
         } else if (val.chores[i].type === 'Bi-monthly') {
           daysOfMonthBeforeOffset = this.getMondays(val.chores[i].dueDate);
           console.log(daysOfMonthBeforeOffset[0], dateOfMonth);
-          if (
-            dateOfMonth === daysOfMonthBeforeOffset[0] ||
-            dateOfMonth === daysOfMonthBeforeOffset[1]
-          ) {
-            console.log('made ithere');
-            val.chores[i].warningColor = 'gold';
-            val.warningColor = this.coordinateListWarningColor(val);
-          } else if (
-            (dateOfMonth > daysOfMonthBeforeOffset[0] &&
-              !val.chores[i].dueDate.offSetDoneStatusOne) ||
-            (dateOfMonth > daysOfMonthBeforeOffset[1] && !val.chores[i].dueDate.offSetDoneStatusTwo)
-          ) {
-            val.chores[i].warningColor = 'red';
-            val.warningColor = this.coordinateListWarningColor(val);
+          if (!val.chores[i].done) {
+            if (
+              dateOfMonth === daysOfMonthBeforeOffset[0] ||
+              dateOfMonth === daysOfMonthBeforeOffset[1]
+            ) {
+              console.log('made ithere');
+              val.chores[i].warningColor = 'gold';
+              val.warningColor = this.coordinateListWarningColor(val);
+            } else if (
+              (dateOfMonth > daysOfMonthBeforeOffset[0] &&
+                !val.chores[i].dueDate.offSetDoneStatusOne) ||
+              (dateOfMonth > daysOfMonthBeforeOffset[1] &&
+                !val.chores[i].dueDate.offSetDoneStatusTwo)
+            ) {
+              val.chores[i].warningColor = 'red';
+              val.warningColor = this.coordinateListWarningColor(val);
+            } else {
+              val.chores[i].warningColor = 'green';
+              val.warningColor = this.coordinateListWarningColor(val);
+            }
           } else {
             val.chores[i].warningColor = 'green';
             val.warningColor = this.coordinateListWarningColor(val);
