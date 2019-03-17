@@ -55,7 +55,10 @@ class BiMonthlyChoreSelector extends Component {
   }
 
   componentWillMount() {
-    this.setState({ offSet: this.props.offSet, favNumber: this.props.date });
+    console.log('props in bimonthly: ', this.props);
+    if (this.props.date) {
+      this.setState({ offSet: this.props.date.offSet, favNumber: this.props.date.date });
+    }
   }
 
   submitInfo() {

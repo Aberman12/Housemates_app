@@ -104,16 +104,8 @@ export default (state = INITIAL_STATE, action) => {
         chores: state.chores.map(chore => {
           if (chore.chores.length) {
             for (var i = 0; i < chore.chores.length; i++) {
-              if (chore.chores[i] === action.payload.listToUpdate) {
-                if (state.newChoreListName !== '') {
-                  chore.chores[i].note = state.newChoreListName;
-                }
-                if (state.newChoreDueDate !== fillinDate || state.dueDateEdited) {
-                  if (fillinDate[5] === '0') {
-                    fillinDate.slice(5, 1);
-                  }
-                  chore.chores[i].dueDate = state.newChoreDueDate;
-                }
+              if (chore.chores[i].uid === action.payload.uid) {
+                chore.chores[i] = action.payload;
               }
             }
             return chore;
@@ -128,194 +120,20 @@ export default (state = INITIAL_STATE, action) => {
       };
 
     case CHANGE_DONE_STATUS:
-      if (action.payload.chore.type === 'one-time') {
-        return {
-          ...state,
-          chores: state.chores.map(chore => {
-            chore.chores.map(choreItem => {
-              if (choreItem.uid === action.payload.chore.uid) {
-                choreItem.done = !choreItem.done;
-                return choreItem;
-              } else {
-                return choreItem;
-              }
-            });
-            return chore;
-          })
-        };
-      } else if (action.payload.chore.type === 'weekly') {
-        var d = new Date();
-        let isChecked;
-        var weekday = new Array(7);
-        weekday[0] = 'sunday';
-        weekday[1] = 'monday';
-        weekday[2] = 'tuesday';
-        weekday[3] = 'wednesday';
-        weekday[4] = 'thursday';
-        weekday[5] = 'friday';
-        weekday[6] = 'saturday';
-
-        var n = d.getDay();
-        let selectDays = new Array(7);
-        let beforeSelectDays = [];
-        let deciferIfChoreCompletedInAdvance = true;
-        for (let day in action.payload.chore.dueDate.done) {
-          if (action.payload.chore.dueDate[day] === '#89cff0') {
-            beforeSelectDays.push(day);
-          }
-        }
-        for (var i = 0; i < beforeSelectDays.length; i++) {
-          if (beforeSelectDays[i] === 'sunday') {
-            selectDays[0] = 'sunday';
-          }
-          if (beforeSelectDays[i] === 'monday') {
-            selectDays[1] = 'monday';
-          }
-          if (beforeSelectDays[i] === 'tuesday') {
-            selectDays[2] = 'tuesday';
-          }
-          if (beforeSelectDays[i] === 'wednesday') {
-            selectDays[3] = 'wednesday';
-          }
-          if (beforeSelectDays[i] === 'thursday') {
-            selectDays[4] = 'thursday';
-          }
-          if (beforeSelectDays[i] === 'friday') {
-            selectDays[5] = 'friday';
-          }
-          if (beforeSelectDays[i] === 'saturday') {
-            selectDays[6] = 'saturday';
-          }
-        }
-
-        if (!action.payload.isChecked) {
-          isChecked = true;
-        } else {
-          isChecked = false;
-        }
-        return {
-          ...state,
-          chores: state.chores.map(chore => {
-            chore.chores.map(choreItem => {
-              if (choreItem.uid === action.payload.chore.uid) {
-                choreItem.done = isChecked;
-                for (var i = 0; i < weekday.length; i++) {
-                  if (selectDays.includes(weekday[i]) && i <= n && isChecked) {
-                    if (!choreItem.dueDate.done[weekday[i]]) {
-                      choreItem.dueDate.done[weekday[i]] = true;
-                    }
-                  } else if (selectDays.includes(weekday[i]) && i <= n && !isChecked) {
-                    for (var j = selectDays.length - 1; j >= 0; j--) {
-                      if (choreItem.dueDate.done[selectDays[j]]) {
-                        choreItem.dueDate.done[selectDays[j]] = false;
-                        break;
-                      }
-                    }
-                    break;
-                  } else if (i > n && !choreItem.dueDate.done[weekday[i]] && !isChecked) {
-                    console.log('something hit this area');
-                  } else if (i > n && choreItem.dueDate.done[weekday[i]] && isChecked) {
-                    console.log('part3');
-                    for (var j = selectDays.length - 1; j <= 0; j--) {
-                      if (!choreItem.dueDate.done[selectDays[j]]) {
-                        choreItem.dueDate.done[selectDays[j]] = true;
-                        break;
-                      }
-                    }
-                  }
-                }
-                return choreItem;
-              } else {
-                return choreItem;
-              }
-            });
-            return chore;
-          })
-        };
-      } else if (action.payload.chore.type === 'monthly') {
-        return {
-          ...state,
-          chores: state.chores.map(chore => {
-            chore.chores.map(choreItem => {
-              if (choreItem.uid === action.payload.chore.uid) {
-                choreItem.done = !choreItem.done;
-                return choreItem;
-              } else {
-                return choreItem;
-              }
-            });
-            return chore;
-          })
-        };
-      } else if (action.payload.chore.type === 'Bi-monthly') {
-        var weekday = new Array(7);
-        weekday[0] = 'sunday';
-        weekday[1] = 'monday';
-        weekday[2] = 'tuesday';
-        weekday[3] = 'wednesday';
-        weekday[4] = 'thursday';
-        weekday[5] = 'friday';
-        weekday[6] = 'saturday';
-        var d = new Date(),
-          month = d.getMonth(),
-          daysOfMonth = [],
-          dateVariable = weekday.indexOf(action.payload.chore.dueDate.date);
-        d.setDate(dateVariable);
-
-        // Get the first Monday in the month
-        while (d.getDay() !== dateVariable) {
-          d.setDate(d.getDate() + 1);
-        }
-
-        // Get all the other daysOfMonth in the month
-        while (d.getMonth() === month) {
-          var day = new Date(d.getTime());
-          daysOfMonth.push(day.getDate());
-          d.setDate(d.getDate() + 7);
-        }
-
-        if (action.payload.chore.dueDate.offSet) {
-          daysOfMonth = [daysOfMonth[0], daysOfMonth[2]];
-        } else {
-          daysOfMonth = [daysOfMonth[1], daysOfMonth[3]];
-        }
-        if (!action.payload.chore.dueDate.offSetDoneStatus.one) {
-          return {
-            ...state,
-            chores: state.chores.map(chore => {
-              chore.chores.map(choreItem => {
-                if (choreItem.uid === action.payload.chore.uid) {
-                  choreItem.dueDate.offSetDoneStatus.one = true;
-                  choreItem.done = true;
-                  return choreItem;
-                } else {
-                  return choreItem;
-                }
-              });
-              return chore;
-            })
-          };
-        } else if (
-          action.payload.chore.dueDate.offSetDoneStatus.one &&
-          !action.payload.chore.dueDate.offSetDoneStatus.two
-        ) {
-          return {
-            ...state,
-            chores: state.chores.map(chore => {
-              chore.chores.map(choreItem => {
-                if (choreItem.uid === action.payload.chore.uid) {
-                  choreItem.dueDate.offSetDoneStatus.two = true;
-                  choreItem.done = true;
-                  return choreItem;
-                } else {
-                  return choreItem;
-                }
-              });
-              return chore;
-            })
-          };
-        }
-      }
+      return {
+        ...state,
+        chores: state.chores.map(chore => {
+          chore.chores.map(choreItem => {
+            if (choreItem.uid === action.payload.uid) {
+              choreItem = action.payload;
+              return choreItem;
+            } else {
+              return choreItem;
+            }
+          });
+          return chore;
+        })
+      };
 
     case SHOW_CHORE_EDIT_MODAL:
       return {
@@ -342,80 +160,23 @@ export default (state = INITIAL_STATE, action) => {
       return {
         chores: state.chores.filter(chore => {
           return chore.uid !== action.payload.uid;
-        })
+        }),
+        choreType: 'none-selected',
+        choreSelected: ''
       };
 
     case CREATE_CHORE_NAME:
       return { ...state, newChoreName: action.payload };
 
     case CREATE_NEW_CHORE:
-      let dueDate = state.newChoreDueDate;
-      let newChore = {
-        note: state.newChoreName,
-        uid: uuidv4(),
-        warningColor: 'green',
-        dueDate: dueDate,
-        done: state.choreDone,
-        type: state.choreType
-      };
-      var d = new Date();
-      var weekday = new Array(7);
-      weekday[0] = 'sunday';
-      weekday[1] = 'monday';
-      weekday[2] = 'tuesday';
-      weekday[3] = 'wednesday';
-      weekday[4] = 'thursday';
-      weekday[5] = 'friday';
-      weekday[6] = 'saturday';
-      let selectDays = new Array(7);
-      let beforeSelectDays = [];
-      var n = d.getDay();
-
-      if (dueDate.hasOwnProperty('done')) {
-        for (let day in dueDate) {
-          if (dueDate[day] === '#89cff0') {
-            beforeSelectDays.push(day);
-          }
-        }
-        for (var i = 0; i < beforeSelectDays.length; i++) {
-          if (beforeSelectDays[i] === 'sunday') {
-            selectDays[0] = 'sunday';
-          }
-          if (beforeSelectDays[i] === 'monday') {
-            selectDays[1] = 'monday';
-          }
-          if (beforeSelectDays[i] === 'tuesday') {
-            selectDays[2] = 'tuesday';
-          }
-          if (beforeSelectDays[i] === 'wednesday') {
-            selectDays[3] = 'wednesday';
-          }
-          if (beforeSelectDays[i] === 'thursday') {
-            selectDays[4] = 'thursday';
-          }
-          if (beforeSelectDays[i] === 'friday') {
-            selectDays[5] = 'friday';
-          }
-          if (beforeSelectDays[i] === 'saturday') {
-            selectDays[6] = 'saturday';
-          }
-        }
-
-        for (var t = 0; t < weekday.length; t++) {
-          if (selectDays.includes(weekday[t]) && t < n) {
-            dueDate.done[weekday[t]] = true;
-          }
-        }
-      }
-
       return {
         ...state,
         chores: state.chores.map(chore => {
-          if (chore.uid === action.payload.val.uid) {
+          if (chore.uid === action.payload.ListUid) {
             if (chore.chores) {
-              chore.chores = [...chore.chores, newChore];
+              chore.chores = [...chore.chores, action.payload.info];
             } else {
-              chore.chores = [newChore];
+              chore.chores = [action.payload.info];
             }
             return chore;
           } else {
@@ -453,7 +214,8 @@ export default (state = INITIAL_STATE, action) => {
             return chore;
           }
         }),
-        choreEditModal: false
+        choreEditModal: false,
+        choreType: 'none-selected'
       };
 
     case GROUP_ZIP_CHANGED:

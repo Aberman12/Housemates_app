@@ -6,6 +6,7 @@ import { showChoreEditModal } from '../actions';
 import DatePicker from './ChoreDatePicker';
 import WeeklyChoreSelector from './WeeklyChoreSelector';
 import MonthlyChoreSelector from './MonthlyChoreSelector';
+import BiMonthlyChoreSelector from './BiMonthlyChoreSelector';
 import Voice from 'react-native-voice';
 
 const EditChoreModal = ({
@@ -38,6 +39,9 @@ const EditChoreModal = ({
           updatedDate={props.newChoreDueDate}
         />
       );
+    } else if (props.choreSelected.type === 'Bi-monthly') {
+      console.log('heres my rpops: ', props);
+      return <BiMonthlyChoreSelector date={props.choreSelected.dueDate} />;
     }
   };
 

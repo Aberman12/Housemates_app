@@ -6,12 +6,7 @@ import { connect } from 'react-redux';
 import { createChoreName, createNewChore } from '../actions';
 import ListItem from './ListItem';
 import ChoreModal from './CreateChoreModal';
-const uuidv4 = require('uuid/v4');
-let date = new Date();
-let year = date.getFullYear();
-let month = date.getMonth() + 1;
-let day = date.getDate();
-const fillinDate = `${year}-${month}-${day}`;
+var uuidv4 = require('uuid/v4');
 
 class IndividualList extends Component {
   constructor(props) {
@@ -19,11 +14,7 @@ class IndividualList extends Component {
     this.state = {
       showList: false,
       showModal: false,
-      newChoreName: '',
-      choreDone: false,
-      choreType: 'none-selected',
-      warningColor: 'green',
-      uid: uuidv4()
+      warningColor: 'green'
     };
   }
 
@@ -33,16 +24,68 @@ class IndividualList extends Component {
 
   onAccept() {
     let newChore = {
-      note: this.state.newChoreName,
+      note: this.props.newChoreName,
       uid: uuidv4(),
-      warningColor: 'green',
-      dueDate: dueDate,
-      done: state.choreDone,
-      type: state.choreType
+      warningColor: this.state.warningColor,
+      dueDate: this.props.newChoreDueDate,
+      done: false,
+      type: this.props.choreType
     };
     if (this.props.newChoreName) {
-      console.log('now: ', this.props);
-      this.props.createNewChore(this.props);
+      let dueDate = this.props.newChoreDueDate;
+
+      var d = new Date();
+      var weekday = new Array(7);
+      weekday[0] = 'sunday';
+      weekday[1] = 'monday';
+      weekday[2] = 'tuesday';
+      weekday[3] = 'wednesday';
+      weekday[4] = 'thursday';
+      weekday[5] = 'friday';
+      weekday[6] = 'saturday';
+      let selectDays = new Array(7);
+      let beforeSelectDays = [];
+      var n = d.getDay();
+
+      if (dueDate.hasOwnProperty('done')) {
+        for (let day in dueDate) {
+          if (dueDate[day] === '#89cff0') {
+            beforeSelectDays.push(day);
+          }
+        }
+        for (var i = 0; i < beforeSelectDays.length; i++) {
+          if (beforeSelectDays[i] === 'sunday') {
+            selectDays[0] = 'sunday';
+          }
+          if (beforeSelectDays[i] === 'monday') {
+            selectDays[1] = 'monday';
+          }
+          if (beforeSelectDays[i] === 'tuesday') {
+            selectDays[2] = 'tuesday';
+          }
+          if (beforeSelectDays[i] === 'wednesday') {
+            selectDays[3] = 'wednesday';
+          }
+          if (beforeSelectDays[i] === 'thursday') {
+            selectDays[4] = 'thursday';
+          }
+          if (beforeSelectDays[i] === 'friday') {
+            selectDays[5] = 'friday';
+          }
+          if (beforeSelectDays[i] === 'saturday') {
+            selectDays[6] = 'saturday';
+          }
+        }
+
+        for (var t = 0; t < weekday.length; t++) {
+          if (selectDays.includes(weekday[t]) && t < n) {
+            dueDate.done[weekday[t]] = true;
+          }
+        }
+      }
+
+      console.log('now: ', this.props.val.uid, newChore);
+      this.props.createNewChore(this.props.val.uid, newChore);
       this.setState({ showModal: false });
     } else {
       window.alert('Please fill in a name for your chore');
@@ -159,8 +202,15 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { newChoreName, chores, choreType } = groupReducer;
-  return { newChoreName, chores, choreType };
+  const {
+    newChoreName,
+    chores,
+    choreType,
+    newChoreListName,
+    newChoreDueDate,
+    dueDateEdited
+  } = groupReducer;
+  return { newChoreName, chores, choreType, newChoreListName, newChoreDueDate, dueDateEdited };
 };
 
 export default connect(

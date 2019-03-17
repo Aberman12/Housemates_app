@@ -16,6 +16,11 @@ import {
 import Note from './SmallerListComponent';
 import { ListModal } from './common';
 import EditChoreModal from './EditChoreModal';
+let date = new Date();
+let year = date.getFullYear();
+let month = date.getMonth() + 1;
+let day = date.getDate();
+const fillinDate = `${year}-${month}-${day}`;
 
 class ChoresComponent extends Component {
   constructor(props) {
@@ -43,7 +48,18 @@ class ChoresComponent extends Component {
   }
 
   saveListChanges() {
-    this.props.saveNewListChanges(this.props.choreSelected, this.props.newChoreListName);
+    var choreInQuestion = this.props.choreSelected;
+    if (this.props.newChoreListName !== '') {
+      choreInQuestion.note = this.props.newChoreListName;
+    }
+    if (this.props.newChoreDueDate !== fillinDate || this.props.dueDateEdited) {
+      if (fillinDate[5] === '0') {
+        fillinDate.slice(5, 1);
+      }
+      choreInQuestion.dueDate = this.props.newChoreDueDate;
+    }
+
+    this.props.saveNewListChanges(choreInQuestion);
   }
 
   onDecline() {
@@ -382,8 +398,24 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { chores, loading, newChoreListName, choreEditModal, choreSelected } = groupReducer;
-  return { chores, loading, newChoreListName, choreEditModal, choreSelected };
+  const {
+    chores,
+    loading,
+    newChoreListName,
+    choreEditModal,
+    choreSelected,
+    dueDateEdited,
+    newChoreDueDate
+  } = groupReducer;
+  return {
+    chores,
+    loading,
+    newChoreListName,
+    choreEditModal,
+    choreSelected,
+    dueDateEdited,
+    newChoreDueDate
+  };
 };
 
 export default connect(

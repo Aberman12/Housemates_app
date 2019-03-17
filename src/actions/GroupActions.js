@@ -76,6 +76,7 @@ const addInitialChores = {
 };
 
 export const changeOffSet = offSet => {
+  console.log('got offsettttetetetetet: ', offSet);
   return {
     type: CHANGE_OFFSET,
     payload: offSet
@@ -89,10 +90,10 @@ export const setChoreType = type => {
   };
 };
 
-export const changeDone = (chore, isChecked) => {
+export const changeDone = chore => {
   return {
     type: CHANGE_DONE_STATUS,
-    payload: { chore, isChecked }
+    payload: chore
   };
 };
 
@@ -216,10 +217,10 @@ export const createChoreName = text => {
   };
 };
 
-export const saveNewListChanges = (listToUpdate, newName) => {
+export const saveNewListChanges = listToUpdate => {
   return {
     type: SAVE_NEW_LIST_CHANGES,
-    payload: { listToUpdate, newName }
+    payload: listToUpdate
   };
 };
 
@@ -243,11 +244,11 @@ export const createChoreDate = date => {
   };
 };
 
-export const createNewChore = info => {
+export const createNewChore = (ListUid, info) => {
   const { currentUser } = firebase.auth();
   const chore = info.chores;
   return dispatch => {
-    dispatch({ type: CREATE_NEW_CHORE, payload: info });
+    dispatch({ type: CREATE_NEW_CHORE, payload: { ListUid, info } });
     // firebase
     //   .database()
     //   .ref(`/chores/${currentUser.uid}`)
