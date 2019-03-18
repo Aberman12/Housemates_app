@@ -25,7 +25,7 @@ class IndividualList extends Component {
   onAccept() {
     let newChore = {
       note: this.props.newChoreName,
-      uid: uuidv4(),
+      _id: uuidv4(),
       warningColor: this.state.warningColor,
       dueDate: this.props.newChoreDueDate,
       done: false,
@@ -84,8 +84,8 @@ class IndividualList extends Component {
         }
       }
 
-      console.log('now: ', this.props.val.uid, newChore);
-      this.props.createNewChore(this.props.val.uid, newChore);
+      console.log('now: ', this.props.val._id, newChore);
+      this.props.createNewChore(this.props.val._id, newChore);
       this.setState({ showModal: false });
     } else {
       window.alert('Please fill in a name for your chore');

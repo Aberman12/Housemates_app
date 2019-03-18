@@ -36,7 +36,7 @@
     "@expo/vector-icons": "^9.0.0",
     "firebase": "^3.4.1",
     "lodash": "^4.17.11",
-    "moment": "^2.24.0",
+    "pouchdb-react-native": "^6.4.1",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-calendars": "^1.22.0",
@@ -58,6 +58,7 @@
     "react-native-wheel-picker": "^1.2.0",
     "react-redux": "^4.4.10",
     "redux": "^3.6.0",
+    "redux-pouchdb": "^0.1.4",
     "redux-thunk": "^2.1.0",
     "rn-wheel-picker": "^2.0.0",
     "uuid": "^3.3.2"

@@ -1,5 +1,6 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
+import PouchDB from 'pouchdb-react-native';
 import {
   LOADING,
   NEW_GROUP_CREATED,
@@ -21,32 +22,39 @@ import {
   CHANGE_CHORE_TYPE,
   CHANGE_OFFSET
 } from './types';
+
+const remotedb = new PouchDB('housemates');
+const db = new PouchDB('housematesLocal');
+db.sync(remotedb, {
+  live: true,
+  retry: true
+});
 const uuidv4 = require('uuid/v4');
 
 const addInitialChores = {
   chores: [
     {
-      uid: uuidv4(),
+      _id: uuidv4(),
       note: 'Weekly',
       warningColor: 'green',
       chores: [
         {
           note: 'clean room',
-          uid: uuidv4(),
+          _id: uuidv4(),
           warningColor: 'green',
           dueDate: '2018-01-19',
           done: false
         },
         {
           note: 'mop floor',
-          uid: uuidv4(),
+          _id: uuidv4(),
           warningColor: 'green',
           dueDate: '2018-01-19',
           done: false
         },
         {
           note: 'go to bed',
-          uid: uuidv4(),
+          _id: uuidv4(),
           warningColor: 'green',
           dueDate: '2018-01-19',
           done: false
@@ -54,19 +62,19 @@ const addInitialChores = {
       ]
     },
     {
-      uid: uuidv4(),
+      _id: uuidv4(),
       note: 'Monthly',
       warningColor: 'green',
       chores: []
     },
     {
-      uid: uuidv4(),
+      _id: uuidv4(),
       note: "Jon's Chores",
       warningColor: 'green',
       chores: []
     },
     {
-      uid: uuidv4(),
+      _id: uuidv4(),
       note: "Cindy's Chores",
       warningColor: 'green',
       chores: []
@@ -76,7 +84,6 @@ const addInitialChores = {
 };
 
 export const changeOffSet = offSet => {
-  console.log('got offsettttetetetetet: ', offSet);
   return {
     type: CHANGE_OFFSET,
     payload: offSet
@@ -112,7 +119,6 @@ export const houseZipChange = text => {
 };
 
 export const changeChoreDate = (date, changed, type) => {
-  console.log('second step for date: ', date);
   return {
     type: CHORE_DATE_CHANGED,
     payload: { date, changed, type }
@@ -134,7 +140,7 @@ export const deleteChore = (chore, chores) => {
     if (chores[i].hasOwnProperty('chores') && chores[i].chores.includes(chore)) {
       index1 = i;
       for (var j = 0; j <= chores[i].chores.length; j++) {
-        if (chores[i].chores[j].uid === chore.uid) {
+        if (chores[i].chores[j]._id === chore._id) {
           index2 = j;
           break;
         }
@@ -160,7 +166,7 @@ export const deleteChore = (chore, chores) => {
 export const createNewChoresList = info => {
   const { currentUser } = firebase.auth();
   const newChore = {
-    uid: uuidv4(),
+    _id: uuidv4(),
     note: info.newChoreListName,
     warningColor: 'green',
     chores: []
@@ -168,13 +174,18 @@ export const createNewChoresList = info => {
   const chore = info.chores.concat([newChore]);
   return dispatch => {
     dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
-    // firebase
-    //   .database()
-    //   .ref(`/chores/${currentUser.uid}`)
-    //   .set({ chore })
-    //   .then(() => {
-    //     console.log('chore set');
-    //   });
+
+    db.put(newChore)
+      .then(function(result) {
+        console.log('Successfully posted a todo!', result);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+
+    db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
+      console.log('from all docs: ', doc);
+    });
   };
 };
 
@@ -245,17 +256,19 @@ export const createChoreDate = date => {
 };
 
 export const createNewChore = (ListUid, info) => {
-  const { currentUser } = firebase.auth();
-  const chore = info.chores;
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: { ListUid, info } });
-    // firebase
-    //   .database()
-    //   .ref(`/chores/${currentUser.uid}`)
-    //   .set({ chore })
-    //   .then(() => {
-    //     console.log('chore set');
-    //   });
+    db.put(info)
+      .then(function(result) {
+        console.log('Successfully posted a todo!', result);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
+
+    db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
+      console.log('from all docs: ', doc);
+    });
   };
 };
 

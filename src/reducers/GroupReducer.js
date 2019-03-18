@@ -104,7 +104,7 @@ export default (state = INITIAL_STATE, action) => {
         chores: state.chores.map(chore => {
           if (chore.chores.length) {
             for (var i = 0; i < chore.chores.length; i++) {
-              if (chore.chores[i].uid === action.payload.uid) {
+              if (chore.chores[i]._id === action.payload._id) {
                 chore.chores[i] = action.payload;
               }
             }
@@ -124,7 +124,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         chores: state.chores.map(chore => {
           chore.chores.map(choreItem => {
-            if (choreItem.uid === action.payload.uid) {
+            if (choreItem._id === action.payload._id) {
               choreItem = action.payload;
               return choreItem;
             } else {
@@ -159,7 +159,7 @@ export default (state = INITIAL_STATE, action) => {
     case DELETE_CHORES_LIST:
       return {
         chores: state.chores.filter(chore => {
-          return chore.uid !== action.payload.uid;
+          return chore._id !== action.payload._id;
         }),
         choreType: 'none-selected',
         choreSelected: ''
@@ -172,7 +172,7 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         chores: state.chores.map(chore => {
-          if (chore.uid === action.payload.ListUid) {
+          if (chore._id === action.payload.ListUid) {
             if (chore.chores) {
               chore.chores = [...chore.chores, action.payload.info];
             } else {
