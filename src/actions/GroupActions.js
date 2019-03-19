@@ -23,8 +23,8 @@ import {
   CHANGE_OFFSET
 } from './types';
 
-const remotedb = new PouchDB('housemates');
-const db = new PouchDB('housematesLocal');
+const remotedb = new PouchDB('housematesTest1');
+const db = new PouchDB('housematesLocalTest1');
 db.sync(remotedb, {
   live: true,
   retry: true
@@ -133,91 +133,77 @@ export const nameNewChoresList = text => {
 };
 
 export const deleteChore = (chore, chores) => {
-  const { currentUser } = firebase.auth();
-  let index1;
-  let index2;
-  for (var i = 0; i <= chores.length; i++) {
-    if (chores[i].hasOwnProperty('chores') && chores[i].chores.includes(chore)) {
-      index1 = i;
-      for (var j = 0; j <= chores[i].chores.length; j++) {
-        if (chores[i].chores[j]._id === chore._id) {
-          index2 = j;
-          break;
+  let choreToGet;
+  return dispatch => {
+    for (var i = 0; i < chores.length; i++) {
+      console.log('chores chore:: ', chores[i], chore);
+      if (chores[i].chores.includes(chore)) {
+        choreToGet = chores[i]._id;
+        console.log('chore to get: ', choreToGet);
+      }
+    }
+    db.get(choreToGet).then(function(doc) {
+      console.log('did i get the right one? ', doc);
+      for (var i = 0; i < doc.chores.length; i++) {
+        if (doc.chores[i]._id === chore._id) {
+          doc.chores.splice(i, 1);
         }
       }
-      break;
-    }
-  }
-  return dispatch => {
-    dispatch({
-      type: DELETE_CHORE,
-      payload: chore
+      console.log('and heres doc: ', doc);
+      db.put(doc)
+        .then(function(result) {
+          dispatch({
+            type: DELETE_CHORE,
+            payload: chore
+          });
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
     });
-    // firebase
-    //   .database()
-    //   .ref(`/chores/${currentUser.uid}/chore/${index1}/chores/${index2}`)
-    //   .remove()
-    //   .then(() => {
-    //     Actions.employeeList({ type: 'reset' });
-    //   });
   };
 };
 
 export const createNewChoresList = info => {
-  const { currentUser } = firebase.auth();
   const newChore = {
     _id: uuidv4(),
     note: info.newChoreListName,
     warningColor: 'green',
     chores: []
   };
-  const chore = info.chores.concat([newChore]);
   return dispatch => {
-    dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
-
     db.put(newChore)
       .then(function(result) {
-        console.log('Successfully posted a todo!', result);
+        dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
       })
       .catch(function(err) {
         console.log(err);
       });
-
-    db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
-      console.log('from all docs: ', doc);
-    });
   };
 };
 
 export const choresFetch = () => {
-  const { currentUser } = firebase.auth();
+  let choresArr = [];
   return dispatch => {
-    // firebase
-    //   .database()
-    //   .ref(`/chores/${currentUser.uid}`)
-    //   .on('value', snapshot => {
-    //     dispatch({ type: CHORES_FETCH_SUCCESS, payload: snapshot.val() });
-    //   });
+    db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
+      doc.rows.forEach(item => {
+        choresArr.push(item.doc);
+      });
+      choresArr = choresArr.reverse();
+      dispatch({ type: CHORES_FETCH_SUCCESS, payload: choresArr });
+    });
   };
 };
 
 export const deleteChoresList = (text, chores) => {
   const { currentUser } = firebase.auth();
+  console.log('list before delete: ', chores, text);
   return dispatch => {
-    let index;
-    for (var i = 0; i < chores.length; i++) {
-      if (chores[i].note === text.note) {
-        index = i;
-      }
-    }
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
-    // firebase
-    //   .database()
-    //   .ref(`/chores/${currentUser.uid}/chore/${index}`)
-    //   .remove()
-    //   .then(() => {
-    //     Actions.employeeList({ type: 'reset' });
-    //   });
+    db.get(text._id).then(function(doc) {
+      console.log('heres doc in deleteList: ', doc);
+      return db.remove(doc);
+    });
   };
 };
 
@@ -258,17 +244,20 @@ export const createChoreDate = date => {
 export const createNewChore = (ListUid, info) => {
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: { ListUid, info } });
-    db.put(info)
-      .then(function(result) {
-        console.log('Successfully posted a todo!', result);
+    db.get(ListUid)
+      .then(function(doc) {
+        console.log('doc i received in createNewChore', doc);
+        doc.chores.push(info);
+        // put them back
+        return db.put(doc);
       })
-      .catch(function(err) {
-        console.log(err);
+      .then(function() {
+        // fetch mittens again
+        return db.get(ListUid);
+      })
+      .then(function(doc) {
+        console.log('edited doc in createNewChore', doc);
       });
-
-    db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
-      console.log('from all docs: ', doc);
-    });
   };
 };
 
@@ -277,68 +266,68 @@ export const createGroup = ({ houseName, zip }) => {
   const id = currentUser.uid;
   return dispatch => {
     dispatch({ type: LOADING });
-    firebase
-      .database()
-      .ref(`/group/${currentUser.uid}/groupData/`)
-      .push({ houseName, zip })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`/group/${currentUser.uid}/members/`)
-          .push({ id });
-      })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`/chores/${currentUser.uid}`)
-          .push({
-            weekly: {
-              date: '12/12/18',
-              note: 'Weekly',
-              warningColor: 'green',
-              chores: addInitialChores.chores[0].chores
-            },
-            monthly: {
-              date: 'December',
-              note: 'Monthly',
-              warningColor: 'green',
-              chores: []
-            },
-            johns: {
-              date: '12/12/18',
-              note: "Jon's Chores",
-              warningColor: 'green',
-              chores: []
-            },
-            cindys: {
-              date: '12/12/18',
-              note: "Cindy's Chores",
-              warningColor: 'green',
-              chores: []
-            }
-          });
-      })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`/groceries/${currentUser.uid}`)
-          .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
-      })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`/expenses/${currentUser.uid}`)
-          .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
-      })
-      .then(() => {
-        firebase
-          .database()
-          .ref(`/iou/${currentUser.uid}`)
-          .push({ SallysIOU: 'Sallys Chores', FredsIOU: 'Sallys Chores' });
-      })
-      .then(() => {
-        dispatch({ type: NEW_GROUP_CREATED, payload: addInitialChores.chores });
-        Actions.main({ type: 'reset' });
-      });
+    //   firebase
+    //     .database()
+    //     .ref(`/group/${currentUser.uid}/groupData/`)
+    //     .push({ houseName, zip })
+    //     .then(() => {
+    //       firebase
+    //         .database()
+    //         .ref(`/group/${currentUser.uid}/members/`)
+    //         .push({ id });
+    //     })
+    //     .then(() => {
+    //       firebase
+    //         .database()
+    //         .ref(`/chores/${currentUser.uid}`)
+    //         .push({
+    //           weekly: {
+    //             date: '12/12/18',
+    //             note: 'Weekly',
+    //             warningColor: 'green',
+    //             chores: addInitialChores.chores[0].chores
+    //           },
+    //           monthly: {
+    //             date: 'December',
+    //             note: 'Monthly',
+    //             warningColor: 'green',
+    //             chores: []
+    //           },
+    //           johns: {
+    //             date: '12/12/18',
+    //             note: "Jon's Chores",
+    //             warningColor: 'green',
+    //             chores: []
+    //           },
+    //           cindys: {
+    //             date: '12/12/18',
+    //             note: "Cindy's Chores",
+    //             warningColor: 'green',
+    //             chores: []
+    //           }
+    //         });
+    //     })
+    //     .then(() => {
+    //       firebase
+    //         .database()
+    //         .ref(`/groceries/${currentUser.uid}`)
+    //         .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
+    //     })
+    //     .then(() => {
+    //       firebase
+    //         .database()
+    //         .ref(`/expenses/${currentUser.uid}`)
+    //         .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
+    //     })
+    //     .then(() => {
+    //       firebase
+    //         .database()
+    //         .ref(`/iou/${currentUser.uid}`)
+    //         .push({ SallysIOU: 'Sallys Chores', FredsIOU: 'Sallys Chores' });
+    //     })
+    //     .then(() => {
+    //       dispatch({ type: NEW_GROUP_CREATED, payload: addInitialChores.chores });
+    //       Actions.main({ type: 'reset' });
+    //     });
   };
 };

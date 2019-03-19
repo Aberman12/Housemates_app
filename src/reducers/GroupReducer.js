@@ -195,8 +195,9 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
 
     case CHORES_FETCH_SUCCESS:
+      console.log('chores fetch success reducer: ', action.payload);
       return {
-        chores: action.payload.chore
+        chores: action.payload
       };
 
     case DELETE_CHORE:
