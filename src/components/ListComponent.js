@@ -59,7 +59,7 @@ class ChoresComponent extends Component {
       choreInQuestion.dueDate = this.props.newChoreDueDate;
     }
 
-    this.props.saveNewListChanges(choreInQuestion);
+    this.props.saveNewListChanges(choreInQuestion, this.props.chores);
   }
 
   onDecline() {
@@ -163,7 +163,6 @@ class ChoresComponent extends Component {
     } else {
       daysOfMonth = [daysOfMonth[0], daysOfMonth[2]];
     }
-    console.log(daysOfMonth);
     return daysOfMonth;
   }
 
@@ -172,7 +171,6 @@ class ChoresComponent extends Component {
       val.warningColor = 'green';
     } else {
       for (var i = 0; i < val.chores.length; i++) {
-        console.log('first on listmannyyy: ', val.chores[i]);
         let getInitialDate = new Date();
         let date = getInitialDate.setHours(0, 0, 0, 0);
         let choreDate = new Date(val.chores[i].dueDate).setHours(0, 0, 0, 0);
@@ -216,7 +214,6 @@ class ChoresComponent extends Component {
           doneStatus = val.chores[i].dueDate.done;
           let thisChoreI = val.chores[i];
           let stuffstuff = false;
-          console.log('chores: ', val.chores[i]);
           for (let day in weeklyDueDate) {
             if (weeklyDueDate[day] === '#89cff0') {
               beforeSelectDays.push(day);
@@ -248,34 +245,28 @@ class ChoresComponent extends Component {
           }
 
           for (var j = 0; j < weekday.length; j++) {
-            console.log(
-              'neweste: ',
-              selectDays.includes(weekday[j]),
-              !doneStatus[weekday[j]],
-              thisChoreI
-            );
             if (selectDays.includes(weekday[j]) && !doneStatus[weekday[j]]) {
               if (n === j) {
-                console.log('made it t gold', thisChoreI);
+                // console.log('made it t gold', thisChoreI);
                 thisChoreI.warningColor = 'gold';
                 stuffstuff = true;
-                console.log(stuffstuff);
+                // console.log(stuffstuff);
                 val.warningColor = this.coordinateListWarningColor(val);
               } else if (n > j) {
-                console.log('made it t red', thisChoreI);
+                // console.log('made it t red', thisChoreI);
                 thisChoreI.warningColor = 'red';
                 stuffstuff = true;
-                console.log(stuffstuff);
+                // console.log(stuffstuff);
                 val.warningColor = this.coordinateListWarningColor(val);
               } else {
-                console.log('made it t gree', thisChoreI);
+                // console.log('made it t gree', thisChoreI);
                 thisChoreI.warningColor = 'green';
                 val.warningColor = this.coordinateListWarningColor(val);
               }
             }
           }
           if (!stuffstuff) {
-            console.log('made it tostuff', stuffstuff);
+            // console.log('made it tostuff', stuffstuff);
             thisChoreI.warningColor = 'green';
             val.warningColor = this.coordinateListWarningColor(val);
           }
@@ -297,13 +288,13 @@ class ChoresComponent extends Component {
           }
         } else if (val.chores[i].type === 'Bi-monthly') {
           daysOfMonthBeforeOffset = this.getMondays(val.chores[i].dueDate);
-          console.log(daysOfMonthBeforeOffset[0], dateOfMonth);
+          // console.log(daysOfMonthBeforeOffset[0], dateOfMonth);
           if (!val.chores[i].done) {
             if (
               dateOfMonth === daysOfMonthBeforeOffset[0] ||
               dateOfMonth === daysOfMonthBeforeOffset[1]
             ) {
-              console.log('made ithere');
+              // console.log('made ithere');
               val.chores[i].warningColor = 'gold';
               val.warningColor = this.coordinateListWarningColor(val);
             } else if (

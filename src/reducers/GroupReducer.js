@@ -153,7 +153,8 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         chores: [...state.chores, action.payload],
-        newChoreListName: ''
+        newChoreListName: '',
+        choreType: 'none-selected'
       };
 
     case DELETE_CHORES_LIST:
@@ -162,7 +163,8 @@ export default (state = INITIAL_STATE, action) => {
           return chore._id !== action.payload._id;
         }),
         choreType: 'none-selected',
-        choreSelected: ''
+        choreSelected: '',
+        choreType: 'none-selected'
       };
 
     case CREATE_CHORE_NAME:
@@ -197,7 +199,8 @@ export default (state = INITIAL_STATE, action) => {
     case CHORES_FETCH_SUCCESS:
       console.log('chores fetch success reducer: ', action.payload);
       return {
-        chores: action.payload
+        chores: action.payload,
+        choreType: 'none-selected'
       };
 
     case DELETE_CHORE:

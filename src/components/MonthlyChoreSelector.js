@@ -171,7 +171,6 @@ class MonthlyChoreSelector extends React.Component {
   }
 
   componentWillMount() {
-    console.log('date thing', this.props.date);
     this.setState({ favNumber: this.props.date });
   }
 

@@ -31,58 +31,6 @@ db.sync(remotedb, {
 });
 const uuidv4 = require('uuid/v4');
 
-const addInitialChores = {
-  chores: [
-    {
-      _id: uuidv4(),
-      note: 'Weekly',
-      warningColor: 'green',
-      chores: [
-        {
-          note: 'clean room',
-          _id: uuidv4(),
-          warningColor: 'green',
-          dueDate: '2018-01-19',
-          done: false
-        },
-        {
-          note: 'mop floor',
-          _id: uuidv4(),
-          warningColor: 'green',
-          dueDate: '2018-01-19',
-          done: false
-        },
-        {
-          note: 'go to bed',
-          _id: uuidv4(),
-          warningColor: 'green',
-          dueDate: '2018-01-19',
-          done: false
-        }
-      ]
-    },
-    {
-      _id: uuidv4(),
-      note: 'Monthly',
-      warningColor: 'green',
-      chores: []
-    },
-    {
-      _id: uuidv4(),
-      note: "Jon's Chores",
-      warningColor: 'green',
-      chores: []
-    },
-    {
-      _id: uuidv4(),
-      note: "Cindy's Chores",
-      warningColor: 'green',
-      chores: []
-    }
-  ],
-  groceries: []
-};
-
 export const changeOffSet = offSet => {
   return {
     type: CHANGE_OFFSET,
@@ -136,20 +84,16 @@ export const deleteChore = (chore, chores) => {
   let choreToGet;
   return dispatch => {
     for (var i = 0; i < chores.length; i++) {
-      console.log('chores chore:: ', chores[i], chore);
       if (chores[i].chores.includes(chore)) {
         choreToGet = chores[i]._id;
-        console.log('chore to get: ', choreToGet);
       }
     }
     db.get(choreToGet).then(function(doc) {
-      console.log('did i get the right one? ', doc);
       for (var i = 0; i < doc.chores.length; i++) {
         if (doc.chores[i]._id === chore._id) {
           doc.chores.splice(i, 1);
         }
       }
-      console.log('and heres doc: ', doc);
       db.put(doc)
         .then(function(result) {
           dispatch({
@@ -197,11 +141,9 @@ export const choresFetch = () => {
 
 export const deleteChoresList = (text, chores) => {
   const { currentUser } = firebase.auth();
-  console.log('list before delete: ', chores, text);
   return dispatch => {
     dispatch({ type: DELETE_CHORES_LIST, payload: text });
     db.get(text._id).then(function(doc) {
-      console.log('heres doc in deleteList: ', doc);
       return db.remove(doc);
     });
   };
@@ -214,10 +156,32 @@ export const createChoreName = text => {
   };
 };
 
-export const saveNewListChanges = listToUpdate => {
-  return {
-    type: SAVE_NEW_LIST_CHANGES,
-    payload: listToUpdate
+export const saveNewListChanges = (listToUpdate, chores) => {
+  this.choreListId;
+  chores.forEach(item => {
+    item.chores.forEach(choreItem => {
+      if (choreItem._id === listToUpdate._id) {
+        this.choreListId = item._id;
+      }
+    });
+  });
+  return dispatch => {
+    db.get(this.choreListId)
+      .then(function(doc) {
+        for (var i = 0; i < doc.chores.length; i++) {
+          if (doc.chores[i]._id === listToUpdate._id) {
+            doc.chores[i] = listToUpdate;
+            found = true;
+          }
+        }
+        if (!found) {
+          doc.chores.push(info);
+        }
+        return db.put(doc);
+      })
+      .then(function() {
+        dispatch({ type: SAVE_NEW_LIST_CHANGES, payload: listToUpdate });
+      });
   };
 };
 
@@ -246,17 +210,11 @@ export const createNewChore = (ListUid, info) => {
     dispatch({ type: CREATE_NEW_CHORE, payload: { ListUid, info } });
     db.get(ListUid)
       .then(function(doc) {
-        console.log('doc i received in createNewChore', doc);
         doc.chores.push(info);
-        // put them back
         return db.put(doc);
       })
       .then(function() {
-        // fetch mittens again
         return db.get(ListUid);
-      })
-      .then(function(doc) {
-        console.log('edited doc in createNewChore', doc);
       });
   };
 };
@@ -266,68 +224,5 @@ export const createGroup = ({ houseName, zip }) => {
   const id = currentUser.uid;
   return dispatch => {
     dispatch({ type: LOADING });
-    //   firebase
-    //     .database()
-    //     .ref(`/group/${currentUser.uid}/groupData/`)
-    //     .push({ houseName, zip })
-    //     .then(() => {
-    //       firebase
-    //         .database()
-    //         .ref(`/group/${currentUser.uid}/members/`)
-    //         .push({ id });
-    //     })
-    //     .then(() => {
-    //       firebase
-    //         .database()
-    //         .ref(`/chores/${currentUser.uid}`)
-    //         .push({
-    //           weekly: {
-    //             date: '12/12/18',
-    //             note: 'Weekly',
-    //             warningColor: 'green',
-    //             chores: addInitialChores.chores[0].chores
-    //           },
-    //           monthly: {
-    //             date: 'December',
-    //             note: 'Monthly',
-    //             warningColor: 'green',
-    //             chores: []
-    //           },
-    //           johns: {
-    //             date: '12/12/18',
-    //             note: "Jon's Chores",
-    //             warningColor: 'green',
-    //             chores: []
-    //           },
-    //           cindys: {
-    //             date: '12/12/18',
-    //             note: "Cindy's Chores",
-    //             warningColor: 'green',
-    //             chores: []
-    //           }
-    //         });
-    //     })
-    //     .then(() => {
-    //       firebase
-    //         .database()
-    //         .ref(`/groceries/${currentUser.uid}`)
-    //         .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
-    //     })
-    //     .then(() => {
-    //       firebase
-    //         .database()
-    //         .ref(`/expenses/${currentUser.uid}`)
-    //         .push({ Weekly: 'Weekly', SpecialRequest: 'Special Request' });
-    //     })
-    //     .then(() => {
-    //       firebase
-    //         .database()
-    //         .ref(`/iou/${currentUser.uid}`)
-    //         .push({ SallysIOU: 'Sallys Chores', FredsIOU: 'Sallys Chores' });
-    //     })
-    //     .then(() => {
-    //       dispatch({ type: NEW_GROUP_CREATED, payload: addInitialChores.chores });
-    //       Actions.main({ type: 'reset' });
-    //     });
   };
 };

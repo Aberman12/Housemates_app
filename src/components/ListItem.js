@@ -25,7 +25,6 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
-    console.log('inside list: ', this.props.chore.warningColor, this.props.chore.done);
     this.setState({ isChecked: this.props.chore.done });
   }
 

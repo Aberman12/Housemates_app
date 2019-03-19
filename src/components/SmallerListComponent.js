@@ -84,7 +84,6 @@ class IndividualList extends Component {
         }
       }
 
-      console.log('now: ', this.props.val._id, newChore);
       this.props.createNewChore(this.props.val._id, newChore);
       this.setState({ showModal: false });
     } else {
