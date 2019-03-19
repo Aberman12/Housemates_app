@@ -25,6 +25,7 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
+    console.log('inside list: ', this.props.chore.warningColor, this.props.chore.done);
     this.setState({ isChecked: this.props.chore.done });
   }
 
@@ -149,7 +150,7 @@ class ListItem extends Component {
       chore.dueDate.offSetDoneStatus.two = true;
       chore.done = true;
     }
-    this.props.changeDone(chore);
+    this.props.changeDone(chore, this.props.choreListId);
   }
 
   onChangeTextFunc(noteText) {

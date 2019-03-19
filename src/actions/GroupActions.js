@@ -45,10 +45,20 @@ export const setChoreType = type => {
   };
 };
 
-export const changeDone = chore => {
-  return {
-    type: CHANGE_DONE_STATUS,
-    payload: chore
+export const changeDone = (listToUpdate, choreListId) => {
+  return dispatch => {
+    db.get(choreListId)
+      .then(function(doc) {
+        for (var i = 0; i < doc.chores.length; i++) {
+          if (doc.chores[i]._id === listToUpdate._id) {
+            doc.chores[i] = listToUpdate;
+          }
+        }
+        return db.put(doc);
+      })
+      .then(function() {
+        dispatch({ type: CHANGE_DONE_STATUS, payload: listToUpdate });
+      });
   };
 };
 
