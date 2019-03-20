@@ -20,7 +20,8 @@ import {
   CHANGE_DONE_STATUS,
   SAVE_NEW_LIST_CHANGES,
   CHANGE_CHORE_TYPE,
-  CHANGE_OFFSET
+  CHANGE_OFFSET,
+  ADD_CHORE_NOTE
 } from './types';
 
 const remotedb = new PouchDB('housematesTest1');
@@ -46,19 +47,19 @@ export const setChoreType = type => {
 };
 
 export const changeDone = (listToUpdate, choreListId) => {
+  let chore = listToUpdate;
   return dispatch => {
+    dispatch({ type: CHANGE_DONE_STATUS, payload: listToUpdate });
     db.get(choreListId)
       .then(function(doc) {
         for (var i = 0; i < doc.chores.length; i++) {
-          if (doc.chores[i]._id === listToUpdate._id) {
-            doc.chores[i] = listToUpdate;
+          if (doc.chores[i]._id === chore._id) {
+            doc.chores[i] = chore;
           }
         }
         return db.put(doc);
       })
-      .then(function() {
-        dispatch({ type: CHANGE_DONE_STATUS, payload: listToUpdate });
-      });
+      .then(function() {});
   };
 };
 
@@ -118,10 +119,17 @@ export const deleteChore = (chore, chores) => {
   };
 };
 
+export const createChoreNote = text => {
+  return {
+    type: ADD_CHORE_NOTE,
+    payload: text
+  };
+};
+
 export const createNewChoresList = info => {
   const newChore = {
     _id: uuidv4(),
-    note: info.newChoreListName,
+    name: info.newChoreListName,
     warningColor: 'green',
     chores: []
   };
@@ -216,6 +224,7 @@ export const createChoreDate = date => {
 };
 
 export const createNewChore = (ListUid, info) => {
+  console.log('inside createNewChore: ', ListUid, info);
   return dispatch => {
     dispatch({ type: CREATE_NEW_CHORE, payload: { ListUid, info } });
     db.get(ListUid)
@@ -224,7 +233,8 @@ export const createNewChore = (ListUid, info) => {
         return db.put(doc);
       })
       .then(function() {
-        return db.get(ListUid);
+        console.log('successfully created new chore!');
+        // return db.get(ListUid);
       });
   };
 };

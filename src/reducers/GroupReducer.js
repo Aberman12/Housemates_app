@@ -16,7 +16,8 @@ import {
   CHANGE_DONE_STATUS,
   SAVE_NEW_LIST_CHANGES,
   CHANGE_CHORE_TYPE,
-  CHANGE_OFFSET
+  CHANGE_OFFSET,
+  ADD_CHORE_NOTE
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
@@ -28,6 +29,7 @@ const fillinDate = `${year}-${month}-${day}`;
 
 const INITIAL_STATE = {
   newChoreListName: '',
+  choreNote: '',
   choreType: 'none-selected',
   newChoreName: '',
   newChoreDueDate: fillinDate,
@@ -45,7 +47,7 @@ const INITIAL_STATE = {
   choreListModal: false,
   choreModal: false,
   choreEditModal: false,
-  choreSelected: { dueDate: new Date(), note: 'hello' },
+  choreSelected: { dueDate: new Date(), name: 'hello' },
   choreListEditModal: false
 };
 
@@ -53,6 +55,10 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CHANGE_OFFSET:
       return { ...state, biMonthlyOffset: action.payload };
+
+    case ADD_CHORE_NOTE:
+      return { ...state, choreNote: action.payload };
+
     case CHANGE_CHORE_TYPE:
       return { ...state, choreType: action.payload };
 
@@ -140,7 +146,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         choreEditModal: true,
         choreSelected: action.payload,
-        newChoreListName: action.payload.note
+        newChoreListName: action.payload.name,
+        choreNote: action.payload.note
       };
 
     case HIDE_CHORE_EDIT_MODAL:
@@ -171,6 +178,7 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, newChoreName: action.payload };
 
     case CREATE_NEW_CHORE:
+      console.log('create fron reducer', action.payload);
       return {
         ...state,
         chores: state.chores.map(chore => {
@@ -187,7 +195,8 @@ export default (state = INITIAL_STATE, action) => {
         }),
         newChoreName: '',
         choreType: 'none-selected',
-        choreDone: false
+        choreDone: false,
+        choreNote: ''
       };
 
     case NEW_CHORES_LIST_NAMED:
@@ -197,7 +206,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
 
     case CHORES_FETCH_SUCCESS:
-      console.log('chores fetch success reducer: ', action.payload);
       return {
         chores: action.payload,
         choreType: 'none-selected'

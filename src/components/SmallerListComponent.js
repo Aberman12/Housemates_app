@@ -3,9 +3,10 @@ import React, { Component } from 'react';
 import { View, Text, ListView, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import { CardSection } from './common';
 import { connect } from 'react-redux';
-import { createChoreName, createNewChore } from '../actions';
+import { createChoreName, createNewChore, createChoreNote } from '../actions';
 import ListItem from './ListItem';
 import ChoreModal from './CreateChoreModal';
+
 var uuidv4 = require('uuid/v4');
 
 class IndividualList extends Component {
@@ -22,18 +23,23 @@ class IndividualList extends Component {
     this.props.createChoreName(text);
   }
 
+  onChangeNoteFunc(text) {
+    this.props.createChoreNote(text);
+  }
+
   onAccept() {
     let newChore = {
-      note: this.props.newChoreName,
+      name: this.props.newChoreName,
       _id: uuidv4(),
       warningColor: this.state.warningColor,
       dueDate: this.props.newChoreDueDate,
       done: false,
-      type: this.props.choreType
+      type: this.props.choreType,
+      note: this.props.choreNote
     };
-    if (this.props.newChoreName) {
+    if (this.props.newChoreName && this.props.newChoreDueDate) {
       let dueDate = this.props.newChoreDueDate;
-
+      console.log('latest:::::::  ', this.props.newChoreName, dueDate);
       var d = new Date();
       var weekday = new Array(7);
       weekday[0] = 'sunday';
@@ -46,7 +52,7 @@ class IndividualList extends Component {
       let selectDays = new Array(7);
       let beforeSelectDays = [];
       var n = d.getDay();
-
+      console.log('hasOwnProperty Error: ', dueDate);
       if (dueDate.hasOwnProperty('done')) {
         for (let day in dueDate) {
           if (dueDate[day] === '#89cff0') {
@@ -83,11 +89,11 @@ class IndividualList extends Component {
           }
         }
       }
-
+      console.log('about to hit createNewChore: ', this.props.val._id, newChore);
       this.props.createNewChore(this.props.val._id, newChore);
       this.setState({ showModal: false });
     } else {
-      window.alert('Please fill in a name for your chore');
+      window.alert('Please fill in a all info');
     }
   }
 
@@ -96,6 +102,8 @@ class IndividualList extends Component {
   }
 
   warningColor(options) {
+    let finishedChore = 'line-through';
+    console.log('options: ', options);
     return {
       position: 'absolute',
       justifyContent: 'center',
@@ -105,12 +113,14 @@ class IndividualList extends Component {
       padding: 10,
       top: 10,
       bottom: 10,
-      right: 10
+      right: 10,
+      textDecorationLine: 'line-through'
     };
   }
 
   renderRow() {
     if (this.state.showList) {
+      console.log('hasOwnProperty Error: ', this.props.val);
       if (this.props.val.hasOwnProperty('chores') && this.props.val.chores.length) {
         return (
           <View>
@@ -158,8 +168,8 @@ class IndividualList extends Component {
     return (
       <View>
         <TouchableOpacity onPress={() => this.setState({ showList: !this.state.showList })}>
-          <View key={this.props.keyval} style={styles.note}>
-            <Text style={styles.noteText}>{this.props.val.note}</Text>
+          <View key={this.props.keyval} style={styles.name}>
+            <Text style={styles.nameText}>{this.props.val.name}</Text>
             <TouchableOpacity
               onPress={this.props.deleteMethod}
               style={this.warningColor(this.props.val)}
@@ -174,6 +184,7 @@ class IndividualList extends Component {
           onAccept={this.onAccept.bind(this)}
           onDecline={this.onDecline.bind(this)}
           onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+          onChangeNoteFunc={this.onChangeNoteFunc.bind(this)}
           props={this.props.choreType}
         >
           Add New Chore?
@@ -184,7 +195,7 @@ class IndividualList extends Component {
 }
 
 const styles = {
-  note: {
+  name: {
     position: 'relative',
     padding: 20,
     paddingRight: 10,
@@ -192,7 +203,7 @@ const styles = {
     borderBottomColor: '#ededed',
     zIndex: 10
   },
-  noteText: {
+  nameText: {
     paddingLeft: 0,
     borderLeftWidth: 10,
     borderLeftColor: '#E91E63',
@@ -207,12 +218,21 @@ const mapStateToProps = ({ groupReducer }) => {
     choreType,
     newChoreListName,
     newChoreDueDate,
-    dueDateEdited
+    dueDateEdited,
+    choreNote
   } = groupReducer;
-  return { newChoreName, chores, choreType, newChoreListName, newChoreDueDate, dueDateEdited };
+  return {
+    newChoreName,
+    chores,
+    choreNote,
+    choreType,
+    newChoreListName,
+    newChoreDueDate,
+    dueDateEdited
+  };
 };
 
 export default connect(
   mapStateToProps,
-  { createChoreName, createNewChore }
+  { createChoreName, createNewChore, createChoreNote }
 )(IndividualList);

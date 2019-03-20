@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, Modal } from 'react-native';
+import { Text, View, Modal, TextInput } from 'react-native';
 import { Button, Card, Input, CardSection } from './common';
 import { connect } from 'react-redux';
 import { showChoreEditModal } from '../actions';
@@ -16,6 +16,7 @@ const EditChoreModal = ({
   onDecline,
   onDelete,
   onChangeTextFunc,
+  onChangeNoteFunc,
   props
 }) => {
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
@@ -63,6 +64,19 @@ const EditChoreModal = ({
           </CardSection>
 
           <CardSection>{showChoreType()}</CardSection>
+          <CardSection>
+            <Text>Add note: </Text>
+            <TextInput
+              style={{ fontSize: 20 }}
+              numberOfLines={2}
+              multiline="true"
+              type="text"
+              onChangeText={text => {
+                onChangeNoteFunc(text);
+              }}
+              value={props.choreNote}
+            />
+          </CardSection>
 
           <CardSection>
             <Button onPress={onDecline}>Cancel</Button>

@@ -25,7 +25,6 @@ class ListItem extends Component {
   }
 
   componentDidMount() {
-    console.log('inside list: ', this.props.chore.warningColor, this.props.chore.done);
     this.setState({ isChecked: this.props.chore.done });
   }
 
@@ -150,20 +149,28 @@ class ListItem extends Component {
       chore.dueDate.offSetDoneStatus.two = true;
       chore.done = true;
     }
+    console.log('biMinghtyasdfasdf: :: ', chore, this.props.choreListId);
     this.props.changeDone(chore, this.props.choreListId);
   }
 
-  onChangeTextFunc(noteText) {
-    this.props.nameNewChoresList(noteText);
+  onChangeTextFunc(choreText) {
+    this.props.nameNewChoresList(choreText);
   }
 
-  deleteNote(val) {
-    // console.log("right now:", this.props);
-    // this.props.deleteChoresList(val, this.props.chores);
-  }
-
-  onDeleteChore() {
-    // this.props.deleteChore(this.props.choreSelected);
+  choreStyle(chore) {
+    let lineStyle = 'none';
+    if (chore.done) {
+      lineStyle = 'line-through';
+    }
+    return {
+      flex: 1,
+      width: 150,
+      marginLeft: 30,
+      marginTop: 15,
+      paddingRight: 130,
+      justifyContent: 'center',
+      textDecorationLine: lineStyle
+    };
   }
 
   render() {
@@ -173,17 +180,10 @@ class ListItem extends Component {
           <View>
             <CardSection>
               <Text
-                style={{
-                  flex: 1,
-                  width: 150,
-                  marginLeft: 30,
-                  marginTop: 15,
-                  paddingRight: 130,
-                  justifyContent: 'center'
-                }}
+                style={this.choreStyle(this.props.chore)}
                 onPress={() => this.showModal(this.props.chore)}
               >
-                {this.props.chore.note}
+                {this.props.chore.name}
               </Text>
               <CheckBox
                 style={{

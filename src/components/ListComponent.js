@@ -11,9 +11,10 @@ import {
   deleteChore,
   changeChoreDate,
   showChoreEditModal,
-  saveNewListChanges
+  saveNewListChanges,
+  createChoreNote
 } from '../actions';
-import Note from './SmallerListComponent';
+import Chore from './SmallerListComponent';
 import { ListModal } from './common';
 import EditChoreModal from './EditChoreModal';
 let date = new Date();
@@ -26,8 +27,8 @@ class ChoresComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      noteArray: [],
-      noteText: '',
+      choreArray: [],
+      choreText: '',
       showModal: false
     };
   }
@@ -50,7 +51,7 @@ class ChoresComponent extends Component {
   saveListChanges() {
     var choreInQuestion = this.props.choreSelected;
     if (this.props.newChoreListName !== '') {
-      choreInQuestion.note = this.props.newChoreListName;
+      choreInQuestion.name = this.props.newChoreListName;
     }
     if (this.props.newChoreDueDate !== fillinDate || this.props.dueDateEdited) {
       if (fillinDate[5] === '0') {
@@ -67,18 +68,22 @@ class ChoresComponent extends Component {
     this.setState({ showModal: false });
   }
 
-  onChangeTextFunc(noteText) {
-    this.props.nameNewChoresList(noteText);
+  onChangeTextFunc(choreText) {
+    this.props.nameNewChoresList(choreText);
   }
 
-  deleteNote(val) {
+  onChangeNoteFunc(text) {
+    this.props.createChoreNote(text);
+  }
+
+  deleteChore(val) {
     this.props.deleteChoresList(val, this.props.chores);
   }
 
   onDeleteChore() {
     Alert.alert(
       `Are you sure you wish to delete`,
-      ` ${this.props.choreSelected.note}?`,
+      ` ${this.props.choreSelected.name}?`,
       [
         { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
         {
@@ -100,6 +105,7 @@ class ChoresComponent extends Component {
           onAccept={this.saveListChanges.bind(this)}
           onDecline={this.onDecline.bind(this)}
           onChangeTextFunc={this.onChangeTextFunc.bind(this)}
+          onChangeNoteFunc={this.onChangeNoteFunc.bind(this)}
           props={this.props}
           onDelete={this.onDeleteChore.bind(this)}
         >
@@ -130,7 +136,7 @@ class ChoresComponent extends Component {
     }
   }
 
-  getMondays(input) {
+  determineColorWarningForBiMonthly(input) {
     var weekday = new Array(7);
     weekday[0] = 'sunday';
     weekday[1] = 'monday';
@@ -166,14 +172,17 @@ class ChoresComponent extends Component {
     return daysOfMonth;
   }
 
-  mainWarningColorFunc(val) {
-    if (!val.chores.length) {
-      val.warningColor = 'green';
+  mainWarningColorFunc(choreList) {
+    console.log('hit warning color func: ', choreList);
+    if (!choreList.chores.length) {
+      choreList.warningColor = 'green';
     } else {
-      for (var i = 0; i < val.chores.length; i++) {
+      for (var i = 0; i < choreList.chores.length; i++) {
+        let currentChore = choreList.chores[i];
         let getInitialDate = new Date();
         let date = getInitialDate.setHours(0, 0, 0, 0);
-        let choreDate = new Date(val.chores[i].dueDate).setHours(0, 0, 0, 0);
+        let choreDate = new Date(currentChore.dueDate).setHours(0, 0, 0, 0);
+
         var selectDays = [];
         var weeklyDueDate;
         var d = new Date();
@@ -191,28 +200,34 @@ class ChoresComponent extends Component {
         let dateOfMonth = d.getDate();
         var daysOfMonthBeforeOffset;
         var daysOfMonthAfterOffset;
-        if (val.chores[i].type === 'one-time') {
-          if (!val.chores[i].done) {
+        if (currentChore.type === 'one-time') {
+          console.log('one time: ', currentChore.done, currentChore.dueDate);
+          if (!currentChore.done) {
             if (choreDate <= date) {
+              console.log('made it past first decider');
               if (choreDate === date) {
-                val.chores[i].warningColor = 'gold';
-                val.warningColor = this.coordinateListWarningColor(val);
+                console.log('made it to gold');
+                currentChore.warningColor = 'gold';
+                choreList.warningColor = this.coordinateListWarningColor(choreList);
               } else if (choreDate < date) {
-                val.chores[i].warningColor = 'red';
-                val.warningColor = this.coordinateListWarningColor(val);
+                console.log('made it to red');
+                currentChore.warningColor = 'red';
+                choreList.warningColor = this.coordinateListWarningColor(choreList);
               }
             } else {
-              val.chores[i].warningColor = 'green';
-              val.warningColor = this.coordinateListWarningColor(val);
+              console.log('made it to first green');
+              currentChore.warningColor = 'green';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             }
           } else {
-            val.chores[i].warningColor = 'green';
-            val.warningColor = this.coordinateListWarningColor(val);
+            console.log('made it to second green');
+            choreList.warningColor = this.coordinateListWarningColor(choreList);
+            currentChore.warningColor = 'green';
           }
-        } else if (val.chores[i].type === 'weekly') {
-          weeklyDueDate = val.chores[i].dueDate;
-          doneStatus = val.chores[i].dueDate.done;
-          let thisChoreI = val.chores[i];
+        } else if (currentChore.type === 'weekly') {
+          weeklyDueDate = currentChore.dueDate;
+          doneStatus = currentChore.dueDate.done;
+          let thisChoreI = currentChore;
           let stuffstuff = false;
           for (let day in weeklyDueDate) {
             if (weeklyDueDate[day] === '#89cff0') {
@@ -251,67 +266,67 @@ class ChoresComponent extends Component {
                 thisChoreI.warningColor = 'gold';
                 stuffstuff = true;
                 // console.log(stuffstuff);
-                val.warningColor = this.coordinateListWarningColor(val);
+                choreList.warningColor = this.coordinateListWarningColor(choreList);
               } else if (n > j) {
                 // console.log('made it t red', thisChoreI);
                 thisChoreI.warningColor = 'red';
                 stuffstuff = true;
                 // console.log(stuffstuff);
-                val.warningColor = this.coordinateListWarningColor(val);
+                choreList.warningColor = this.coordinateListWarningColor(choreList);
               } else {
                 // console.log('made it t gree', thisChoreI);
                 thisChoreI.warningColor = 'green';
-                val.warningColor = this.coordinateListWarningColor(val);
+                choreList.warningColor = this.coordinateListWarningColor(choreList);
               }
             }
           }
           if (!stuffstuff) {
             // console.log('made it tostuff', stuffstuff);
             thisChoreI.warningColor = 'green';
-            val.warningColor = this.coordinateListWarningColor(val);
+            choreList.warningColor = this.coordinateListWarningColor(choreList);
           }
-        } else if (val.chores[i].type === 'monthly') {
-          if (val.chores[i].done) {
-            val.chores[i].warningColor = 'green';
-            val.warningColor = this.coordinateListWarningColor(val);
+        } else if (currentChore.type === 'monthly') {
+          if (currentChore.done) {
+            currentChore.warningColor = 'green';
+            choreList.warningColor = this.coordinateListWarningColor(choreList);
           } else {
-            if (dateOfMonth === val.chores[i].dueDate) {
-              val.chores[i].warningColor = 'gold';
-              val.warningColor = this.coordinateListWarningColor(val);
-            } else if (dateOfMonth > val.chores[i].dueDate) {
-              val.chores[i].warningColor = 'red';
-              val.warningColor = this.coordinateListWarningColor(val);
+            if (dateOfMonth === currentChore.dueDate) {
+              currentChore.warningColor = 'gold';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
+            } else if (dateOfMonth > currentChore.dueDate) {
+              currentChore.warningColor = 'red';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             } else {
-              val.chores[i].warningColor = 'green';
-              val.warningColor = this.coordinateListWarningColor(val);
+              currentChore.warningColor = 'green';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             }
           }
-        } else if (val.chores[i].type === 'Bi-monthly') {
-          daysOfMonthBeforeOffset = this.getMondays(val.chores[i].dueDate);
+        } else if (currentChore.type === 'Bi-monthly') {
+          daysOfMonthBeforeOffset = this.determineColorWarningForBiMonthly(currentChore.dueDate);
           // console.log(daysOfMonthBeforeOffset[0], dateOfMonth);
-          if (!val.chores[i].done) {
+          if (!currentChore.done) {
             if (
               dateOfMonth === daysOfMonthBeforeOffset[0] ||
               dateOfMonth === daysOfMonthBeforeOffset[1]
             ) {
               // console.log('made ithere');
-              val.chores[i].warningColor = 'gold';
-              val.warningColor = this.coordinateListWarningColor(val);
+              currentChore.warningColor = 'gold';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             } else if (
               (dateOfMonth > daysOfMonthBeforeOffset[0] &&
-                !val.chores[i].dueDate.offSetDoneStatusOne) ||
+                !currentChore.dueDate.offSetDoneStatusOne) ||
               (dateOfMonth > daysOfMonthBeforeOffset[1] &&
-                !val.chores[i].dueDate.offSetDoneStatusTwo)
+                !currentChore.dueDate.offSetDoneStatusTwo)
             ) {
-              val.chores[i].warningColor = 'red';
-              val.warningColor = this.coordinateListWarningColor(val);
+              currentChore.warningColor = 'red';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             } else {
-              val.chores[i].warningColor = 'green';
-              val.warningColor = this.coordinateListWarningColor(val);
+              currentChore.warningColor = 'green';
+              choreList.warningColor = this.coordinateListWarningColor(choreList);
             }
           } else {
-            val.chores[i].warningColor = 'green';
-            val.warningColor = this.coordinateListWarningColor(val);
+            currentChore.warningColor = 'green';
+            choreList.warningColor = this.coordinateListWarningColor(choreList);
           }
         }
       }
@@ -319,9 +334,9 @@ class ChoresComponent extends Component {
   }
 
   render() {
-    let notes = this.props.chores.map((val, key) => {
+    let chores = this.props.chores.map((val, key) => {
       this.mainWarningColorFunc(val);
-      return <Note key={key} keyval={key} val={val} deleteMethod={() => this.deleteNote(val)} />;
+      return <Chore key={key} keyval={key} val={val} deleteMethod={() => this.deleteChore(val)} />;
     });
     return (
       <View style={styles.container}>
@@ -330,7 +345,7 @@ class ChoresComponent extends Component {
           // scrollEventThrottle={16}
           style={styles.scrollContainer}
         >
-          {notes}
+          {chores}
         </ScrollView>
         <TouchableOpacity
           onPress={() => this.setState({ showModal: true })}
@@ -402,7 +417,8 @@ const mapStateToProps = ({ groupReducer }) => {
     choreEditModal,
     choreSelected,
     dueDateEdited,
-    newChoreDueDate
+    newChoreDueDate,
+    choreNote
   } = groupReducer;
   return {
     chores,
@@ -411,7 +427,8 @@ const mapStateToProps = ({ groupReducer }) => {
     choreEditModal,
     choreSelected,
     dueDateEdited,
-    newChoreDueDate
+    newChoreDueDate,
+    choreNote
   };
 };
 
@@ -426,6 +443,7 @@ export default connect(
     deleteChore,
     changeChoreDate,
     showChoreEditModal,
-    saveNewListChanges
+    saveNewListChanges,
+    createChoreNote
   }
 )(ChoresComponent);

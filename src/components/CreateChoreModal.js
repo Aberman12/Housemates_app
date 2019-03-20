@@ -7,7 +7,15 @@ import ChoreTypeSelector from './ChoreTypeSelector';
 import BiMonthlyChoreSelector from './BiMonthlyChoreSelector';
 import MonthlyChoreSelector from './MonthlyChoreSelector';
 
-const ChoreModal = ({ children, visible, onAccept, onDecline, onChangeTextFunc, props }) => {
+const ChoreModal = ({
+  children,
+  visible,
+  onAccept,
+  onDecline,
+  onChangeTextFunc,
+  onChangeNoteFunc,
+  props
+}) => {
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
 
   const selectChoreDateType = () => {
@@ -47,7 +55,14 @@ const ChoreModal = ({ children, visible, onAccept, onDecline, onChangeTextFunc, 
           <CardSection>
             <Text>Assign Chore (Optional)</Text>
           </CardSection>
-
+          <CardSection>
+            <Text style={{ marginRight: -80 }}>Add note: </Text>
+            <Input
+              placeholder="trash under sink"
+              type="text"
+              onChangeText={text => onChangeNoteFunc(text)}
+            />
+          </CardSection>
           <CardSection>
             <Button onPress={onDecline}>Back</Button>
             <Button onPress={onAccept}>Create</Button>
