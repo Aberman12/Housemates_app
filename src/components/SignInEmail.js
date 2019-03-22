@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import { Text } from "react-native";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { Text } from 'react-native';
+import { connect } from 'react-redux';
 import {
   emailChanged,
   passwordChanged,
@@ -8,8 +8,8 @@ import {
   firstNameChanged,
   lastNameChanged,
   phoneChanged
-} from "../actions";
-import { Card, CardSection, Input, Button, Spinner } from "./common";
+} from '../actions';
+import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignUpEmail extends Component {
   onEmailChange(text) {
@@ -33,8 +33,8 @@ class SignUpEmail extends Component {
   // }
 
   onButtonPress() {
-    const { email, password } = this.props;
-    this.props.loginUser({ email, password });
+    const { email, password, firstName, lastName } = this.props;
+    this.props.loginUser({ email, password, firstName, lastName });
   }
 
   renderButton() {
@@ -42,11 +42,7 @@ class SignUpEmail extends Component {
       return <Spinner size="large" />;
     }
 
-    return (
-      <Button onPress={this.onButtonPress.bind(this)}>
-        Continue to Account Setup
-      </Button>
-    );
+    return <Button onPress={this.onButtonPress.bind(this)}>Continue to Account Setup</Button>;
   }
 
   render() {
@@ -103,8 +99,8 @@ class SignUpEmail extends Component {
 const styles = {
   errorTextStyle: {
     fontSize: 20,
-    alignSelf: "center",
-    color: "red"
+    alignSelf: 'center',
+    color: 'red'
   }
 };
 

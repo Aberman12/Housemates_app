@@ -154,7 +154,14 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, choreEditModal: false, choreSelected: '' };
 
     case NEW_GROUP_CREATED:
-      return { ...state, loading: false, chores: action.payload };
+      return {
+        ...state,
+        loading: false,
+        chores: action.payload.choreData,
+        members: action.payload.newGroup.members,
+        houseName: action.payload.newGroup.houseName,
+        zip: action.payload.newGroup.zip
+      };
 
     case NEW_CHORES_LIST_CREATED:
       return {
@@ -207,7 +214,10 @@ export default (state = INITIAL_STATE, action) => {
 
     case CHORES_FETCH_SUCCESS:
       return {
-        chores: action.payload,
+        chores: action.payload.choresArr,
+        houseName: action.payload.groupObj.houseName,
+        zip: action.payload.groupObj.zip,
+        members: action.payload.groupObj.users,
         choreType: 'none-selected'
       };
 

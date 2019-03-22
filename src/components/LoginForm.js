@@ -1,19 +1,12 @@
-import React, { Component } from "react";
-import { Text, View } from "react-native";
-import { Actions } from "react-native-router-flux";
-import { goToEmail } from "../actions";
+import React, { Component } from 'react';
+import { Text, View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
+import { goToEmail } from '../actions';
 // import FBbutton from "./FBLoginButton";
-import {
-  Card,
-  CardSection,
-  Button,
-  SignUpButton,
-  SignUpButtonEmail,
-  Spinner
-} from "./common";
-import SlideShow from "./common/Slideshow.js";
-import img1 from "./common/demo1.gif";
-import img2 from "./common/demo2.gif";
+import { Card, CardSection, Button, SignUpButton, SignUpButtonEmail, Spinner } from './common';
+import SlideShow from './common/Slideshow.js';
+import img1 from './common/demo1.gif';
+import img2 from './common/demo2.gif';
 
 class LoginForm extends Component {
   usePhoneAuth() {
@@ -46,14 +39,10 @@ class LoginForm extends Component {
           <Button>Login With Facebook</Button>
         </CardSection>
         <CardSection>
-          <Button onPress={this.usePhoneAuth.bind(this)}>
-            Sign Up With Phone Number
-          </Button>
+          <Button onPress={this.usePhoneAuth.bind(this)}>Sign Up With Phone Number</Button>
         </CardSection>
         <CardSection>
-          <Button onPress={this.signUpEmail.bind(this)}>
-            Sign Up With Email
-          </Button>
+          <Button onPress={this.signUpEmail.bind(this)}>Sign Up With Email</Button>
         </CardSection>
         {/* <CardSection>
           <Button onPress={this.logInEmail.bind(this)}>
@@ -71,8 +60,8 @@ class LoginForm extends Component {
 const styles = {
   errorTextStyle: {
     fontSize: 20,
-    alignSelf: "center",
-    color: "red"
+    alignSelf: 'center',
+    color: 'red'
   },
   loginStyle: {
     marginBottom: 653

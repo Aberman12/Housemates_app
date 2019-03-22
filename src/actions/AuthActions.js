@@ -1,5 +1,6 @@
-import firebase from "firebase";
-import { Actions } from "react-native-router-flux";
+import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
+import PouchDB from 'pouchdb-react-native';
 import {
   EMAIL_CHANGED,
   PASSWORD_CHANGED,
@@ -10,7 +11,15 @@ import {
   FIRST_CHANGED,
   LAST_CHANGED,
   BIRTHDAY_CHANGED
-} from "./types";
+} from './types';
+
+const uuidv4 = require('uuid/v4');
+const remotedb = new PouchDB('housematesTest1');
+const db = new PouchDB('housematesLocalTest1');
+db.sync(remotedb, {
+  live: true,
+  retry: true
+});
 
 export const emailChanged = text => {
   return {
@@ -54,22 +63,14 @@ export const phoneChanged = text => {
   };
 };
 
-export const loginUser = ({
-  email,
-  password,
-  firstName,
-  lastName,
-  phoneNumber
-}) => {
+export const loginUser = ({ email, password, firstName, lastName, phoneNumber }) => {
   return dispatch => {
     dispatch({ type: LOGIN_USER });
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        alert.alert(
-          "It looks like you already have an account. Signing you in..."
-        );
+        window.alert('It looks like you already have an account. Signing you in...');
         loginUserSuccess(dispatch, user);
       })
       .catch(error => {
@@ -83,15 +84,35 @@ export const loginUser = ({
               displayName: `${firstName} ${lastName}`
               // photoURL: // some photo url
             });
+            let userInfo = {
+              userToken: user,
+              firstName,
+              lastName,
+              phoneNumber,
+              email,
+              password,
+              _id: user.uid,
+              groupNumber: user.uid
+            };
+            console.log('user id: ', user.uid);
+            db.put(userInfo)
+              .then(function(result) {
+                db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
+                  console.log('docs fetched: ', doc);
+                });
+              })
+              .catch(function(err) {
+                console.log(err);
+              });
             user
               .sendEmailVerification()
               .then(function() {
-                window.alert("we have sent you a verification email");
-                Actions.HouseSignup({ type: "reset" });
-                console.log("email sent");
+                window.alert('we have sent you a verification email');
+                Actions.HouseSignup({ type: 'reset' });
+                console.log('email sent');
               })
               .catch(function(error) {
-                console.log("error sending confirmation email: ", error);
+                console.log('error sending confirmation email: ', error);
               });
           })
           .catch(() => loginUserFail(dispatch));
@@ -104,6 +125,8 @@ const loginUserFail = dispatch => {
 };
 
 const loginUserSuccess = (dispatch, user) => {
+  console.log('heres the user that was saved: ', user);
+
   dispatch({
     type: LOGIN_USER_SUCCESS,
     payload: user

@@ -145,14 +145,29 @@ export const createNewChoresList = info => {
 };
 
 export const choresFetch = () => {
+  const { currentUser } = firebase.auth();
+  const id = currentUser.uid;
   let choresArr = [];
+  let groupObj;
+  let users = [];
   return dispatch => {
     db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
       doc.rows.forEach(item => {
-        choresArr.push(item.doc);
+        console.log(item);
+        if (item.doc.groupNumber === id) {
+          console.log('is right thing: ', item);
+          if (item.doc.hasOwnProperty('chores')) {
+            choresArr.push(item.doc);
+          } else if (item.doc.hasOwnProperty('userToken')) {
+            users.push(item.doc);
+          } else if (item.doc.hasOwnProperty('houseName')) {
+            groupObj = item.doc;
+          }
+        }
       });
+      console.log('choresArr: ', choresArr);
       choresArr = choresArr.reverse();
-      dispatch({ type: CHORES_FETCH_SUCCESS, payload: choresArr });
+      dispatch({ type: CHORES_FETCH_SUCCESS, payload: { groupObj, choresArr, users } });
     });
   };
 };
@@ -241,8 +256,65 @@ export const createNewChore = (ListUid, info) => {
 
 export const createGroup = ({ houseName, zip }) => {
   const { currentUser } = firebase.auth();
-  const id = currentUser.uid;
+  const groupNumber = currentUser.uid;
+  let newGroup = {
+    _id: uuidv4(),
+    groupNumber,
+    members: [groupNumber],
+    houseName,
+    zip
+  };
+  console.log('groupNumber: ', groupNumber);
+  const choreData = [
+    {
+      _id: uuidv4(),
+      name: 'Weekly',
+      warningColor: 'green',
+      chores: [],
+      groupNumber
+    },
+    {
+      _id: uuidv4(),
+      name: 'Monthly',
+      warningColor: 'green',
+      chores: [],
+      groupNumber
+    },
+    {
+      _id: uuidv4(),
+      name: "John's Chores",
+      warningColor: 'green',
+      chores: [],
+      groupNumber
+    },
+    {
+      _id: uuidv4(),
+      name: "Amy's Chores",
+      warningColor: 'green',
+      chores: [],
+      groupNumber
+    }
+  ];
+
   return dispatch => {
     dispatch({ type: LOADING });
+    db.put(newGroup)
+      .then(function(results) {
+        console.log('group created: ', results);
+        db.bulkDocs(choreData)
+          .then(function(results) {
+            console.log('practice chores set: ', results);
+            dispatch({ type: NEW_GROUP_CREATED, payload: { newGroup, choreData } });
+            Actions.main({ type: 'reset' });
+          })
+          .catch(function(err) {
+            console.log('chore seed data creation error: ', err);
+            // return db.get(ListUid);
+          });
+      })
+      .catch(function(err) {
+        console.log('group creation error: ', err);
+        // return db.get(ListUid);
+      });
   };
 };

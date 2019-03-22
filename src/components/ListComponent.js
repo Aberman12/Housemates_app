@@ -35,6 +35,7 @@ class ChoresComponent extends Component {
 
   componentDidMount() {
     if (this.props.chores.length === 0) {
+      console.log('triggers choresFectch)');
       this.props.choresFetch();
     }
   }
