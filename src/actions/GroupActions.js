@@ -127,19 +127,28 @@ export const createChoreNote = text => {
 };
 
 export const createNewChoresList = info => {
+  const { currentUser } = firebase.auth();
+  const userId = currentUser.uid;
   const newChore = {
     _id: uuidv4(),
     name: info.newChoreListName,
     warningColor: 'green',
-    chores: []
+    chores: [],
+    dateCreated: Date.now()
   };
   return dispatch => {
-    db.put(newChore)
-      .then(function(result) {
-        dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
+    db.get(userId)
+      .then(function(doc) {
+        newChore.groupNumber = doc.groupNumber;
       })
-      .catch(function(err) {
-        console.log(err);
+      .then(function(result) {
+        db.put(newChore)
+          .then(function(result) {
+            dispatch({ type: NEW_CHORES_LIST_CREATED, payload: newChore });
+          })
+          .catch(function(err) {
+            console.log(err);
+          });
       });
   };
 };
@@ -165,6 +174,8 @@ export const choresFetch = () => {
           }
         }
       });
+      console.log(choresArr, ' 1');
+      choresArr = choresArr.sort((a, b) => b.dateCreated - a.dateCreated);
       console.log('choresArr: ', choresArr);
       choresArr = choresArr.reverse();
       dispatch({ type: CHORES_FETCH_SUCCESS, payload: { groupObj, choresArr, users } });
@@ -271,28 +282,32 @@ export const createGroup = ({ houseName, zip }) => {
       name: 'Weekly',
       warningColor: 'green',
       chores: [],
-      groupNumber
+      groupNumber,
+      dateCreated: 1
     },
     {
       _id: uuidv4(),
       name: 'Monthly',
       warningColor: 'green',
       chores: [],
-      groupNumber
+      groupNumber,
+      dateCreated: 2
     },
     {
       _id: uuidv4(),
       name: "John's Chores",
       warningColor: 'green',
       chores: [],
-      groupNumber
+      groupNumber,
+      dateCreated: 3
     },
     {
       _id: uuidv4(),
       name: "Amy's Chores",
       warningColor: 'green',
       chores: [],
-      groupNumber
+      groupNumber,
+      dateCreated: 4
     }
   ];
 
