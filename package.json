@@ -38,6 +38,7 @@
     "lodash": "^4.17.11",
     "npm": "^6.9.0",
     "pouchdb-react-native": "^6.4.1",
+    "prop-types": "^15.7.2",
     "react": "16.5.0",
     "react-native": "0.57.1",
     "react-native-calendars": "^1.22.0",

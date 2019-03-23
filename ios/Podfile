@@ -30,4 +30,6 @@ target 'Housemates' do
 
   pod 'Picker', :path => '../node_modules/react-native-picker'
 
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
 end

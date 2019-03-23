@@ -7,6 +7,7 @@ import DatePicker from './ChoreDatePicker';
 import WeeklyChoreSelector from './WeeklyChoreSelector';
 import MonthlyChoreSelector from './MonthlyChoreSelector';
 import BiMonthlyChoreSelector from './BiMonthlyChoreSelector';
+import MemberSelector from './MemberSelector';
 import Voice from 'react-native-voice';
 
 const EditChoreModal = ({
@@ -65,6 +66,10 @@ const EditChoreModal = ({
 
           <CardSection>{showChoreType()}</CardSection>
           <CardSection>
+            <Text>Assign Chore (Optional)</Text>
+            <MemberSelector selected={props.choreSelected.memberSelected} />
+          </CardSection>
+          <CardSection>
             <Text>Add note: </Text>
             <TextInput
               style={{ fontSize: 20 }}
@@ -113,8 +118,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ groupReducer }) => {
-  const { choreSelected, newChoreDueDate } = groupReducer;
-  return { choreSelected, newChoreDueDate };
+  const { choreSelected, newChoreDueDate, memberSelected } = groupReducer;
+  return { choreSelected, newChoreDueDate, memberSelected };
 };
 
 export default connect(

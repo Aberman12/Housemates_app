@@ -163,7 +163,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         loading: false,
         chores: action.payload.choreData,
-        members: action.payload.newGroup.members,
+        members: [action.payload.addFirstMember],
         houseName: action.payload.newGroup.houseName,
         zip: action.payload.newGroup.zip
       };
@@ -190,7 +190,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, newChoreName: action.payload };
 
     case CREATE_NEW_CHORE:
-      console.log('create fron reducer', action.payload);
       return {
         ...state,
         chores: state.chores.map(chore => {
@@ -218,7 +217,6 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
 
     case CHORES_FETCH_SUCCESS:
-      console.log('fetchhhchchchchchchch', action.payload);
       return {
         chores: action.payload.choresArr,
         houseName: action.payload.groupObj.houseName,

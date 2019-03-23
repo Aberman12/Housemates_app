@@ -20,7 +20,6 @@ const ChoreModal = ({
   const { cardStyle, containerStyle, textStyle, cardSectionStyle } = styles;
 
   const selectChoreDateType = () => {
-    console.log('heres my propertwas:', props);
     if (props === 'none-selected') {
       return <ChoreTypeSelector />;
     }

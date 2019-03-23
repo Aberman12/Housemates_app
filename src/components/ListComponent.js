@@ -33,9 +33,8 @@ class ChoresComponent extends Component {
     };
   }
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.chores.length === 0) {
-      console.log('triggers choresFectch)');
       this.props.choresFetch();
     }
   }
@@ -174,7 +173,6 @@ class ChoresComponent extends Component {
   }
 
   mainWarningColorFunc(choreList) {
-    console.log('hit warning color func: ', choreList);
     if (!choreList.chores.length) {
       choreList.warningColor = 'green';
     } else {
@@ -202,26 +200,20 @@ class ChoresComponent extends Component {
         var daysOfMonthBeforeOffset;
         var daysOfMonthAfterOffset;
         if (currentChore.type === 'one-time') {
-          console.log('one time: ', currentChore.done, currentChore.dueDate);
           if (!currentChore.done) {
             if (choreDate <= date) {
-              console.log('made it past first decider');
               if (choreDate === date) {
-                console.log('made it to gold');
                 currentChore.warningColor = 'gold';
                 choreList.warningColor = this.coordinateListWarningColor(choreList);
               } else if (choreDate < date) {
-                console.log('made it to red');
                 currentChore.warningColor = 'red';
                 choreList.warningColor = this.coordinateListWarningColor(choreList);
               }
             } else {
-              console.log('made it to first green');
               currentChore.warningColor = 'green';
               choreList.warningColor = this.coordinateListWarningColor(choreList);
             }
           } else {
-            console.log('made it to second green');
             choreList.warningColor = this.coordinateListWarningColor(choreList);
             currentChore.warningColor = 'green';
           }

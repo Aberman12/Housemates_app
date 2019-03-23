@@ -1,4 +1,6 @@
 rootProject.name = 'Housemates'
+include ':react-native-vector-icons'
+project(':react-native-vector-icons').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-vector-icons/android')
 include ':rn-wheel-picker'
 project(':rn-wheel-picker').projectDir = new File(rootProject.projectDir, '../node_modules/rn-wheel-picker/android')
 include ':react-native-wheel-picker'

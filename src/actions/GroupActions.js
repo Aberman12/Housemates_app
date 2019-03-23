@@ -157,15 +157,18 @@ export const createNewChoresList = info => {
 export const choresFetch = () => {
   const { currentUser } = firebase.auth();
   const id = currentUser.uid;
+  let groupNumber;
   let choresArr = [];
   let groupObj;
   let users = [];
   return dispatch => {
+    db.get(id).then(function(doc) {
+      console.log('heres what I got: ', doc);
+      groupNumber = doc.groupNumber;
+    });
     db.allDocs({ include_docs: true, descending: true }, function(err, doc) {
       doc.rows.forEach(item => {
-        console.log(item);
-        if (item.doc.groupNumber === id) {
-          console.log('is right thing: ', item);
+        if (item.doc.groupNumber === groupNumber) {
           if (item.doc.hasOwnProperty('chores')) {
             choresArr.push(item.doc);
           } else if (item.doc.hasOwnProperty('userToken')) {
@@ -175,9 +178,7 @@ export const choresFetch = () => {
           }
         }
       });
-      console.log(choresArr, ' 1');
       choresArr = choresArr.sort((a, b) => b.dateCreated - a.dateCreated);
-      console.log('choresArr: ', choresArr);
       choresArr = choresArr.reverse();
       dispatch({ type: CHORES_FETCH_SUCCESS, payload: { groupObj, choresArr, users } });
     });
@@ -276,14 +277,15 @@ export const createNewChore = (ListUid, info) => {
 export const createGroup = ({ houseName, zip }) => {
   const { currentUser } = firebase.auth();
   const groupNumber = currentUser.uid;
+  let addFirstMember;
   let newGroup = {
     _id: uuidv4(),
     groupNumber,
-    members: [groupNumber],
+    members: [addFirstMember],
     houseName,
     zip
   };
-  console.log('groupNumber: ', groupNumber);
+
   const choreData = [
     {
       _id: uuidv4(),
@@ -319,15 +321,19 @@ export const createGroup = ({ houseName, zip }) => {
     }
   ];
 
+  db.get(groupNumber).then(function(doc) {
+    console.log('heres first member doc: ', doc);
+    addFirstMember = doc;
+  });
+
   return dispatch => {
     dispatch({ type: LOADING });
     db.put(newGroup)
       .then(function(results) {
-        console.log('group created: ', results);
         db.bulkDocs(choreData)
           .then(function(results) {
             console.log('practice chores set: ', results);
-            dispatch({ type: NEW_GROUP_CREATED, payload: { newGroup, choreData } });
+            dispatch({ type: NEW_GROUP_CREATED, payload: { newGroup, choreData, addFirstMember } });
             Actions.main({ type: 'reset' });
           })
           .catch(function(err) {

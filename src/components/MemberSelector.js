@@ -14,6 +14,9 @@ class MemberSelector extends React.Component {
   }
   componentWillMount() {
     console.log('will mount props: ', this.props);
+    if (this.props.hasOwnProperty('selected')) {
+      this.setState({ favNumber: this.props.selected });
+    }
     let members = this.props.members.map(member => {
       let memberObj = {
         label: `${member.firstName} ${member.lastName}`,

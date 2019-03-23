@@ -12,6 +12,7 @@ import CreateHouse from './components/CreateHouse';
 // import Calendar from "./components/Calendar";
 import Agenda from './components/CalendarAgenda';
 import List from './components/ListComponent';
+import Profile from './components/Profile1/';
 
 const TabIcon = ({ selected, title }) => {
   return (
@@ -69,7 +70,7 @@ const RouterComponent = () => {
           onRight={() => Actions.employeeCreate()}
           rightTitle="Settings"
           key="tab2"
-          component={List}
+          component={Profile}
           title="Chores"
           icon={TabIcon}
         />

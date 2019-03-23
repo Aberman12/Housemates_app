@@ -41,7 +41,7 @@ class IndividualList extends Component {
     };
     if (this.props.newChoreName && this.props.newChoreDueDate) {
       let dueDate = this.props.newChoreDueDate;
-      console.log('latest:::::::  ', this.props.newChoreName, dueDate);
+
       var d = new Date();
       var weekday = new Array(7);
       weekday[0] = 'sunday';
@@ -54,7 +54,7 @@ class IndividualList extends Component {
       let selectDays = new Array(7);
       let beforeSelectDays = [];
       var n = d.getDay();
-      console.log('hasOwnProperty Error: ', dueDate);
+
       if (dueDate.hasOwnProperty('done')) {
         for (let day in dueDate) {
           if (dueDate[day] === '#89cff0') {
@@ -91,7 +91,7 @@ class IndividualList extends Component {
           }
         }
       }
-      console.log('about to hit createNewChore: ', this.props.val._id, newChore);
+
       this.props.createNewChore(this.props.val._id, newChore);
       this.setState({ showModal: false });
     } else {
@@ -105,7 +105,6 @@ class IndividualList extends Component {
 
   warningColor(options) {
     let finishedChore = 'line-through';
-    console.log('options: ', options);
     return {
       position: 'absolute',
       justifyContent: 'center',
@@ -122,7 +121,6 @@ class IndividualList extends Component {
 
   renderRow() {
     if (this.state.showList) {
-      console.log('hasOwnProperty Error: ', this.props.val);
       if (this.props.val.hasOwnProperty('chores') && this.props.val.chores.length) {
         return (
           <View>
