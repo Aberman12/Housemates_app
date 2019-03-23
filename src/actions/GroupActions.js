@@ -21,7 +21,8 @@ import {
   SAVE_NEW_LIST_CHANGES,
   CHANGE_CHORE_TYPE,
   CHANGE_OFFSET,
-  ADD_CHORE_NOTE
+  ADD_CHORE_NOTE,
+  GIVE_CHORE_TO_MEMBER
 } from './types';
 
 const remotedb = new PouchDB('housematesTest1');
@@ -197,6 +198,13 @@ export const createChoreName = text => {
   return {
     type: CREATE_CHORE_NAME,
     payload: text
+  };
+};
+
+export const setChoreMember = memberId => {
+  return {
+    type: GIVE_CHORE_TO_MEMBER,
+    payload: memberId
   };
 };
 

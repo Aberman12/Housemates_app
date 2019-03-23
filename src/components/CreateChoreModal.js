@@ -6,6 +6,7 @@ import WeeklySelector from './WeeklyChoreSelector';
 import ChoreTypeSelector from './ChoreTypeSelector';
 import BiMonthlyChoreSelector from './BiMonthlyChoreSelector';
 import MonthlyChoreSelector from './MonthlyChoreSelector';
+import MemberSelector from './MemberSelector';
 
 const ChoreModal = ({
   children,
@@ -54,6 +55,7 @@ const ChoreModal = ({
           <CardSection>{selectChoreDateType()}</CardSection>
           <CardSection>
             <Text>Assign Chore (Optional)</Text>
+            <MemberSelector />
           </CardSection>
           <CardSection>
             <Text style={{ marginRight: -80 }}>Add note: </Text>

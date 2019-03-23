@@ -17,7 +17,8 @@ import {
   SAVE_NEW_LIST_CHANGES,
   CHANGE_CHORE_TYPE,
   CHANGE_OFFSET,
-  ADD_CHORE_NOTE
+  ADD_CHORE_NOTE,
+  GIVE_CHORE_TO_MEMBER
 } from '../actions/types';
 
 const uuidv4 = require('uuid/v4');
@@ -32,6 +33,7 @@ const INITIAL_STATE = {
   choreNote: '',
   choreType: 'none-selected',
   newChoreName: '',
+  memberSelected: '',
   newChoreDueDate: fillinDate,
   dueDateEdited: false,
   houseName: '',
@@ -55,6 +57,9 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CHANGE_OFFSET:
       return { ...state, biMonthlyOffset: action.payload };
+
+    case GIVE_CHORE_TO_MEMBER:
+      return { ...state, memberSelected: action.payload };
 
     case ADD_CHORE_NOTE:
       return { ...state, choreNote: action.payload };
@@ -213,11 +218,12 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, loading: true };
 
     case CHORES_FETCH_SUCCESS:
+      console.log('fetchhhchchchchchchch', action.payload);
       return {
         chores: action.payload.choresArr,
         houseName: action.payload.groupObj.houseName,
         zip: action.payload.groupObj.zip,
-        members: action.payload.groupObj.users,
+        members: action.payload.users,
         choreType: 'none-selected'
       };
 

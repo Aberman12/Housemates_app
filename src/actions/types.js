@@ -33,3 +33,4 @@ export const SAVE_NEW_LIST_CHANGES = 'save_new_list_changes';
 export const CHANGE_CHORE_TYPE = 'change_chore_type';
 export const CHANGE_OFFSET = 'change-offset';
 export const ADD_CHORE_NOTE = 'add_chore_note';
+export const GIVE_CHORE_TO_MEMBER = 'give_chore_to_member';

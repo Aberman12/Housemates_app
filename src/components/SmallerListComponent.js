@@ -35,7 +35,9 @@ class IndividualList extends Component {
       dueDate: this.props.newChoreDueDate,
       done: false,
       type: this.props.choreType,
-      note: this.props.choreNote
+      note: this.props.choreNote,
+      memberSelected: this.props.memberSelected,
+      dateCreated: Date.now()
     };
     if (this.props.newChoreName && this.props.newChoreDueDate) {
       let dueDate = this.props.newChoreDueDate;
@@ -219,7 +221,8 @@ const mapStateToProps = ({ groupReducer }) => {
     newChoreListName,
     newChoreDueDate,
     dueDateEdited,
-    choreNote
+    choreNote,
+    memberSelected
   } = groupReducer;
   return {
     newChoreName,
@@ -228,7 +231,8 @@ const mapStateToProps = ({ groupReducer }) => {
     choreType,
     newChoreListName,
     newChoreDueDate,
-    dueDateEdited
+    dueDateEdited,
+    memberSelected
   };
 };
 
