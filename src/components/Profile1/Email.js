@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-// import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 import PropTypes from 'prop-types';
 
 import mainColor from './constants';
@@ -47,14 +47,14 @@ const Email = ({ containerStyle, onPressEmail, name, email, index }) => (
   <TouchableOpacity onPress={() => onPressEmail(email)}>
     <View style={[styles.container, containerStyle]}>
       <View style={styles.iconRow}>
-        {/* {+index === 0 && (
+        {+index === 0 && (
           <Icon
             name="email"
             underlayColor="transparent"
             iconStyle={styles.emailIcon}
             onPress={() => onPressEmail()}
           />
-        )} */}
+        )}
       </View>
       <View style={styles.emailRow}>
         <View style={styles.emailColumn}>
