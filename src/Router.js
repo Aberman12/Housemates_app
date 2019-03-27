@@ -58,7 +58,7 @@ const RouterComponent = () => {
       >
         <Scene key="osu" title="RT" icon={TabIcon}>
           <Scene
-            onRight={() => Actions.employeeCreate()}
+            onRight={() => Actions.ProfileScreen()}
             rightTitle="Settings"
             key="employeeList"
             component={List}
@@ -67,15 +67,15 @@ const RouterComponent = () => {
           />
         </Scene>
         <Scene
-          onRight={() => Actions.employeeCreate()}
+          onRight={() => Actions.ProfileScreen()}
           rightTitle="Settings"
           key="tab2"
-          component={Profile}
+          component={List}
           title="Chores"
           icon={TabIcon}
         />
         <Scene
-          onRight={() => Actions.employeeCreate()}
+          onRight={() => Actions.ProfileScreen()}
           rightTitle="Settings"
           key="tab3"
           component={List}
@@ -83,7 +83,7 @@ const RouterComponent = () => {
           icon={TabIcon}
         />
         <Scene
-          // onRight={() => Actions.employeeCreate()}
+          // onRight={() => Actions.ProfileScreen()}
           // rightTitle="Settings"
           key="tab4"
           component={Agenda}
@@ -91,6 +91,7 @@ const RouterComponent = () => {
           icon={TabIcon}
         />
       </Scene>
+      <Scene key="ProfileScreen" component={Profile} title="HouseMates" />
       {/* </Scene> */}
     </Router>
   );

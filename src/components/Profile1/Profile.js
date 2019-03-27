@@ -11,6 +11,8 @@ import {
   Text,
   View
 } from 'react-native';
+import { connect } from 'react-redux';
+import { changeChoreDate, changeOffSet } from '../../actions';
 import PropTypes from 'prop-types';
 
 import mainColor from './constants';
@@ -171,22 +173,9 @@ class Contact extends Component {
                 uri: avatar
               }}
             />
-            <Text style={styles.userNameText}>{name}</Text>
-            <View style={styles.userAddressRow}>
-              <View>
-                <Icon
-                  name="place"
-                  underlayColor="transparent"
-                  iconStyle={styles.placeIcon}
-                  onPress={this.onPressPlace}
-                />
-              </View>
-              <View style={styles.userCityRow}>
-                <Text style={styles.userCityText}>
-                  {city}, {country}
-                </Text>
-              </View>
-            </View>
+            <Text style={styles.userNameText}>{`${this.props.members[0].firstName} ${
+              this.props.members[0].lastName
+            }`}</Text>
           </View>
         </ImageBackground>
       </View>
@@ -206,6 +195,7 @@ class Contact extends Component {
             number={number}
             onPressSms={this.onPressSms}
             onPressTel={this.onPressTel}
+            props={this.props.members}
           />
         );
       }}
@@ -224,6 +214,7 @@ class Contact extends Component {
             name={name}
             email={email}
             onPressEmail={this.onPressEmail}
+            props={this.props.members}
           />
         );
       }}
@@ -246,4 +237,12 @@ class Contact extends Component {
   }
 }
 
-export default Contact;
+const mapStateToProps = ({ groupReducer }) => {
+  const { members } = groupReducer;
+  return { members };
+};
+
+export default connect(
+  mapStateToProps,
+  { changeChoreDate, changeOffSet }
+)(Contact);
