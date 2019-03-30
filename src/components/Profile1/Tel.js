@@ -56,7 +56,7 @@ const Tel = ({ containerStyle, index, name, number, onPressSms, onPressTel }) =>
     <TouchableOpacity onPress={() => onPressTel(number)}>
       <View style={[styles.container, containerStyle]}>
         <View style={styles.iconRow}>
-          {+index === 0 && (
+          {+0 === 0 && (
             <Icon
               name="call"
               underlayColor="transparent"

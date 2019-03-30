@@ -36,5 +36,13 @@
 	<string>1:929817228975:ios:fc7a8cb127a92497</string>
 	<key>DATABASE_URL</key>
 	<string>https://housemates-9f3f7.firebaseio.com</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+    <key>NSCameraUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to use your camera</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>$(PRODUCT_NAME) would like to your microphone (for videos)</string>
 </dict>
 </plist>

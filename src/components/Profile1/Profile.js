@@ -182,44 +182,43 @@ class Contact extends Component {
     );
   };
 
-  renderTel = () => (
-    <ListView
-      contentContainerStyle={styles.telContainer}
-      dataSource={this.state.telDS}
-      renderRow={({ id, name, number }, _, k) => {
-        return (
-          <Tel
-            key={`tel-${id}`}
-            index={k}
-            name={name}
-            number={number}
-            onPressSms={this.onPressSms}
-            onPressTel={this.onPressTel}
-            props={this.props.members}
-          />
-        );
-      }}
-    />
-  );
+  renderTel = () => {
+    // <ListView
+    //   contentContainerStyle={styles.telContainer}
+    //   dataSource={this.state.telDS}
+    //   renderRow={({ id, name, number }, _, k) => {
+    return (
+      <Tel
+        // key={`tel-${id}`}
+        // index={k}
+        name={this.props.members[0].firstName}
+        name={this.props.members[0].phoneNumber}
+        onPressSms={this.onPressSms}
+        onPressTel={this.onPressTel}
+      />
+    );
+    //   }}
+    // />
+  };
 
-  renderEmail = () => (
-    <ListView
-      contentContainerStyle={styles.emailContainer}
-      dataSource={this.state.emailDS}
-      renderRow={({ email, id, name }, _, k) => {
-        return (
-          <Email
-            key={`email-${id}`}
-            index={k}
-            name={name}
-            email={email}
-            onPressEmail={this.onPressEmail}
-            props={this.props.members}
-          />
-        );
-      }}
-    />
-  );
+  renderEmail = () => {
+    // <ListView
+    //   contentContainerStyle={styles.emailContainer}
+    //   dataSource={this.state.emailDS}
+    //   renderRow={({ email, id, name }, _, k) => {
+    return (
+      <Email
+        // key={`email-${id}`}
+        // index={k}
+        name={this.props.members[0].firstName}
+        name={this.props.members[0].email}
+        onPressEmail={this.onPressEmail}
+        props={this.props.members}
+      />
+    );
+    //   }}
+    // />
+  };
 
   render() {
     return (

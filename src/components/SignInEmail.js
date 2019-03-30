@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Text } from 'react-native';
 import { connect } from 'react-redux';
+import ImagePicker from 'react-native-image-picker';
 import {
   emailChanged,
   passwordChanged,
@@ -12,6 +13,11 @@ import {
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignUpEmail extends Component {
+  state = {
+    avatarSource: null,
+    videoSource: null
+  };
+
   onEmailChange(text) {
     this.props.emailChanged(text);
   }
@@ -28,13 +34,57 @@ class SignUpEmail extends Component {
     this.props.lastNameChanged(text);
   }
 
-  // onphoneChange(text) {
-  //   this.props.phoneChanged(text);
-  // }
+  onphoneChange(text) {
+    this.props.phoneChanged(text);
+  }
+
+  selectPhotoTapped() {
+    const options = {
+      quality: 1.0,
+      maxWidth: 500,
+      maxHeight: 500,
+      storageOptions: {
+        skipBackup: true
+      }
+    };
+
+    ImagePicker.showImagePicker(options, response => {
+      console.log('Response = ', response);
+
+      if (response.didCancel) {
+        console.log('User cancelled photo picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        let source = { uri: response.uri };
+
+        // You can also display the image using data:
+        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+        this.setState({
+          avatarSource: source
+        });
+      }
+    });
+  }
 
   onButtonPress() {
-    const { email, password, firstName, lastName } = this.props;
-    this.props.loginUser({ email, password, firstName, lastName });
+    const { email, password, firstName, lastName, phoneNumber } = this.props;
+    if (!email) {
+      this.showEmpltyEntryError('email');
+    } else if (!password) {
+      this.showEmpltyEntryError('password');
+    } else if (!firstName) {
+      this.showEmpltyEntryError('firstName');
+    } else if (!lastName) {
+      this.showEmpltyEntryError('lastName');
+    } else if (!phoneNumber) {
+      this.showEmpltyEntryError('phoneNumber');
+    } else {
+      this.props.loginUser({ email, password, firstName, lastName, phoneNumber });
+    }
   }
 
   renderButton() {
@@ -81,14 +131,17 @@ class SignUpEmail extends Component {
             value={this.props.password}
           />
         </CardSection>
-        {/* <CardSection>
+        <CardSection>
           <Input
             label="Phone #"
             placeholder="(optional) - For housemates to view"
             onChangeText={this.onphoneChange.bind(this)}
             value={this.props.phoneNumber}
           />
-        </CardSection> */}
+        </CardSection>
+        <CardSection>
+          <Button onPress={this.selectPhotoTapped.bind(this)}>Pick Profile Picture</Button>
+        </CardSection>
         <Text style={styles.errorTextStyle}>{this.props.error}</Text>
         <CardSection>{this.renderButton()}</CardSection>
       </Card>
@@ -105,8 +158,8 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, firstName, lastName, error, loading } = auth;
-  return { email, password, firstName, lastName, error, loading };
+  const { email, password, firstName, lastName, error, loading, phoneNumber } = auth;
+  return { email, password, firstName, lastName, error, loading, phoneNumber };
 };
 
 export default connect(
@@ -116,6 +169,7 @@ export default connect(
     passwordChanged,
     loginUser,
     firstNameChanged,
-    lastNameChanged
+    lastNameChanged,
+    phoneChanged
   }
 )(SignUpEmail);
