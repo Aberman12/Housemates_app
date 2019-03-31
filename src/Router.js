@@ -13,6 +13,7 @@ import CreateHouse from './components/CreateHouse';
 import Agenda from './components/CalendarAgenda';
 import List from './components/ListComponent';
 import Profile from './components/Profile1/';
+import CalendarEventCreatorPage from './components/CalendarEventCreatorPage';
 
 const TabIcon = ({ selected, title }) => {
   return (
@@ -92,6 +93,11 @@ const RouterComponent = () => {
         />
       </Scene>
       <Scene key="ProfileScreen" component={Profile} title="HouseMates" />
+      <Scene
+        key="CalendarEventCreatorPage"
+        component={CalendarEventCreatorPage}
+        title="HouseMates"
+      />
       {/* </Scene> */}
     </Router>
   );
