@@ -1,15 +1,22 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { Agenda } from 'react-native-calendars';
+import { setSelectedCalendarDate } from '../actions';
 
-export default class AgendaScreen extends Component {
+class AgendaScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       items: {},
       showModal: false
     };
+  }
+
+  componentWillMount() {
+    console.log(this.props.customCalendarEventItems);
+    this.setState({ items: this.props.customCalendarEventItems });
   }
 
   render() {
@@ -72,13 +79,33 @@ export default class AgendaScreen extends Component {
     );
   }
 
-  createCalendarEvent() {
+  createCalendarEvent(d) {
+    d = d.toString();
+    var date = new Date(d);
+    let month;
+    let day;
+
+    if ((date.getMonth() + 1).toString().length === 1) {
+      month = '0' + (date.getMonth() + 1).toString();
+    } else {
+      month = (date.getMonth() + 1).toString();
+    }
+
+    if (date.getUTCDate().toString().length === 1) {
+      day = '0' + date.getUTCDate().toString();
+    } else {
+      day = date.getUTCDate().toString();
+    }
+
+    d = `${date.getFullYear()}-${month}-${day}`;
+
+    this.props.setSelectedCalendarDate(d);
     Actions.CalendarEventCreatorPage();
   }
 
-  renderEmptyDate() {
+  renderEmptyDate(thing) {
     return (
-      <TouchableOpacity onPress={() => this.createCalendarEvent()}>
+      <TouchableOpacity onPress={() => this.createCalendarEvent(thing['0'])}>
         <View style={[styles.item, { height: 67 }]}>
           <Text>Date empty</Text>
         </View>
@@ -111,3 +138,13 @@ const styles = StyleSheet.create({
     paddingTop: 30
   }
 });
+
+const mapStateToProps = ({ CalendarReducer }) => {
+  const { customCalendarEventItems } = CalendarReducer;
+  return { customCalendarEventItems };
+};
+
+export default connect(
+  mapStateToProps,
+  { setSelectedCalendarDate }
+)(AgendaScreen);

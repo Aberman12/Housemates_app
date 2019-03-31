@@ -35,3 +35,5 @@ export const CHANGE_OFFSET = 'change-offset';
 export const ADD_CHORE_NOTE = 'add_chore_note';
 export const GIVE_CHORE_TO_MEMBER = 'give_chore_to_member';
 export const PROFILE_PICTURE_SELECTED = 'profile_picture_selected';
+export const CREATE_NEW_CALENDAR_EVENT = 'create_new_calendar_event';
+export const SET_SELECTED_CALENDAR_DATE = 'set_selected_calendar_date';
