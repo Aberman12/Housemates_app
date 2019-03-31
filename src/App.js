@@ -21,11 +21,11 @@ class App extends Component {
   }
 
   componentDidMount() {
-    // firebase.auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     Actions.main({ type: 'reset' });
-    //   }
-    // });
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        Actions.main({ type: 'reset' });
+      }
+    });
   }
 
   render() {

@@ -89,8 +89,6 @@ class SignUpEmail extends Component {
       this.showEmpltyEntryError('lastName');
     } else if (!phoneNumber) {
       this.showEmpltyEntryError('phoneNumber');
-    } else if (!profilePicture) {
-      this.showEmpltyEntryError('profile picture');
     } else {
       this.props.loginUser({ email, password, firstName, lastName, phoneNumber, profilePicture });
     }
