@@ -10,7 +10,8 @@ import {
   PHONE_CHANGED,
   FIRST_CHANGED,
   LAST_CHANGED,
-  BIRTHDAY_CHANGED
+  BIRTHDAY_CHANGED,
+  PROFILE_PICTURE_SELECTED
 } from './types';
 
 const uuidv4 = require('uuid/v4');
@@ -24,6 +25,13 @@ db.sync(remotedb, {
 export const emailChanged = text => {
   return {
     type: EMAIL_CHANGED,
+    payload: text
+  };
+};
+
+export const setProfilePicture = text => {
+  return {
+    type: PROFILE_PICTURE_SELECTED,
     payload: text
   };
 };
@@ -63,7 +71,15 @@ export const phoneChanged = text => {
   };
 };
 
-export const loginUser = ({ email, password, firstName, lastName, phoneNumber }) => {
+export const loginUser = ({
+  email,
+  password,
+  firstName,
+  lastName,
+  phoneNumber,
+  profilePicture
+}) => {
+  console.log('picture ifno 1', profilePicture);
   return dispatch => {
     dispatch({ type: LOGIN_USER });
     firebase
@@ -88,13 +104,14 @@ export const loginUser = ({ email, password, firstName, lastName, phoneNumber })
               userToken: user,
               firstName,
               lastName,
+              picture: profilePicture,
               phoneNumber,
               email,
               password,
               _id: user.uid,
               groupNumber: user.uid
             };
-            console.log('user id: ', user.uid);
+            console.log('picture ifno ', profilePicture);
             db.put(userInfo)
               .then(function(result) {
                 db.allDocs({ include_docs: true, descending: true }, function(err, doc) {

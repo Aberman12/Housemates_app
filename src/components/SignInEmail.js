@@ -8,13 +8,14 @@ import {
   loginUser,
   firstNameChanged,
   lastNameChanged,
-  phoneChanged
+  phoneChanged,
+  setProfilePicture
 } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class SignUpEmail extends Component {
   state = {
-    avatarSource: null,
+    avatarSource: 'http://www.venmond.com/demo/vendroid/img/avatar/big.jpg',
     videoSource: null
   };
 
@@ -48,30 +49,36 @@ class SignUpEmail extends Component {
       }
     };
 
-    ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response);
+    // ImagePicker.showImagePicker(options, response => {
+    //   console.log('Response = ', response);
 
-      if (response.didCancel) {
-        console.log('User cancelled photo picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        let source = { uri: response.uri };
+    //   if (response.didCancel) {
+    //     console.log('User cancelled photo picker');
+    //   } else if (response.error) {
+    //     console.log('ImagePicker Error: ', response.error);
+    //   } else if (response.customButton) {
+    //     console.log('User tapped custom button: ', response.customButton);
+    //   } else {
+    //     let source = { uri: response.uri };
 
-        // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+    //     // You can also display the image using data:
+    //     // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        this.setState({
-          avatarSource: source
-        });
-      }
-    });
+    //     this.setState({
+    //       avatarSource: source
+    //     });
+    //   }
+    // });
+    this.onChangePhoto(this.state.avatarSource);
+  }
+
+  onChangePhoto(img) {
+    console.log('made it to change PHoto: ', img);
+    this.props.setProfilePicture(img);
   }
 
   onButtonPress() {
-    const { email, password, firstName, lastName, phoneNumber } = this.props;
+    const { email, password, firstName, lastName, phoneNumber, profilePicture } = this.props;
     if (!email) {
       this.showEmpltyEntryError('email');
     } else if (!password) {
@@ -82,8 +89,10 @@ class SignUpEmail extends Component {
       this.showEmpltyEntryError('lastName');
     } else if (!phoneNumber) {
       this.showEmpltyEntryError('phoneNumber');
+    } else if (!profilePicture) {
+      this.showEmpltyEntryError('profile picture');
     } else {
-      this.props.loginUser({ email, password, firstName, lastName, phoneNumber });
+      this.props.loginUser({ email, password, firstName, lastName, phoneNumber, profilePicture });
     }
   }
 
@@ -158,8 +167,17 @@ const styles = {
 };
 
 const mapStateToProps = ({ auth }) => {
-  const { email, password, firstName, lastName, error, loading, phoneNumber } = auth;
-  return { email, password, firstName, lastName, error, loading, phoneNumber };
+  const {
+    email,
+    password,
+    firstName,
+    lastName,
+    error,
+    loading,
+    phoneNumber,
+    profilePicture
+  } = auth;
+  return { email, password, firstName, lastName, error, loading, phoneNumber, profilePicture };
 };
 
 export default connect(
@@ -170,6 +188,7 @@ export default connect(
     loginUser,
     firstNameChanged,
     lastNameChanged,
-    phoneChanged
+    phoneChanged,
+    setProfilePicture
   }
 )(SignUpEmail);

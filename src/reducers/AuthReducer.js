@@ -9,7 +9,8 @@ import {
   LAST_CHANGED,
   USER_CREATE,
   BIRTHDAY_CHANGED,
-  SEND_TO_ACCOUNT_CREATION
+  SEND_TO_ACCOUNT_CREATION,
+  PROFILE_PICTURE_SELECTED
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -19,6 +20,7 @@ const INITIAL_STATE = {
   password: '',
   birthday: '',
   phoneNumber: '',
+  profilePicture: '',
   user: null,
   error: '',
   loading: false
@@ -28,15 +30,16 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case PROFILE_PICTURE_SELECTED:
+      console.log('made it to change PHoto redycer: ', action.payload);
+      return { ...state, profilePicture: action.payload };
     case EMAIL_CHANGED:
       return { ...state, email: action.payload };
     case FIRST_CHANGED:
-      console.log('first changed;', action.payload);
       return { ...state, firstName: action.payload };
     case BIRTHDAY_CHANGED:
       return { ...state, birthday: action.payload };
     case LAST_CHANGED:
-      console.log('last changed;', action.payload);
       return { ...state, lastName: action.payload };
     case PHONE_CHANGED:
       return { ...state, phoneNumber: action.payload };

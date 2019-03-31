@@ -170,7 +170,7 @@ class Contact extends Component {
             <Image
               style={styles.userImage}
               source={{
-                uri: avatar
+                uri: this.props.members[0].picture
               }}
             />
             <Text style={styles.userNameText}>{`${this.props.members[0].firstName} ${
