@@ -39,7 +39,7 @@ const INITIAL_STATE = {
   houseName: '',
   zip: '',
   choreDone: false,
-  members: [],
+  members: [{}, {}],
   chores: [],
   groceries: [],
   calendar: [],

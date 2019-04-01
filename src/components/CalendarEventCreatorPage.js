@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Modal, TouchableOpacity, Picker, Content, Item, Label } from 'react-native';
+import { Text, View, Modal, TouchableOpacity, Picker, Content, Image, Label } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { CardSection, Button, Input, Card } from './common';
 import DatePicker from 'react-native-datepicker';
@@ -17,7 +17,8 @@ class CalendarEventCreatorPage extends Component {
       time: '',
       showCreateTime: false,
       name: '',
-      note: ''
+      note: '',
+      members: []
     };
   }
 
@@ -34,66 +35,66 @@ class CalendarEventCreatorPage extends Component {
     this.setState({ note });
   }
 
-  createEndDate() {
-    if (this.state.showCreateEndDate && !this.state.endDate) {
-      return (
-        <DatePicker
-          style={{ width: 200 }}
-          date={this.state.date || this.props.date || new Date()}
-          mode="date"
-          placeholder="select date"
-          format="YYYY-MM-DD"
-          minDate={new Date() - 1}
-          maxDate="2019-06-01"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          onCloseModal={() => this.setState({ showCreateEndDate: false })}
-          customStyles={{
-            // dateIcon: {
-            //   position: "absolute",
-            //   left: 0,
-            //   top: 4,
-            //   marginLeft: 0
-            // },
-            dateInput: {
-              marginLeft: 36
-            }
-          }}
-          onDateChange={date => {
-            this.addEndDate(date);
-          }}
-        />
-      );
-    } else if (this.state.endDate) {
-      return (
-        <Text
-          style={{
-            paddingTop: 10,
-            paddingBottom: 10,
-            textAlign: 'center',
-            fontSize: 20,
-            justifyContent: 'center'
-          }}
-        >
-          End Date Selected
-        </Text>
-      );
-    } else {
-      return (
-        <Text
-          style={{
-            paddingTop: 10,
-            paddingBottom: 10,
-            textAlign: 'center',
-            fontSize: 20,
-            justifyContent: 'center'
-          }}
-        >
-          Press to Add End Date (Optional)
-        </Text>
-      );
-    }
-  }
+  // createEndDate() {
+  //   if (this.state.showCreateEndDate && !this.state.endDate) {
+  //     return (
+  //       <DatePicker
+  //         style={{ width: 200 }}
+  //         date={this.state.date || this.props.date || new Date()}
+  //         mode="date"
+  //         placeholder="select date"
+  //         format="YYYY-MM-DD"
+  //         minDate={new Date() - 1}
+  //         maxDate="2019-06-01"
+  //         confirmBtnText="Confirm"
+  //         cancelBtnText="Cancel"
+  //         onCloseModal={() => this.setState({ showCreateEndDate: false })}
+  //         customStyles={{
+  //           // dateIcon: {
+  //           //   position: "absolute",
+  //           //   left: 0,
+  //           //   top: 4,
+  //           //   marginLeft: 0
+  //           // },
+  //           dateInput: {
+  //             marginLeft: 36
+  //           }
+  //         }}
+  //         onDateChange={date => {
+  //           this.addEndDate(date);
+  //         }}
+  //       />
+  //     );
+  //   } else if (this.state.endDate) {
+  //     return (
+  //       <Text
+  //         style={{
+  //           paddingTop: 10,
+  //           paddingBottom: 10,
+  //           textAlign: 'center',
+  //           fontSize: 20,
+  //           justifyContent: 'center'
+  //         }}
+  //       >
+  //         End Date Selected
+  //       </Text>
+  //     );
+  //   } else {
+  //     return (
+  //       <Text
+  //         style={{
+  //           paddingTop: 10,
+  //           paddingBottom: 10,
+  //           textAlign: 'center',
+  //           fontSize: 20,
+  //           justifyContent: 'center'
+  //         }}
+  //       >
+  //         Press to Add End Date (Optional)
+  //       </Text>
+  //     );
+  //   }
+  // }
 
   createTime() {
     if (this.state.showCreateTime && !this.state.time) {
@@ -117,7 +118,7 @@ class CalendarEventCreatorPage extends Component {
             justifyContent: 'center'
           }}
         >
-          Time Selected
+          Event Scheduled for: {this.state.time}
         </Text>
       );
     } else {
@@ -154,29 +155,75 @@ class CalendarEventCreatorPage extends Component {
   }
 
   create() {
-    let { name, time, note } = this.state;
-    let calendarEvent = {
-      name,
-      time,
-      note,
-      date: this.props.calendarDateSelected,
-      _id: uuidv4()
-    };
-    let endDateCalendarEvent = {};
+    let { name, time, note, members } = this.state;
+
     if (!this.state.time) {
       this.showMissingEntryError('Event time');
     } else if (!this.state.name) {
       this.showMissingEntryError('Event name');
     } else {
       if (this.state.endDate) {
-        endDateCalendarEvent = calendarEvent;
-        endDateCalendarEvent.endDate = this.state.endDate;
-        this.props.createCalendarEvent(calendarEvent, endDateCalendarEvent);
+        // let startDateCalendarEvent = {
+        //   name,
+        //   time,
+        //   note,
+        //   color: 'green',
+        //   startingDay: true,
+        //   endingDay: false,
+        //   date: this.props.calendarDateSelected,
+        //   _id: uuidv4()
+        // };
+        // let endDateCalendarEvent = {
+        //   name,
+        //   time,
+        //   note,
+        //   endDate,
+        //   startingDay: false,
+        //   endingDay: true,
+        //   _id: uuidv4(),
+        //   color: 'green'
+        // };
+        // this.props.createCalendarEvent(startDateCalendarEvent, endDateCalendarEvent);
+        // Actions.pop();
       } else {
+        let calendarEvent = {
+          name,
+          time,
+          members,
+          note,
+          date: this.props.calendarDateSelected,
+          _id: uuidv4()
+        };
         this.props.createCalendarEvent(calendarEvent);
         Actions.pop();
       }
     }
+  }
+
+  selectMember(member) {
+    if (!this.state.members.includes(member)) {
+      this.setState({ members: this.state.members.concat(member) });
+    } else {
+      this.setState({ members: this.state.members.filter(memInState => memInState !== member) });
+    }
+  }
+
+  userImageCSS(info) {
+    let op = 0.3;
+
+    if (this.state.members.includes(info)) {
+      op = 1;
+    }
+
+    return {
+      borderColor: 'green',
+      borderRadius: 40,
+      borderWidth: 3,
+      height: 80,
+      marginBottom: 15,
+      width: 80,
+      opacity: op
+    };
   }
 
   render() {
@@ -216,12 +263,27 @@ class CalendarEventCreatorPage extends Component {
               {this.createTime()}
             </TouchableOpacity>
           </CardSection>
-          <CardSection>
+          {/* <CardSection>
             <TouchableOpacity
               onPress={() => this.setState({ showCreateEndDate: !this.state.showCreateEndDate })}
             >
               {this.createEndDate()}
             </TouchableOpacity>
+          </CardSection> */}
+          <CardSection>
+            <Text>Select Event Members</Text>
+            {this.props.members.map(member => {
+              return (
+                <TouchableOpacity onPress={() => this.selectMember(member)}>
+                  <Image
+                    style={this.userImageCSS(member)}
+                    source={{
+                      uri: 'http://www.venmond.com/demo/vendroid/img/avatar/big.jpg'
+                    }}
+                  />
+                </TouchableOpacity>
+              );
+            })}
           </CardSection>
           <CardSection>
             <Button onPress={() => this.cancel()}>Cancel</Button>
@@ -254,9 +316,10 @@ const styles = {
   }
 };
 
-const mapStateToProps = ({ CalendarReducer }) => {
+const mapStateToProps = ({ CalendarReducer, groupReducer }) => {
   const { calendarDateSelected } = CalendarReducer;
-  return { calendarDateSelected };
+  const { members } = groupReducer;
+  return { calendarDateSelected, members };
 };
 
 export default connect(
